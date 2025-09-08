@@ -14,10 +14,127 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          ai_last_analysis_at: string | null
+          created_at: string | null
+          email: string | null
+          id: string
+          paystack_customer_code: string | null
+          paystack_subscription_code: string | null
+          plan: string
+          updated_at: string | null
+        }
+        Insert: {
+          ai_last_analysis_at?: string | null
+          created_at?: string | null
+          email?: string | null
+          id: string
+          paystack_customer_code?: string | null
+          paystack_subscription_code?: string | null
+          plan?: string
+          updated_at?: string | null
+        }
+        Update: {
+          ai_last_analysis_at?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          paystack_customer_code?: string | null
+          paystack_subscription_code?: string | null
+          plan?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      trades: {
+        Row: {
+          created_at: string | null
+          direction: string
+          entry: number
+          executed_at: string | null
+          exit: number | null
+          id: string
+          notes: string | null
+          pair: string
+          pnl: number | null
+          result: string | null
+          risk_pct: number | null
+          rr: number | null
+          screenshot_url: string | null
+          sl: number | null
+          tp: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          direction: string
+          entry: number
+          executed_at?: string | null
+          exit?: number | null
+          id?: string
+          notes?: string | null
+          pair: string
+          pnl?: number | null
+          result?: string | null
+          risk_pct?: number | null
+          rr?: number | null
+          screenshot_url?: string | null
+          sl?: number | null
+          tp?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          direction?: string
+          entry?: number
+          executed_at?: string | null
+          exit?: number | null
+          id?: string
+          notes?: string | null
+          pair?: string
+          pnl?: number | null
+          result?: string | null
+          risk_pct?: number | null
+          rr?: number | null
+          screenshot_url?: string | null
+          sl?: number | null
+          tp?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trades_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
-      [_ in never]: never
+      trades_stats: {
+        Row: {
+          avg_rr: number | null
+          total_pnl: number | null
+          trade_count: number | null
+          user_id: string | null
+          win_rate: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trades_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never
