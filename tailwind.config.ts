@@ -57,6 +57,18 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        profit: {
+          DEFAULT: "hsl(var(--profit))",
+          foreground: "hsl(var(--profit-foreground))",
+        },
+        loss: {
+          DEFAULT: "hsl(var(--loss))",
+          foreground: "hsl(var(--loss-foreground))",
+        },
+        neutral: {
+          DEFAULT: "hsl(var(--neutral))",
+          foreground: "hsl(var(--neutral-foreground))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
