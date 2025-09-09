@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Trading Journal Design System - Dark theme focused with financial color palette */
+/* Trading Journal Design System - Modern Flux UI with Psychological Appeal */
 
 @layer base {
   :root {
@@ -15,8 +15,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 142 76% 36%;
-    --primary-foreground: 355 7% 97%;
+    --primary: 236 72% 79%;
+    --primary-foreground: 224 71.4% 4.1%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -32,17 +32,33 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 236 72% 79%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    /* Trading specific colors */
-    --profit: 142 76% 36%;
+    /* Trading specific colors - Psychologically appealing */
+    --profit: 142 86% 28%;
     --profit-foreground: 355 7% 97%;
     --loss: 0 84.2% 60.2%;
     --loss-foreground: 210 40% 98%;
     --neutral: 214 13% 51%;
     --neutral-foreground: 210 40% 98%;
+
+    /* Gradients for depth and appeal */
+    --gradient-primary: linear-gradient(135deg, hsl(236 72% 79%), hsl(245 79% 67%));
+    --gradient-success: linear-gradient(135deg, hsl(142 86% 28%), hsl(152 76% 36%));
+    --gradient-danger: linear-gradient(135deg, hsl(0 84% 60%), hsl(10 84% 65%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(210 40% 98%));
+    
+    /* Shadows for depth */
+    --shadow-sm: 0 1px 3px hsl(0 0% 0% / 0.1);
+    --shadow-md: 0 4px 12px hsl(0 0% 0% / 0.1);
+    --shadow-lg: 0 10px 25px hsl(0 0% 0% / 0.15);
+    --shadow-xl: 0 20px 40px hsl(0 0% 0% / 0.2);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 
     --sidebar-background: 0 0% 98%;
 
@@ -62,41 +78,53 @@
   }
 
   .dark {
-    --background: 224 71% 4%;
-    --foreground: 213 31% 91%;
+    --background: 224 71.4% 4.1%;
+    --foreground: 210 20% 98%;
 
-    --card: 224 71% 4%;
-    --card-foreground: 213 31% 91%;
+    --card: 224 71.4% 4.1%;
+    --card-foreground: 210 20% 98%;
 
-    --popover: 224 71% 4%;
-    --popover-foreground: 213 31% 91%;
+    --popover: 224 71.4% 4.1%;
+    --popover-foreground: 210 20% 98%;
 
-    --primary: 142 86% 28%;
-    --primary-foreground: 355 7% 97%;
+    --primary: 263 70% 50.4%;
+    --primary-foreground: 210 20% 98%;
 
-    --secondary: 215 28% 17%;
-    --secondary-foreground: 213 31% 91%;
+    --secondary: 215 27.9% 16.9%;
+    --secondary-foreground: 210 20% 98%;
 
-    --muted: 215 28% 17%;
-    --muted-foreground: 217 10% 65%;
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 64.9%;
 
-    --accent: 215 28% 17%;
-    --accent-foreground: 213 31% 91%;
+    --accent: 215 27.9% 16.9%;
+    --accent-foreground: 210 20% 98%;
 
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 213 31% 91%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 20% 98%;
 
-    --border: 215 28% 17%;
-    --input: 215 28% 17%;
-    --ring: 142 86% 28%;
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 263 70% 50.4%;
 
     /* Trading specific colors for dark mode */
-    --profit: 142 86% 28%;
+    --profit: 142 76% 36%;
     --profit-foreground: 355 7% 97%;
-    --loss: 0 63% 31%;
-    --loss-foreground: 213 31% 91%;
-    --neutral: 217 10% 65%;
-    --neutral-foreground: 213 31% 91%;
+    --loss: 0 84.2% 60.2%;
+    --loss-foreground: 210 40% 98%;
+    --neutral: 217.9 10.6% 64.9%;
+    --neutral-foreground: 210 20% 98%;
+
+    /* Dark mode gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(263 70% 50%), hsl(245 79% 67%));
+    --gradient-success: linear-gradient(135deg, hsl(142 76% 36%), hsl(152 76% 36%));
+    --gradient-danger: linear-gradient(135deg, hsl(0 84% 60%), hsl(10 84% 65%));
+    --gradient-card: linear-gradient(135deg, hsl(224 71% 4%), hsl(215 28% 17%));
+    
+    /* Dark mode shadows */
+    --shadow-sm: 0 1px 3px hsl(0 0% 0% / 0.3);
+    --shadow-md: 0 4px 12px hsl(0 0% 0% / 0.3);
+    --shadow-lg: 0 10px 25px hsl(0 0% 0% / 0.4);
+    --shadow-xl: 0 20px 40px hsl(0 0% 0% / 0.5);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -115,5 +143,103 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  /* Gradient utilities */
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .gradient-success {
+    background: var(--gradient-success);
+  }
+  
+  .gradient-danger {
+    background: var(--gradient-danger);
+  }
+  
+  .gradient-card {
+    background: var(--gradient-card);
+  }
+
+  /* Shadow utilities */
+  .shadow-soft {
+    box-shadow: var(--shadow-md);
+  }
+  
+  .shadow-strong {
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .shadow-powerful {
+    box-shadow: var(--shadow-xl);
+  }
+
+  /* Animation utilities */
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+  
+  .transition-spring {
+    transition: var(--transition-spring);
+  }
+
+  /* Card enhancements */
+  .card-enhanced {
+    @apply bg-card border shadow-soft transition-smooth hover:shadow-strong;
+    background: var(--gradient-card);
+  }
+
+  /* Button enhancements */
+  .btn-gradient {
+    background: var(--gradient-primary);
+    @apply text-primary-foreground transition-spring hover:scale-105 active:scale-95;
+  }
+  
+  .btn-success {
+    background: var(--gradient-success);
+    @apply text-white transition-spring hover:scale-105 active:scale-95;
+  }
+  
+  .btn-danger {
+    background: var(--gradient-danger);
+    @apply text-white transition-spring hover:scale-105 active:scale-95;
+  }
+
+  /* Interactive elements */
+  .interactive-scale {
+    @apply transition-spring hover:scale-105 active:scale-95 cursor-pointer;
+  }
+  
+  .glow-effect {
+    @apply transition-smooth hover:shadow-powerful;
+    filter: brightness(1) contrast(1);
+  }
+  
+  .glow-effect:hover {
+    filter: brightness(1.1) contrast(1.1);
+  }
+
+  /* Status indicators */
+  .status-profit {
+    @apply bg-profit/20 text-profit border-profit/30;
+  }
+  
+  .status-loss {
+    @apply bg-loss/20 text-loss border-loss/30;
+  }
+  
+  .status-neutral {
+    @apply bg-neutral/20 text-neutral border-neutral/30;
+  }
+
+  /* Typography */
+  .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }

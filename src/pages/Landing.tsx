@@ -7,113 +7,128 @@ export default function Landing() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b">
+      <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <TrendingUp className="w-8 h-8 text-primary" />
-            <h1 className="text-2xl font-bold text-primary">TradingJournal</h1>
+            <h1 className="text-2xl font-bold text-gradient">TradingJournal</h1>
           </div>
           <div className="space-x-2">
             <Link to="/auth">
-              <Button variant="outline">Sign In</Button>
+              <Button variant="outline" className="interactive-scale">Sign In</Button>
             </Link>
             <Link to="/auth">
-              <Button>Get Started</Button>
+              <Button className="btn-gradient shadow-soft">Get Started</Button>
             </Link>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 px-4">
+      <section className="py-20 px-4 gradient-card">
         <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-profit bg-clip-text text-transparent">
+          <h2 className="text-6xl font-bold mb-8 text-gradient">
             Track Your Trades. Improve Your Performance.
           </h2>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
             The ultimate trading journal with AI-powered insights to help you analyze your performance, 
-            identify patterns, and become a better trader.
+            identify patterns, and become a consistently profitable trader.
           </p>
-          <div className="space-x-4">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <Link to="/auth">
-              <Button size="lg" className="px-8 py-3 text-lg">
+              <Button size="lg" className="btn-gradient shadow-strong px-8 py-4 text-lg">
                 Start Your Journey
               </Button>
             </Link>
-            <Button variant="outline" size="lg" className="px-8 py-3 text-lg">
+            <Button variant="outline" size="lg" className="interactive-scale px-8 py-4 text-lg">
               Watch Demo
             </Button>
+          </div>
+          <div className="text-sm text-muted-foreground">
+            ✨ Free to start • No credit card required • Join 10,000+ traders
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4 bg-muted/50">
+      <section className="py-20 px-4 bg-muted/30">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h3 className="text-3xl font-bold mb-4">Everything You Need to Succeed</h3>
-            <p className="text-lg text-muted-foreground">
-              Powerful features designed for serious traders
+            <h3 className="text-4xl font-bold mb-6 text-gradient">Everything You Need to Succeed</h3>
+            <p className="text-xl text-muted-foreground">
+              Powerful features designed for serious traders who want consistent profits
             </p>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card>
-              <CardHeader>
-                <BarChart3 className="w-12 h-12 text-primary mb-4" />
-                <CardTitle>Detailed Analytics</CardTitle>
-                <CardDescription>
-                  Track win rates, risk-reward ratios, and P&L with comprehensive statistics
+            <Card className="card-enhanced glow-effect">
+              <CardHeader className="text-center">
+                <div className="p-3 rounded-xl bg-primary/10 w-fit mx-auto mb-4">
+                  <BarChart3 className="w-12 h-12 text-primary" />
+                </div>
+                <CardTitle className="text-xl mb-2">Detailed Analytics</CardTitle>
+                <CardDescription className="leading-relaxed">
+                  Track win rates, risk-reward ratios, and P&L with comprehensive statistics that reveal your trading edge
                 </CardDescription>
               </CardHeader>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <Brain className="w-12 h-12 text-primary mb-4" />
-                <CardTitle>AI Insights</CardTitle>
-                <CardDescription>
-                  Get personalized analysis of your trading patterns and actionable improvement suggestions
+            <Card className="card-enhanced glow-effect">
+              <CardHeader className="text-center">
+                <div className="p-3 rounded-xl bg-primary/10 w-fit mx-auto mb-4">
+                  <Brain className="w-12 h-12 text-primary" />
+                </div>
+                <CardTitle className="text-xl mb-2">AI Insights</CardTitle>
+                <CardDescription className="leading-relaxed">
+                  Get personalized analysis of your trading patterns and actionable improvement suggestions powered by AI
                 </CardDescription>
               </CardHeader>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <Shield className="w-12 h-12 text-primary mb-4" />
-                <CardTitle>Secure & Private</CardTitle>
-                <CardDescription>
-                  Your trading data is encrypted and secure. We never share your information
+            <Card className="card-enhanced glow-effect">
+              <CardHeader className="text-center">
+                <div className="p-3 rounded-xl bg-primary/10 w-fit mx-auto mb-4">
+                  <Shield className="w-12 h-12 text-primary" />
+                </div>
+                <CardTitle className="text-xl mb-2">Secure & Private</CardTitle>
+                <CardDescription className="leading-relaxed">
+                  Your trading data is encrypted and secure. We never share your information with anyone, ever
                 </CardDescription>
               </CardHeader>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <Zap className="w-12 h-12 text-primary mb-4" />
-                <CardTitle>Lightning Fast</CardTitle>
-                <CardDescription>
-                  Quick trade entry with smart calculations for P&L, risk-reward, and more
+            <Card className="card-enhanced glow-effect">
+              <CardHeader className="text-center">
+                <div className="p-3 rounded-xl bg-primary/10 w-fit mx-auto mb-4">
+                  <Zap className="w-12 h-12 text-primary" />
+                </div>
+                <CardTitle className="text-xl mb-2">Lightning Fast</CardTitle>
+                <CardDescription className="leading-relaxed">
+                  Quick trade entry with smart calculations for P&L, risk-reward, and automatic performance tracking
                 </CardDescription>
               </CardHeader>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CheckCircle className="w-12 h-12 text-primary mb-4" />
-                <CardTitle>Trade Validation</CardTitle>
-                <CardDescription>
-                  Validate your setups and maintain discipline with detailed trade logs
+            <Card className="card-enhanced glow-effect">
+              <CardHeader className="text-center">
+                <div className="p-3 rounded-xl bg-primary/10 w-fit mx-auto mb-4">
+                  <CheckCircle className="w-12 h-12 text-primary" />
+                </div>
+                <CardTitle className="text-xl mb-2">Trade Validation</CardTitle>
+                <CardDescription className="leading-relaxed">
+                  Validate your setups and maintain discipline with detailed trade logs and strategy analysis
                 </CardDescription>
               </CardHeader>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <TrendingUp className="w-12 h-12 text-primary mb-4" />
-                <CardTitle>Performance Tracking</CardTitle>
-                <CardDescription>
-                  Monitor your progress over time and identify areas for improvement
+            <Card className="card-enhanced glow-effect">
+              <CardHeader className="text-center">
+                <div className="p-3 rounded-xl bg-primary/10 w-fit mx-auto mb-4">
+                  <TrendingUp className="w-12 h-12 text-primary" />
+                </div>
+                <CardTitle className="text-xl mb-2">Performance Tracking</CardTitle>
+                <CardDescription className="leading-relaxed">
+                  Monitor your progress over time and identify areas for improvement with advanced metrics
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -122,81 +137,83 @@ export default function Landing() {
       </section>
 
       {/* Pricing Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-4xl">
+      <section className="py-20 px-4 gradient-card">
+        <div className="container mx-auto max-w-5xl">
           <div className="text-center mb-16">
-            <h3 className="text-3xl font-bold mb-4">Simple, Transparent Pricing</h3>
-            <p className="text-lg text-muted-foreground">
-              Start for free, upgrade when you're ready
+            <h3 className="text-4xl font-bold mb-6 text-gradient">Simple, Transparent Pricing</h3>
+            <p className="text-xl text-muted-foreground">
+              Start for free, upgrade when you're ready to unlock your full potential
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
-            <Card className="border-2">
-              <CardHeader>
-                <CardTitle className="text-2xl">Free</CardTitle>
-                <CardDescription>Perfect for getting started</CardDescription>
-                <div className="text-3xl font-bold">$0</div>
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <Card className="card-enhanced">
+              <CardHeader className="text-center">
+                <CardTitle className="text-2xl text-muted-foreground">Free</CardTitle>
+                <CardDescription className="text-lg">Perfect for getting started</CardDescription>
+                <div className="text-5xl font-bold text-foreground mt-4">$0</div>
               </CardHeader>
-              <CardContent>
-                <ul className="space-y-3">
+              <CardContent className="pt-6">
+                <ul className="space-y-4">
                   <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-profit mr-2" />
-                    Up to 20 trades
+                    <CheckCircle className="w-6 h-6 text-profit mr-3" />
+                    <span className="text-base">Up to 20 trades</span>
                   </li>
                   <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-profit mr-2" />
-                    Basic analytics
+                    <CheckCircle className="w-6 h-6 text-profit mr-3" />
+                    <span className="text-base">Basic analytics dashboard</span>
                   </li>
                   <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-profit mr-2" />
-                    AI analysis (weekly)
+                    <CheckCircle className="w-6 h-6 text-profit mr-3" />
+                    <span className="text-base">AI analysis (weekly)</span>
                   </li>
                 </ul>
-                <Link to="/auth" className="block mt-6">
-                  <Button className="w-full" variant="outline">
+                <Link to="/auth" className="block mt-8">
+                  <Button className="w-full interactive-scale" variant="outline" size="lg">
                     Get Started Free
                   </Button>
                 </Link>
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-primary relative">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
+            <Card className="border-2 border-primary relative card-enhanced shadow-powerful">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <span className="gradient-primary text-primary-foreground px-4 py-2 rounded-full text-sm font-medium shadow-soft">
                   Most Popular
                 </span>
               </div>
-              <CardHeader>
-                <CardTitle className="text-2xl">Pro</CardTitle>
-                <CardDescription>For serious traders</CardDescription>
-                <div className="text-3xl font-bold">$9<span className="text-lg font-normal">/month</span></div>
+              <CardHeader className="text-center pt-8">
+                <CardTitle className="text-2xl text-primary">Pro</CardTitle>
+                <CardDescription className="text-lg">For serious traders</CardDescription>
+                <div className="text-5xl font-bold text-foreground mt-4">
+                  $9<span className="text-xl font-normal text-muted-foreground">/month</span>
+                </div>
               </CardHeader>
-              <CardContent>
-                <ul className="space-y-3">
+              <CardContent className="pt-6">
+                <ul className="space-y-4">
                   <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-profit mr-2" />
-                    Unlimited trades
+                    <CheckCircle className="w-6 h-6 text-profit mr-3" />
+                    <span className="text-base">Unlimited trades</span>
                   </li>
                   <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-profit mr-2" />
-                    Advanced analytics
+                    <CheckCircle className="w-6 h-6 text-profit mr-3" />
+                    <span className="text-base">Advanced analytics & insights</span>
                   </li>
                   <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-profit mr-2" />
-                    Unlimited AI analysis
+                    <CheckCircle className="w-6 h-6 text-profit mr-3" />
+                    <span className="text-base">Unlimited AI analysis</span>
                   </li>
                   <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-profit mr-2" />
-                    CSV export
+                    <CheckCircle className="w-6 h-6 text-profit mr-3" />
+                    <span className="text-base">CSV export & reporting</span>
                   </li>
                   <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-profit mr-2" />
-                    Priority support
+                    <CheckCircle className="w-6 h-6 text-profit mr-3" />
+                    <span className="text-base">Priority support</span>
                   </li>
                 </ul>
-                <Link to="/auth" className="block mt-6">
-                  <Button className="w-full">
+                <Link to="/auth" className="block mt-8">
+                  <Button className="w-full btn-gradient shadow-strong" size="lg">
                     Upgrade to Pro
                   </Button>
                 </Link>
@@ -207,17 +224,20 @@ export default function Landing() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-primary text-primary-foreground">
+      <section className="py-20 px-4 gradient-primary">
         <div className="container mx-auto max-w-4xl text-center">
-          <h3 className="text-3xl font-bold mb-4">Ready to Improve Your Trading?</h3>
-          <p className="text-xl mb-8 opacity-90">
-            Join thousands of traders who are already improving their performance with TradingJournal
+          <h3 className="text-4xl font-bold mb-6 text-primary-foreground">Ready to Improve Your Trading?</h3>
+          <p className="text-xl mb-8 text-primary-foreground/90 leading-relaxed">
+            Join thousands of traders who are already improving their performance with data-driven insights
           </p>
           <Link to="/auth">
-            <Button size="lg" variant="secondary" className="px-8 py-3 text-lg">
+            <Button size="lg" variant="secondary" className="interactive-scale shadow-strong px-8 py-4 text-lg">
               Start Your Free Trial
             </Button>
           </Link>
+          <div className="text-primary-foreground/80 text-sm mt-4">
+            🚀 Get started in under 2 minutes
+          </div>
         </div>
       </section>
 
