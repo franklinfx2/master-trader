@@ -1,12 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTrades } from '@/hooks/useTrades';
 import { useProfile } from '@/hooks/useProfile';
 import { Layout } from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Brain, Clock, TrendingUp, AlertCircle } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Brain, Clock, TrendingUp, AlertCircle, BarChart3, Target, Filter } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { TradingSessionChart } from '@/components/trading/TradingSessionChart';
+import { TimeOfDayChart } from '@/components/trading/TimeOfDayChart';
+import { SetupAnalysisChart } from '@/components/trading/SetupAnalysisChart';
+import { AIInsightCard } from '@/components/trading/AIInsightCard';
+import { TradeFilters } from '@/components/trading/TradeFilters';
 
 export default function Analyze() {
   const { trades } = useTrades();
@@ -14,6 +20,13 @@ export default function Analyze() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<string | null>(null);
+  const [filteredTrades, setFilteredTrades] = useState(trades);
+  const [activeTab, setActiveTab] = useState('overview');
+
+  // Update filtered trades when trades change
+  useEffect(() => {
+    setFilteredTrades(trades);
+  }, [trades]);
 
   const canAnalyze = () => {
     if (profile?.plan === 'pro') return true;
@@ -230,102 +243,211 @@ export default function Analyze() {
           </CardContent>
         </Card>
 
-        {/* Analysis Results */}
-        {analysis && (
-          <Card>
-            <CardHeader>
-              <div className="flex items-center space-x-2">
-                <TrendingUp className="w-6 h-6 text-profit" />
-                <CardTitle>Analysis Results</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="prose dark:prose-invert max-w-none">
-                <div className="whitespace-pre-wrap text-sm leading-relaxed">
-                  {analysis}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        {/* Enhanced Analysis Dashboard */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-5">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="sessions">Sessions</TabsTrigger>
+            <TabsTrigger value="timing">Timing</TabsTrigger>
+            <TabsTrigger value="setups">Setups</TabsTrigger>
+            <TabsTrigger value="ai-insights">AI Coach</TabsTrigger>
+          </TabsList>
 
-        {/* Quick Stats */}
-        <div className="grid md:grid-cols-3 gap-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Recent Performance</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Last 10 trades:</span>
-                  <span className="font-medium">
-                    {trades.slice(0, 10).filter(t => t.result === 'win').length}/10 wins
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Win rate:</span>
-                  <span className="font-medium">
-                    {trades.slice(0, 10).length > 0 
-                      ? `${((trades.slice(0, 10).filter(t => t.result === 'win').length / trades.slice(0, 10).filter(t => t.result !== 'open').length) * 100).toFixed(1)}%`
-                      : '0%'
-                    }
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <TabsContent value="overview" className="space-y-6">
+            <TradeFilters trades={trades} onFilterChange={setFilteredTrades} />
+            
+            {/* AI Coaching Insights Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <AIInsightCard trades={filteredTrades} type="session" />
+              <AIInsightCard trades={filteredTrades} type="time" />
+              <AIInsightCard trades={filteredTrades} type="setup" />
+              <AIInsightCard trades={filteredTrades} type="risk" />
+            </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Trade Distribution</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Long trades:</span>
-                  <span className="font-medium">
-                    {trades.filter(t => t.direction === 'long').length}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Short trades:</span>
-                  <span className="font-medium">
-                    {trades.filter(t => t.direction === 'short').length}
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+            {/* Key Performance Metrics */}
+            <div className="grid md:grid-cols-3 gap-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Recent Performance</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Last 10 trades:</span>
+                      <span className="font-medium">
+                        {filteredTrades.slice(0, 10).filter(t => t.result === 'win').length}/10 wins
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Win rate:</span>
+                      <span className="font-medium">
+                        {filteredTrades.slice(0, 10).length > 0 
+                          ? `${((filteredTrades.slice(0, 10).filter(t => t.result === 'win').length / filteredTrades.slice(0, 10).filter(t => t.result !== 'open').length) * 100).toFixed(1)}%`
+                          : '0%'
+                        }
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Risk Management</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Avg risk:</span>
-                  <span className="font-medium">
-                    {trades.filter(t => t.risk_pct).length > 0 
-                      ? `${(trades.filter(t => t.risk_pct).reduce((sum, t) => sum + (t.risk_pct || 0), 0) / trades.filter(t => t.risk_pct).length).toFixed(1)}%`
-                      : 'N/A'
-                    }
-                  </span>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Trade Distribution</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Long trades:</span>
+                      <span className="font-medium">
+                        {filteredTrades.filter(t => t.direction === 'long').length}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Short trades:</span>
+                      <span className="font-medium">
+                        {filteredTrades.filter(t => t.direction === 'short').length}
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Risk Management</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Avg risk:</span>
+                      <span className="font-medium">
+                        {filteredTrades.filter(t => t.risk_pct).length > 0 
+                          ? `${(filteredTrades.filter(t => t.risk_pct).reduce((sum, t) => sum + (t.risk_pct || 0), 0) / filteredTrades.filter(t => t.risk_pct).length).toFixed(1)}%`
+                          : 'N/A'
+                        }
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Avg R:R:</span>
+                      <span className="font-medium">
+                        {filteredTrades.filter(t => t.rr).length > 0 
+                          ? `1:${(filteredTrades.filter(t => t.rr).reduce((sum, t) => sum + (t.rr || 0), 0) / filteredTrades.filter(t => t.rr).length).toFixed(2)}`
+                          : 'N/A'
+                        }
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="sessions" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center space-x-2">
+                  <BarChart3 className="w-6 h-6 text-primary" />
+                  <CardTitle>Trading Sessions Performance</CardTitle>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Avg R:R:</span>
-                  <span className="font-medium">
-                    {trades.filter(t => t.rr).length > 0 
-                      ? `1:${(trades.filter(t => t.rr).reduce((sum, t) => sum + (t.rr || 0), 0) / trades.filter(t => t.rr).length).toFixed(2)}`
-                      : 'N/A'
-                    }
-                  </span>
+                <CardDescription>
+                  Analyze your win rates across different trading sessions
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <TradingSessionChart trades={filteredTrades} />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="timing" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center space-x-2">
+                  <Clock className="w-6 h-6 text-primary" />
+                  <CardTitle>Time of Day Analysis</CardTitle>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+                <CardDescription>
+                  Discover your most profitable trading hours
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <TimeOfDayChart trades={filteredTrades} />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="setups" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center space-x-2">
+                  <Target className="w-6 h-6 text-primary" />
+                  <CardTitle>Setup Analysis</CardTitle>
+                </div>
+                <CardDescription>
+                  Identify your most successful trading patterns
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <SetupAnalysisChart trades={filteredTrades} />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="ai-insights" className="space-y-6">
+            {/* AI Analysis Results */}
+            {analysis && (
+              <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+                <CardHeader>
+                  <div className="flex items-center space-x-2">
+                    <Brain className="w-6 h-6 text-primary" />
+                    <CardTitle>AI Trading Coach Analysis</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="prose dark:prose-invert max-w-none">
+                    <div className="whitespace-pre-wrap text-sm leading-relaxed bg-background/50 p-4 rounded-lg border">
+                      {analysis}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Weekly Summary Generator */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center space-x-2">
+                  <TrendingUp className="w-6 h-6 text-primary" />
+                  <CardTitle>Weekly Performance Summary</CardTitle>
+                </div>
+                <CardDescription>
+                  Get personalized insights and actionable recommendations from your AI trading coach
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
+                    <h4 className="font-medium text-blue-900 dark:text-blue-200 mb-2">💡 Your AI Trading Coach</h4>
+                    <p className="text-sm text-blue-700 dark:text-blue-300">
+                      I analyze your trading patterns to provide precise, actionable insights. Think of me as your personal trading mentor,
+                      helping you identify what's working and where you can improve.
+                    </p>
+                  </div>
+                  
+                  {!analysis && (
+                    <div className="text-center py-8">
+                      <Brain className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground mb-4">
+                        Ready to analyze your trading patterns and get personalized coaching insights?
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </Layout>
   );
