@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import edgeMindLogo from '@/assets/edge-mind-logo.png';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -44,8 +45,9 @@ export const Layout = ({ children }: LayoutProps) => {
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="flex flex-col h-full">
-          <div className="flex items-center px-6 py-4 border-b">
-            <h1 className="text-xl font-bold text-primary">TradingJournal</h1>
+          <div className="flex items-center px-6 py-4 border-b space-x-3">
+            <img src={edgeMindLogo} alt="Edge Mind" className="w-8 h-8" />
+            <h1 className="text-xl font-bold text-primary">Edge Mind</h1>
           </div>
           
           <nav className="flex-1 px-4 py-6 space-y-2">
@@ -94,7 +96,7 @@ export const Layout = ({ children }: LayoutProps) => {
           >
             <Menu className="w-5 h-5" />
           </Button>
-          <h1 className="text-lg font-semibold">TradingJournal</h1>
+          <h1 className="text-lg font-semibold">Edge Mind</h1>
           <div></div>
         </div>
 

@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import edgeMindLogo from '@/assets/edge-mind-logo.png';
 
 export default function Auth() {
   const { user, signIn, signUp } = useAuth();
@@ -35,9 +36,12 @@ export default function Auth() {
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold text-primary">TradingJournal</CardTitle>
+          <div className="flex items-center justify-center space-x-3 mb-4">
+            <img src={edgeMindLogo} alt="Edge Mind" className="w-12 h-12" />
+            <CardTitle className="text-2xl font-bold text-primary">Edge Mind</CardTitle>
+          </div>
           <CardDescription>
-            Track your trades and get AI-powered insights
+            AI-powered trading intelligence and analytics
           </CardDescription>
         </CardHeader>
         <CardContent>

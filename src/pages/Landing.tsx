@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart3, Brain, Shield, Zap, CheckCircle, TrendingUp } from 'lucide-react';
+import edgeMindLogo from '@/assets/edge-mind-logo.png';
 
 export default function Landing() {
   return (
@@ -9,9 +10,9 @@ export default function Landing() {
       {/* Header */}
       <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <TrendingUp className="w-8 h-8 text-primary" />
-            <h1 className="text-2xl font-bold text-gradient">TradingJournal</h1>
+          <div className="flex items-center space-x-3">
+            <img src={edgeMindLogo} alt="Edge Mind" className="w-10 h-10" />
+            <h1 className="text-2xl font-bold text-gradient">Edge Mind</h1>
           </div>
           <div className="space-x-2">
             <Link to="/auth">
@@ -28,11 +29,11 @@ export default function Landing() {
       <section className="py-20 px-4 gradient-card">
         <div className="container mx-auto max-w-4xl text-center">
           <h2 className="text-6xl font-bold mb-8 text-gradient">
-            Track Your Trades. Improve Your Performance.
+            AI-Powered Trading Intelligence
           </h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-            The ultimate trading journal with AI-powered insights to help you analyze your performance, 
-            identify patterns, and become a consistently profitable trader.
+            Edge Mind combines advanced AI with powerful analytics to give you the mental edge in trading. 
+            Track performance, identify patterns, and make data-driven decisions with cutting-edge insights.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <Link to="/auth">
@@ -244,7 +245,7 @@ export default function Landing() {
       {/* Footer */}
       <footer className="border-t py-8 px-4">
         <div className="container mx-auto max-w-6xl text-center text-muted-foreground">
-          <p>&copy; 2024 TradingJournal. All rights reserved.</p>
+          <p>&copy; 2024 Edge Mind. All rights reserved.</p>
         </div>
       </footer>
     </div>
