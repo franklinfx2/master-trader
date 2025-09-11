@@ -184,7 +184,7 @@ export default function Settings() {
                 <div>
                   <h3 className="text-lg font-semibold mb-2">Upgrade to Pro</h3>
                   <p className="text-muted-foreground mb-4">
-                    Get unlimited trades, unlimited AI analysis, and CSV export for just $9/month.
+                    Get unlimited trades, unlimited AI analysis, and CSV export for just ₦290/month.
                   </p>
                 </div>
                 
@@ -222,7 +222,7 @@ export default function Settings() {
                   ) : (
                     <>
                       <Crown className="w-4 h-4 mr-2" />
-                      Upgrade to Pro - $9/month
+                      Upgrade to Pro - ₦290/month
                     </>
                   )}
                 </Button>

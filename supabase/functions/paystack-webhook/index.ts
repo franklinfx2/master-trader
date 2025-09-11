@@ -51,9 +51,9 @@ serve(async (req) => {
 
     const event = JSON.parse(body)
 
-    // Handle successful payment
+    // Handle payment events
     if (event.event === 'charge.success') {
-      const { customer, metadata } = event.data
+      const { customer, metadata, status, amount } = event.data
 
       if (metadata && metadata.userId && metadata.plan === 'pro') {
         // Initialize Supabase client
@@ -76,7 +76,17 @@ serve(async (req) => {
           throw error
         }
 
-        console.log(`Successfully upgraded user ${metadata.userId} to Pro plan`)
+        console.log(`Successfully upgraded user ${metadata.userId} to Pro plan - Amount: ${amount/100} NGN`)
+      }
+    } else if (event.event === 'charge.failed' || event.event === 'charge.abandoned') {
+      // Handle failed or abandoned payments
+      const { metadata, status } = event.data
+      
+      if (metadata && metadata.userId) {
+        console.log(`Payment ${status} for user ${metadata.userId} - Plan: ${metadata.plan}`)
+        
+        // You could add additional logging or notification logic here
+        // For now, we just log the failed payment
       }
     }
 

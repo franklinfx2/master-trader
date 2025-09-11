@@ -39,7 +39,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         email: email,
-        amount: 2900000, // ₦29,000 in kobo (for Pro plan)
+        amount: 2900000, // ₦290 in kobo (for Pro plan) - Live mode amount
         currency: 'NGN',
         reference: `pro_upgrade_${userId}_${Date.now()}`,
         callback_url: `${req.headers.get('origin') || 'https://localhost:3000'}/settings`,

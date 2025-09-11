@@ -1,6 +1,6 @@
 // Paystack configuration for live mode
 export const PAYSTACK_CONFIG = {
-  publicKey: 'pk_live_your_public_key_here', // This will be replaced with your actual live public key
+  publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || 'pk_live_your_public_key_here',
   baseUrl: 'https://api.paystack.co', // Live endpoint
   currency: 'NGN',
   channels: ['card', 'bank', 'ussd', 'qr', 'mobile_money', 'bank_transfer']
