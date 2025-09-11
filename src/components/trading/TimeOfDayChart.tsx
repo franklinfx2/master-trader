@@ -20,7 +20,9 @@ export function TimeOfDayChart({ trades }: TimeOfDayChartProps) {
     }));
 
     trades.forEach(trade => {
+      if (!trade?.executed_at) return;
       const hour = new Date(trade.executed_at).getHours();
+      if (isNaN(hour)) return;
       hours[hour].total++;
       if (trade.result === 'win') hours[hour].wins++;
       if (trade.result === 'loss') hours[hour].losses++;

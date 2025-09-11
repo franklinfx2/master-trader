@@ -26,7 +26,9 @@ export function AIInsightCard({ trades, type }: AIInsightCardProps) {
 
   const analyzeSession = () => {
     const sessions = trades.reduce((acc, trade) => {
+      if (!trade?.executed_at) return acc;
       const hour = new Date(trade.executed_at).getHours();
+      if (isNaN(hour)) return acc;
       let session = 'Other';
       
       if (hour >= 0 && hour < 8) session = 'Asian';
@@ -65,7 +67,9 @@ export function AIInsightCard({ trades, type }: AIInsightCardProps) {
     const hourlyData = Array.from({ length: 24 }, () => ({ wins: 0, total: 0 }));
     
     trades.forEach(trade => {
+      if (!trade?.executed_at) return;
       const hour = new Date(trade.executed_at).getHours();
+      if (isNaN(hour)) return;
       hourlyData[hour].total++;
       if (trade.result === 'win') hourlyData[hour].wins++;
     });

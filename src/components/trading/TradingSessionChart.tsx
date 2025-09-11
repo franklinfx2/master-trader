@@ -17,7 +17,9 @@ const sessionColors = {
 export function TradingSessionChart({ trades }: TradingSessionChartProps) {
   const sessionData = useMemo(() => {
     const sessions = trades.reduce((acc, trade) => {
+      if (!trade?.executed_at) return acc;
       const hour = new Date(trade.executed_at).getHours();
+      if (isNaN(hour)) return acc;
       let session = 'Other';
       
       // Determine session based on UTC hour
