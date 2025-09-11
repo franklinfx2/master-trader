@@ -181,11 +181,17 @@ export default function Settings() {
               </div>
             ) : (
               <div className="space-y-4">
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">Upgrade to Pro</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Get unlimited trades, unlimited AI analysis, and CSV export for just ₦290/month.
+                <div className="space-y-3">
+                  <h3 className="text-2xl font-bold text-violet">Upgrade to Pro</h3>
+                  <p className="text-muted-foreground text-lg">
+                    Unlock unlimited trades, advanced AI analytics, premium insights, and exclusive features for just ₦290/month.
                   </p>
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    <span className="status-premium text-sm">Unlimited Trades</span>
+                    <span className="status-premium text-sm">AI Analysis</span>
+                    <span className="status-premium text-sm">CSV Export</span>
+                    <span className="status-premium text-sm">Premium Charts</span>
+                  </div>
                 </div>
                 
                 <div className="grid md:grid-cols-2 gap-4">
@@ -212,16 +218,18 @@ export default function Settings() {
                 <Button 
                   onClick={handleUpgrade}
                   disabled={loading}
-                  className="w-full sm:w-auto"
+                  variant="premium"
+                  size="lg"
+                  className="w-full sm:w-auto shadow-powerful"
                 >
                   {loading ? (
                     <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Processing...
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      Processing Payment...
                     </>
                   ) : (
                     <>
-                      <Crown className="w-4 h-4 mr-2" />
+                      <Crown className="w-5 h-5 mr-2" />
                       Upgrade to Pro - ₦290/month
                     </>
                   )}

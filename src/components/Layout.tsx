@@ -34,22 +34,32 @@ export const Layout = ({ children }: LayoutProps) => {
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden"
+          className="fixed inset-0 bg-background/80 backdrop-blur-md z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
+      {/* Premium Sidebar */}
       <div className={cn(
-        "fixed inset-y-0 left-0 z-50 w-64 bg-card border-r transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0",
+        "fixed inset-y-0 left-0 z-50 w-72 glass-effect border-r border-violet/20 transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0",
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="flex flex-col h-full">
-          <div className="flex items-center px-6 py-4 border-b space-x-3">
-            <img src={edgeMindLogo} alt="Edge Mind" className="w-8 h-8" />
-            <h1 className="text-xl font-bold text-primary">Edge Mind</h1>
+          {/* Premium Logo Header */}
+          <div className="relative overflow-hidden">
+            <div className="absolute inset-0 gradient-violet opacity-90" />
+            <div className="relative z-10 flex items-center px-6 py-6 space-x-3">
+              <div className="p-2 rounded-xl bg-white/20 backdrop-blur-sm">
+                <img src={edgeMindLogo} alt="Edge Mind" className="w-8 h-8" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-white">Edge Mind</h1>
+                <p className="text-sm text-white/80">Trading Journal Pro</p>
+              </div>
+            </div>
           </div>
           
+          {/* Premium Navigation */}
           <nav className="flex-1 px-4 py-6 space-y-2">
             {navigation.map((item) => {
               const isActive = location.pathname === item.href;
@@ -58,25 +68,33 @@ export const Layout = ({ children }: LayoutProps) => {
                   key={item.name}
                   to={item.href}
                   className={cn(
-                    "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                    "group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200",
                     isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                      ? "bg-violet text-white shadow-premium scale-105"
+                      : "text-muted-foreground hover:text-violet hover:bg-violet/10 hover:scale-105"
                   )}
                   onClick={() => setSidebarOpen(false)}
                 >
-                  <item.icon className="w-5 h-5 mr-3" />
-                  {item.name}
+                  <div className={cn(
+                    "p-2 rounded-lg mr-3 transition-colors",
+                    isActive 
+                      ? "bg-white/20" 
+                      : "bg-transparent group-hover:bg-violet/20"
+                  )}>
+                    <item.icon className="w-5 h-5" />
+                  </div>
+                  <span className="font-medium">{item.name}</span>
                 </Link>
               );
             })}
           </nav>
 
-          <div className="p-4 border-t">
+          {/* Premium Sign Out */}
+          <div className="p-4 border-t border-violet/20">
             <Button
               variant="outline"
               onClick={signOut}
-              className="w-full justify-start"
+              className="w-full justify-start border-violet/30 text-violet hover:bg-violet/10 hover:border-violet/50 transition-all duration-200"
             >
               <LogOut className="w-4 h-4 mr-2" />
               Sign Out
@@ -87,22 +105,30 @@ export const Layout = ({ children }: LayoutProps) => {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Mobile header */}
-        <div className="lg:hidden flex items-center justify-between p-4 border-b bg-card">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setSidebarOpen(true)}
-          >
-            <Menu className="w-5 h-5" />
-          </Button>
-          <h1 className="text-lg font-semibold">Edge Mind</h1>
-          <div></div>
+        {/* Premium Mobile header */}
+        <div className="lg:hidden glass-effect border-b border-violet/20 backdrop-blur-md">
+          <div className="flex items-center justify-between p-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSidebarOpen(true)}
+              className="text-violet hover:bg-violet/10"
+            >
+              <Menu className="w-5 h-5" />
+            </Button>
+            <div className="flex items-center space-x-2">
+              <img src={edgeMindLogo} alt="Edge Mind" className="w-6 h-6" />
+              <h1 className="text-lg font-bold text-violet">Edge Mind</h1>
+            </div>
+            <div className="w-10"></div>
+          </div>
         </div>
 
-        {/* Page content */}
-        <main className="flex-1 overflow-auto p-6">
-          {children}
+        {/* Premium Page content */}
+        <main className="flex-1 overflow-auto bg-gradient-to-br from-background via-background to-violet/5">
+          <div className="p-6 lg:p-8">
+            {children}
+          </div>
         </main>
       </div>
     </div>

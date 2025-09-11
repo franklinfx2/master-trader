@@ -2,53 +2,61 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Trading Journal Design System - Modern Flux UI with Psychological Appeal */
+/* Premium Violet Trading Journal Design System */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 0 0% 98%;
+    --foreground: 240 10% 3.9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 240 10% 3.9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 240 10% 3.9%;
 
-    --primary: 236 72% 79%;
-    --primary-foreground: 224 71.4% 4.1%;
+    /* Premium Violet Palette */
+    --primary: 281 50% 59%; /* African Violet #b674be */
+    --primary-foreground: 0 0% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 281 83% 87%; /* Wisteria #d39adc */
+    --accent-foreground: 281 50% 15%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 236 72% 79%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 281 50% 59%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
-    /* Trading specific colors - Psychologically appealing */
-    --profit: 142 86% 28%;
+    /* Premium violet variants */
+    --violet-deep: 281 70% 25%; /* Japanese Violet #552a5a */
+    --violet-light: 281 83% 87%; /* Wisteria #d39adc */
+    --violet-primary: 281 50% 59%; /* African Violet #b674be */
+
+    /* Trading specific colors */
+    --profit: 142 76% 36%;
     --profit-foreground: 355 7% 97%;
     --loss: 0 84.2% 60.2%;
     --loss-foreground: 210 40% 98%;
-    --neutral: 214 13% 51%;
-    --neutral-foreground: 210 40% 98%;
+    --neutral: 240 3.8% 46.1%;
+    --neutral-foreground: 0 0% 98%;
 
-    /* Gradients for depth and appeal */
-    --gradient-primary: linear-gradient(135deg, hsl(236 72% 79%), hsl(245 79% 67%));
-    --gradient-success: linear-gradient(135deg, hsl(142 86% 28%), hsl(152 76% 36%));
+    /* Premium gradients with violet accents */
+    --gradient-primary: linear-gradient(135deg, hsl(281 50% 59%), hsl(281 70% 45%));
+    --gradient-violet: linear-gradient(135deg, hsl(281 70% 25%), hsl(281 50% 59%));
+    --gradient-success: linear-gradient(135deg, hsl(142 76% 36%), hsl(152 76% 36%));
     --gradient-danger: linear-gradient(135deg, hsl(0 84% 60%), hsl(10 84% 65%));
-    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(210 40% 98%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(240 20% 99%));
+    --gradient-hero: linear-gradient(135deg, hsl(281 83% 87%), hsl(281 50% 59%));
     
     /* Shadows for depth */
     --shadow-sm: 0 1px 3px hsl(0 0% 0% / 0.1);
@@ -78,47 +86,55 @@
   }
 
   .dark {
-    --background: 224 71.4% 4.1%;
-    --foreground: 210 20% 98%;
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
 
-    --card: 224 71.4% 4.1%;
-    --card-foreground: 210 20% 98%;
+    --card: 240 3.7% 15.9%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 224 71.4% 4.1%;
-    --popover-foreground: 210 20% 98%;
+    --popover: 240 3.7% 15.9%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 263 70% 50.4%;
-    --primary-foreground: 210 20% 98%;
+    /* Dark mode violet palette */
+    --primary: 281 50% 59%; /* African Violet */
+    --primary-foreground: 0 0% 98%;
 
-    --secondary: 215 27.9% 16.9%;
-    --secondary-foreground: 210 20% 98%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 215 27.9% 16.9%;
-    --muted-foreground: 217.9 10.6% 64.9%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
 
-    --accent: 215 27.9% 16.9%;
-    --accent-foreground: 210 20% 98%;
+    --accent: 281 83% 87%; /* Wisteria */
+    --accent-foreground: 281 50% 15%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 20% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 215 27.9% 16.9%;
-    --input: 215 27.9% 16.9%;
-    --ring: 263 70% 50.4%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 281 50% 59%;
+
+    /* Premium violet variants for dark mode */
+    --violet-deep: 281 70% 25%; /* Japanese Violet */
+    --violet-light: 281 83% 87%; /* Wisteria */
+    --violet-primary: 281 50% 59%; /* African Violet */
 
     /* Trading specific colors for dark mode */
     --profit: 142 76% 36%;
     --profit-foreground: 355 7% 97%;
     --loss: 0 84.2% 60.2%;
     --loss-foreground: 210 40% 98%;
-    --neutral: 217.9 10.6% 64.9%;
-    --neutral-foreground: 210 20% 98%;
+    --neutral: 240 5% 64.9%;
+    --neutral-foreground: 0 0% 98%;
 
-    /* Dark mode gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(263 70% 50%), hsl(245 79% 67%));
+    /* Dark mode violet gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(281 50% 59%), hsl(281 70% 45%));
+    --gradient-violet: linear-gradient(135deg, hsl(281 70% 25%), hsl(281 50% 59%));
     --gradient-success: linear-gradient(135deg, hsl(142 76% 36%), hsl(152 76% 36%));
     --gradient-danger: linear-gradient(135deg, hsl(0 84% 60%), hsl(10 84% 65%));
-    --gradient-card: linear-gradient(135deg, hsl(224 71% 4%), hsl(215 28% 17%));
+    --gradient-card: linear-gradient(135deg, hsl(240 3.7% 15.9%), hsl(240 10% 20%));
+    --gradient-hero: linear-gradient(135deg, hsl(281 70% 25%), hsl(281 50% 59%));
     
     /* Dark mode shadows */
     --shadow-sm: 0 1px 3px hsl(0 0% 0% / 0.3);
@@ -147,9 +163,17 @@
 }
 
 @layer components {
-  /* Gradient utilities */
+  /* Premium Violet Gradient utilities */
   .gradient-primary {
     background: var(--gradient-primary);
+  }
+  
+  .gradient-violet {
+    background: var(--gradient-violet);
+  }
+  
+  .gradient-hero {
+    background: var(--gradient-hero);
   }
   
   .gradient-success {
@@ -164,7 +188,11 @@
     background: var(--gradient-card);
   }
 
-  /* Shadow utilities */
+  /* Premium shadow utilities */
+  .shadow-premium {
+    box-shadow: 0 8px 32px hsl(281 50% 59% / 0.15);
+  }
+  
   .shadow-soft {
     box-shadow: var(--shadow-md);
   }
@@ -177,6 +205,12 @@
     box-shadow: var(--shadow-xl);
   }
 
+  /* Premium violet glass effect */
+  .glass-effect {
+    @apply backdrop-blur-lg bg-card/80 border border-border/50;
+    box-shadow: 0 8px 32px hsl(281 50% 59% / 0.1);
+  }
+
   /* Animation utilities */
   .transition-smooth {
     transition: var(--transition-smooth);
@@ -186,16 +220,31 @@
     transition: var(--transition-spring);
   }
 
-  /* Card enhancements */
-  .card-enhanced {
-    @apply bg-card border shadow-soft transition-smooth hover:shadow-strong;
+  /* Premium card enhancements */
+  .card-premium {
+    @apply bg-card border border-border/50 shadow-premium transition-smooth hover:shadow-powerful rounded-2xl;
     background: var(--gradient-card);
   }
 
-  /* Button enhancements */
+  .card-enhanced {
+    @apply bg-card border shadow-soft transition-smooth hover:shadow-strong rounded-xl;
+    background: var(--gradient-card);
+  }
+
+  /* Premium button variants */
+  .btn-premium {
+    background: var(--gradient-primary);
+    @apply text-primary-foreground font-semibold px-6 py-3 rounded-xl shadow-soft transition-spring hover:scale-105 hover:shadow-strong active:scale-95;
+  }
+
   .btn-gradient {
     background: var(--gradient-primary);
     @apply text-primary-foreground transition-spring hover:scale-105 active:scale-95;
+  }
+  
+  .btn-violet {
+    background: var(--gradient-violet);
+    @apply text-white font-medium transition-spring hover:scale-105 active:scale-95;
   }
   
   .btn-success {
@@ -222,17 +271,22 @@
     filter: brightness(1.1) contrast(1.1);
   }
 
-  /* Status indicators */
+  /* Premium status indicators */
   .status-profit {
-    @apply bg-profit/20 text-profit border-profit/30;
+    @apply bg-profit/10 text-profit border border-profit/20 rounded-lg px-3 py-1;
   }
   
   .status-loss {
-    @apply bg-loss/20 text-loss border-loss/30;
+    @apply bg-loss/10 text-loss border border-loss/20 rounded-lg px-3 py-1;
   }
   
   .status-neutral {
-    @apply bg-neutral/20 text-neutral border-neutral/30;
+    @apply bg-neutral/10 text-neutral border border-neutral/20 rounded-lg px-3 py-1;
+  }
+
+  /* Premium violet indicators */
+  .status-premium {
+    @apply bg-primary/10 text-primary border border-primary/20 rounded-lg px-3 py-1 font-medium;
   }
 
   /* Typography */
@@ -241,5 +295,35 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  .text-violet-gradient {
+    background: var(--gradient-violet);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Premium hero section */
+  .hero-premium {
+    background: var(--gradient-hero);
+    @apply text-white;
+  }
+
+  /* Violet accent utilities */
+  .border-violet {
+    border-color: hsl(var(--primary));
+  }
+
+  .ring-violet {
+    --tw-ring-color: hsl(var(--primary));
+  }
+
+  .bg-violet {
+    background-color: hsl(var(--primary));
+  }
+
+  .text-violet {
+    color: hsl(var(--primary));
   }
 }

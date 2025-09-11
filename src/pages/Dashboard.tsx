@@ -31,40 +31,56 @@ export default function Dashboard() {
 
   return (
     <Layout>
-      <div className="space-y-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-4xl font-bold text-gradient mb-2">Dashboard</h1>
-            <p className="text-muted-foreground text-lg">
-              Welcome back! Here's your trading overview.
-            </p>
+      <div className="space-y-8 p-2">
+        {/* Premium Hero Section */}
+        <div className="relative overflow-hidden rounded-3xl p-8 md:p-12">
+          <div className="absolute inset-0 gradient-hero opacity-90" />
+          <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between">
+            <div className="space-y-4 text-white">
+              <h1 className="text-4xl md:text-5xl font-bold">
+                Welcome back, Trader! 
+              </h1>
+              <p className="text-lg md:text-xl text-white/90 max-w-2xl">
+                Track your performance, analyze your trades, and maximize your trading potential with our premium analytics suite.
+              </p>
+            </div>
+            <div className="mt-6 md:mt-0 flex flex-col sm:flex-row gap-3">
+              <Link to="/trades">
+                <Button variant="premium" size="lg" className="w-full sm:w-auto shadow-powerful">
+                  <Plus className="w-5 h-5 mr-2" />
+                  Add New Trade
+                </Button>
+              </Link>
+              <Link to="/analyze">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto bg-white/10 border-white/20 text-white hover:bg-white/20">
+                  <BarChart3 className="w-5 h-5 mr-2" />
+                  View Analytics
+                </Button>
+              </Link>
+            </div>
           </div>
-          <Link to="/trades">
-            <Button className="btn-gradient shadow-soft">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Trade
-            </Button>
-          </Link>
         </div>
 
-        {/* Plan Notice */}
+        {/* Premium Plan Notice */}
         {profile?.plan === 'free' && trades.length >= 20 && (
-          <Card className="border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950 shadow-soft">
+          <Card className="card-premium border-violet/20 bg-violet/5">
             <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="text-2xl">⚠️</div>
-                  <div>
-                    <p className="text-amber-800 dark:text-amber-200 font-medium">
-                      You've reached the 20 trade limit on the free plan.
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-start space-x-4">
+                  <div className="p-3 rounded-xl bg-violet/10 text-violet">
+                    <TrendingUp className="w-6 h-6" />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-violet font-semibold text-lg">
+                      You've reached the 20 trade limit
                     </p>
-                    <p className="text-amber-600 dark:text-amber-400 text-sm">
-                      Upgrade to Pro for unlimited trades and advanced features.
+                    <p className="text-muted-foreground">
+                      Unlock unlimited trades, advanced analytics, and premium features with Pro.
                     </p>
                   </div>
                 </div>
                 <Link to="/settings">
-                  <Button variant="outline" size="sm" className="interactive-scale">
+                  <Button variant="premium" size="lg" className="w-full sm:w-auto shadow-premium">
                     Upgrade to Pro
                   </Button>
                 </Link>
@@ -73,126 +89,151 @@ export default function Dashboard() {
           </Card>
         )}
 
-        {/* Stats Grid */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="card-enhanced glow-effect">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        {/* Premium Stats Grid */}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <Card className="card-premium group hover:scale-105 transition-all duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">Total Trades</CardTitle>
-              <BarChart3 className="h-5 w-5 text-primary" />
+              <div className="p-2 rounded-lg bg-violet/10 group-hover:bg-violet/20 transition-colors">
+                <BarChart3 className="h-5 w-5 text-violet" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-primary">{stats?.trade_count || 0}</div>
-              <p className="text-xs text-muted-foreground mt-1">
+              <div className="text-3xl font-bold text-violet mb-1">{stats?.trade_count || 0}</div>
+              <p className="text-sm text-muted-foreground">
                 {profile?.plan === 'free' ? `${20 - (stats?.trade_count || 0)} remaining` : 'Unlimited'}
               </p>
             </CardContent>
           </Card>
 
-          <Card className="card-enhanced glow-effect">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <Card className="card-premium group hover:scale-105 transition-all duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">Win Rate</CardTitle>
-              <TrendingUp className="h-5 w-5 text-profit" />
+              <div className="p-2 rounded-lg bg-profit/10 group-hover:bg-profit/20 transition-colors">
+                <TrendingUp className="h-5 w-5 text-profit" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-profit">
+              <div className="text-3xl font-bold text-profit mb-1">
                 {stats?.win_rate ? `${stats.win_rate.toFixed(1)}%` : '0%'}
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                {stats?.win_rate && stats.win_rate > 50 ? 'Above average' : 'Keep improving'}
+              <p className="text-sm text-muted-foreground">
+                {stats?.win_rate && stats.win_rate > 50 ? 'Above average 🎯' : 'Keep improving 📈'}
               </p>
             </CardContent>
           </Card>
 
-          <Card className="card-enhanced glow-effect">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Avg Risk:Reward</CardTitle>
-              <TrendingUp className="h-5 w-5 text-primary" />
+          <Card className="card-premium group hover:scale-105 transition-all duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Risk:Reward</CardTitle>
+              <div className="p-2 rounded-lg bg-violet/10 group-hover:bg-violet/20 transition-colors">
+                <TrendingUp className="h-5 w-5 text-violet" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-primary">
+              <div className="text-3xl font-bold text-violet mb-1">
                 {stats?.avg_rr ? `1:${stats.avg_rr.toFixed(2)}` : '1:0'}
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                {stats?.avg_rr && stats.avg_rr > 2 ? 'Excellent ratio' : 'Aim for 1:2+'}
+              <p className="text-sm text-muted-foreground">
+                {stats?.avg_rr && stats.avg_rr > 2 ? 'Excellent ratio ⭐' : 'Aim for 1:2+ 🎯'}
               </p>
             </CardContent>
           </Card>
 
-          <Card className="card-enhanced glow-effect">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <Card className="card-premium group hover:scale-105 transition-all duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">Total P&L</CardTitle>
-              <DollarSign className={`h-5 w-5 ${(stats?.total_pnl || 0) >= 0 ? 'text-profit' : 'text-loss'}`} />
+              <div className={`p-2 rounded-lg transition-colors ${
+                (stats?.total_pnl || 0) >= 0 
+                  ? 'bg-profit/10 group-hover:bg-profit/20' 
+                  : 'bg-loss/10 group-hover:bg-loss/20'
+              }`}>
+                <DollarSign className={`h-5 w-5 ${(stats?.total_pnl || 0) >= 0 ? 'text-profit' : 'text-loss'}`} />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className={`text-3xl font-bold ${
+              <div className={`text-3xl font-bold mb-1 ${
                 (stats?.total_pnl || 0) >= 0 ? 'text-profit' : 'text-loss'
               }`}>
                 {stats?.total_pnl ? formatCurrency(stats.total_pnl) : '$0.00'}
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                {(stats?.total_pnl || 0) >= 0 ? 'Profitable' : 'Work on strategy'}
+              <p className="text-sm text-muted-foreground">
+                {(stats?.total_pnl || 0) >= 0 ? 'Profitable 💰' : 'Work on strategy 📚'}
               </p>
             </CardContent>
           </Card>
         </div>
 
-        {/* Recent Trades */}
-        <Card className="card-enhanced">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-xl">Recent Trades</CardTitle>
-                <CardDescription>Your last 5 trades performance</CardDescription>
+        {/* Premium Recent Trades */}
+        <Card className="card-premium">
+          <CardHeader className="pb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <CardTitle className="text-2xl font-bold text-violet">Recent Trades</CardTitle>
+                <CardDescription className="text-base">Your latest trading performance at a glance</CardDescription>
               </div>
               <Link to="/trades">
-                <Button variant="outline" size="sm" className="interactive-scale">
-                  View All
+                <Button variant="violet" size="lg" className="w-full sm:w-auto shadow-strong">
+                  <BarChart3 className="w-4 h-4 mr-2" />
+                  View All Trades
                 </Button>
               </Link>
             </div>
           </CardHeader>
           <CardContent>
             {recentTrades.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="text-6xl mb-4">📊</div>
-                <p className="text-muted-foreground mb-6 text-lg">No trades yet</p>
+              <div className="text-center py-16">
+                <div className="mx-auto w-20 h-20 rounded-full bg-violet/10 flex items-center justify-center mb-6">
+                  <BarChart3 className="w-10 h-10 text-violet" />
+                </div>
+                <h3 className="text-xl font-semibold text-violet mb-2">Start Your Trading Journey</h3>
+                <p className="text-muted-foreground mb-8 text-lg max-w-md mx-auto">
+                  Record your first trade to unlock powerful analytics and performance insights.
+                </p>
                 <Link to="/trades">
-                  <Button className="btn-gradient shadow-soft">
-                    <Plus className="w-4 h-4 mr-2" />
+                  <Button variant="premium" size="lg" className="shadow-powerful">
+                    <Plus className="w-5 h-5 mr-2" />
                     Add Your First Trade
                   </Button>
                 </Link>
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {recentTrades.map((trade) => (
-                  <div key={trade.id} className="flex items-center justify-between p-4 border rounded-lg transition-smooth hover:shadow-soft interactive-scale">
-                    <div className="flex items-center space-x-4">
-                      <div className={`px-3 py-1 rounded-full text-xs font-medium border ${
-                        trade.direction === 'long' 
-                          ? 'status-profit' 
-                          : 'status-loss'
-                      }`}>
-                        {trade.direction.toUpperCase()}
+                  <div key={trade.id} className="group p-5 border border-border/50 rounded-xl hover:shadow-premium transition-all duration-300 hover:scale-[1.02] glass-effect">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      <div className="flex items-center space-x-4">
+                        <div className={`px-4 py-2 rounded-xl text-sm font-semibold border-2 transition-colors ${
+                          trade.direction === 'long' 
+                            ? 'bg-profit/10 text-profit border-profit/30 group-hover:bg-profit/20' 
+                            : 'bg-loss/10 text-loss border-loss/30 group-hover:bg-loss/20'
+                        }`}>
+                          {trade.direction.toUpperCase()}
+                        </div>
+                        <div className="space-y-1">
+                          <p className="font-bold text-lg text-foreground">{trade.pair}</p>
+                          <p className="text-sm text-muted-foreground">
+                            Entry: <span className="font-medium">${trade.entry}</span>
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-semibold text-foreground">{trade.pair}</p>
-                        <p className="text-sm text-muted-foreground">
-                          Entry: ${trade.entry}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className={`font-bold text-lg ${
-                        trade.result === 'win' ? 'text-profit' :
-                        trade.result === 'loss' ? 'text-loss' :
-                        'text-neutral'
-                      }`}>
-                        {trade.result === 'open' ? 'OPEN' : 
-                         trade.pnl ? formatCurrency(trade.pnl) : '-'}
-                      </div>
-                      <div className="text-sm text-muted-foreground capitalize">
-                        {trade.result === 'open' ? 'Active Position' : trade.result}
+                      <div className="text-right space-y-1">
+                        <div className={`font-bold text-xl ${
+                          trade.result === 'win' ? 'text-profit' :
+                          trade.result === 'loss' ? 'text-loss' :
+                          'text-violet'
+                        }`}>
+                          {trade.result === 'open' ? 'ACTIVE' : 
+                           trade.pnl ? formatCurrency(trade.pnl) : '-'}
+                        </div>
+                        <div className={`text-sm font-medium px-3 py-1 rounded-lg ${
+                          trade.result === 'win' ? 'bg-profit/10 text-profit' :
+                          trade.result === 'loss' ? 'bg-loss/10 text-loss' :
+                          trade.result === 'open' ? 'bg-violet/10 text-violet' :
+                          'bg-neutral/10 text-neutral'
+                        }`}>
+                          {trade.result === 'open' ? 'Active Position' : trade.result.toUpperCase()}
+                        </div>
                       </div>
                     </div>
                   </div>
