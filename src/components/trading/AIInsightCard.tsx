@@ -83,10 +83,17 @@ export function AIInsightCard({ trades, type }: AIInsightCardProps) {
       .filter(h => h.total >= 2)
       .sort((a, b) => b.winRate - a.winRate)[0];
 
-    const displayHour = bestHour?.hour === 0 ? '12 AM' : 
-                      bestHour?.hour === 12 ? '12 PM' : 
-                      bestHour?.hour < 12 ? `${bestHour.hour} AM` : 
-                      `${bestHour.hour - 12} PM`;
+    const displayHour = bestHour
+      ? (
+          bestHour.hour === 0
+            ? '12 AM'
+            : bestHour.hour === 12
+              ? '12 PM'
+              : bestHour.hour < 12
+                ? `${bestHour.hour} AM`
+                : `${bestHour.hour - 12} PM`
+        )
+      : 'N/A';
 
     return {
       title: 'Optimal Trading Time',
