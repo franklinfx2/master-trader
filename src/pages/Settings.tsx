@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useProfile } from '@/hooks/useProfile';
 import { Layout } from '@/components/Layout';
 import { Button } from '@/components/ui/button';
@@ -9,9 +9,53 @@ import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
 export default function Settings() {
-  const { profile, updateProfile } = useProfile();
+  const { profile, updateProfile, fetchProfile } = useProfile();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+
+  // Check for payment verification on page load
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const reference = urlParams.get('reference');
+    
+    if (reference) {
+      verifyPayment(reference);
+      // Clean up URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
+
+  const verifyPayment = async (reference: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('verify-paystack-payment', {
+        body: { reference }
+      });
+
+      if (error) throw error;
+
+      if (data.success) {
+        toast({
+          title: "Payment Successful!",
+          description: "Your account has been upgraded to Pro. Welcome!",
+        });
+        // Refresh profile data
+        await fetchProfile();
+      } else {
+        toast({
+          title: "Payment Verification Failed",
+          description: data.message || "Unable to verify payment. Please contact support.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Payment verification error:', error);
+      toast({
+        title: "Verification Error",
+        description: "There was an error verifying your payment. Please contact support.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleUpgrade = async () => {
     setLoading(true);
