@@ -2,22 +2,22 @@
 export const PAYSTACK_CONFIG = {
   publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || 'pk_live_your_public_key_here',
   baseUrl: 'https://api.paystack.co', // Live endpoint
-  currency: 'NGN',
-  channels: ['card', 'bank', 'ussd', 'qr', 'mobile_money', 'bank_transfer']
+  currency: 'USD',
+  channels: ['card']
 };
 
-// Utility function to format amount in kobo
-export const formatAmountToKobo = (amount: number): number => {
+// Utility function to format amount in cents
+export const formatAmountToCents = (amount: number): number => {
   return Math.round(amount * 100);
 };
 
-// Utility function to format kobo to naira
-export const formatKoboToNaira = (kobo: number): string => {
-  const naira = kobo / 100;
-  return new Intl.NumberFormat('en-NG', {
+// Utility function to format cents to dollars
+export const formatCentsToDollars = (cents: number): string => {
+  const dollars = cents / 100;
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'NGN',
-  }).format(naira);
+    currency: 'USD',
+  }).format(dollars);
 };
 
 // Plan configurations
@@ -33,7 +33,7 @@ export const PLANS = {
   },
   pro: {
     name: 'Pro',
-    price: 29000, // ₦29,000 in kobo
+    price: 4900, // $49.00 in cents
     features: [
       'Unlimited trades',
       'Advanced analytics', 

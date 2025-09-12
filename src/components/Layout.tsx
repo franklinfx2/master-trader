@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
-import edgeMindLogo from '@/assets/edge-mind-logo.png';
+// import edgeMindLogo from '@/assets/edge-mind-logo.png';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -48,13 +48,13 @@ export const Layout = ({ children }: LayoutProps) => {
           {/* Premium Logo Header */}
           <div className="relative overflow-hidden">
             <div className="absolute inset-0 gradient-violet opacity-90" />
-            <div className="relative z-10 flex items-center px-6 py-6 space-x-3">
-              <div className="p-2 rounded-xl bg-white/20 backdrop-blur-sm">
-                <img src={edgeMindLogo} alt="Edge Mind" className="w-8 h-8" />
-              </div>
+            <div className="relative z-10 flex items-center px-6 py-6">
               <div>
-                <h1 className="text-xl font-bold text-white">Edge Mind</h1>
-                <p className="text-sm text-white/80">Trading Journal Pro</p>
+                <h1 className="text-2xl font-bold text-white tracking-tight">
+                  Master Trader
+                  <span className="text-white/90 font-light"> AI</span>
+                </h1>
+                <p className="text-sm text-white/80 font-medium">Advanced Trading Journal</p>
               </div>
             </div>
           </div>
@@ -117,8 +117,9 @@ export const Layout = ({ children }: LayoutProps) => {
               <Menu className="w-5 h-5" />
             </Button>
             <div className="flex items-center space-x-2">
-              <img src={edgeMindLogo} alt="Edge Mind" className="w-6 h-6" />
-              <h1 className="text-lg font-bold text-violet">Edge Mind</h1>
+              <h1 className="text-lg font-bold text-violet tracking-tight">
+                Master Trader <span className="text-violet/80 font-light">AI</span>
+              </h1>
             </div>
             <div className="w-10"></div>
           </div>

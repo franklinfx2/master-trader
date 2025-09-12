@@ -39,8 +39,8 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         email: email,
-        amount: 2900000, // ₦290 in kobo (for Pro plan) - Live mode amount
-        currency: 'NGN',
+        amount: 4900, // $49.00 in cents (for Pro plan)
+        currency: 'USD',
         reference: `pro_upgrade_${userId}_${Date.now()}`,
         callback_url: `${req.headers.get('origin') || 'https://localhost:3000'}/settings`,
         metadata: {
@@ -48,7 +48,7 @@ serve(async (req) => {
           plan: 'pro',
           upgrade: true
         },
-        channels: ['card', 'bank', 'ussd', 'qr', 'mobile_money', 'bank_transfer']
+        channels: ['card']
       }),
     })
 
