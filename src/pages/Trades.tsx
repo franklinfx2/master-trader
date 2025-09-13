@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Plus, Edit, Trash2, Filter } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { ScreenshotUpload } from '@/components/trading/ScreenshotUpload';
 
 export default function Trades() {
   const { trades, loading, addTrade, updateTrade, deleteTrade } = useTrades();
@@ -31,6 +32,7 @@ export default function Trades() {
     result: 'open' as 'win' | 'loss' | 'be' | 'open',
     notes: '',
   });
+  const [screenshots, setScreenshots] = useState<string[]>([]);
 
   const resetForm = () => {
     setFormData({
@@ -44,6 +46,7 @@ export default function Trades() {
       result: 'open',
       notes: '',
     });
+    setScreenshots([]);
     setEditingTrade(null);
   };
 
@@ -287,6 +290,12 @@ export default function Trades() {
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   />
                 </div>
+
+                <ScreenshotUpload
+                  screenshots={screenshots}
+                  onScreenshotsChange={setScreenshots}
+                  disabled={profile?.plan !== 'pro'}
+                />
 
                 <div className="flex justify-end space-x-2">
                   <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>

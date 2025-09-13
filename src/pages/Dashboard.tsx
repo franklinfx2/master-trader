@@ -164,6 +164,97 @@ export default function Dashboard() {
           </Card>
         </div>
 
+        {/* Pro Plan Highlight Card */}
+        <Card className="card-premium border-violet/30 bg-gradient-to-r from-violet/10 via-violet/5 to-violet/10">
+          <CardContent className="pt-6">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+              <div className="flex items-start space-x-4">
+                <div className="p-4 rounded-2xl bg-violet text-white shadow-premium">
+                  <TrendingUp className="w-8 h-8" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-bold text-violet">Upgrade to Pro - $9/month</h3>
+                  <p className="text-muted-foreground text-lg mb-4">
+                    Unlock the full power of Master Trader AI with premium features
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-violet rounded-full"></div>
+                      <span>Advanced analytics & insights</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-violet rounded-full"></div>
+                      <span>Unlimited trade history</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-violet rounded-full"></div>
+                      <span>Screenshot uploads</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-violet rounded-full"></div>
+                      <span>Premium AI insights</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <Link to="/settings">
+                <Button variant="premium" size="lg" className="w-full lg:w-auto shadow-powerful text-lg px-8 py-4">
+                  Start Pro Trial
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Testimonials Section */}
+        <Card className="card-premium">
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold text-violet text-center">
+              Trusted by Traders Worldwide
+            </CardTitle>
+            <CardDescription className="text-center text-lg">
+              Join thousands of successful traders using Master Trader AI
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="glass-effect p-6 rounded-xl border border-violet/20">
+                <div className="flex items-center space-x-1 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="w-4 h-4 text-yellow-400">⭐</div>
+                  ))}
+                </div>
+                <p className="text-sm mb-4 italic">
+                  "Master Trader AI completely changed how I track my trades! The insights are incredible."
+                </p>
+                <p className="text-xs text-muted-foreground font-medium">- Sarah M., Day Trader</p>
+              </div>
+              <div className="glass-effect p-6 rounded-xl border border-violet/20">
+                <div className="flex items-center space-x-1 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="w-4 h-4 text-yellow-400">⭐</div>
+                  ))}
+                </div>
+                <p className="text-sm mb-4 italic">
+                  "Worth every cent — professional, easy to use, and powerful. Best trading journal I've used."
+                </p>
+                <p className="text-xs text-muted-foreground font-medium">- Mike R., Forex Trader</p>
+              </div>
+              <div className="glass-effect p-6 rounded-xl border border-violet/20">
+                <div className="flex items-center space-x-1 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="w-4 h-4 text-yellow-400">⭐</div>
+                  ))}
+                </div>
+                <p className="text-sm mb-4 italic">
+                  "The Pro plan at $9/month feels like a steal for what it offers. Amazing analytics!"
+                </p>
+                <p className="text-xs text-muted-foreground font-medium">- Alex T., Swing Trader</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Premium Recent Trades */}
         <Card className="card-premium">
           <CardHeader className="pb-4">

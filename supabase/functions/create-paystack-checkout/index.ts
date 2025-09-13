@@ -39,7 +39,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         email: email,
-        amount: 4900, // $49.00 in cents (for Pro plan)
+        amount: 900, // $9.00 in cents (for Pro plan)
         currency: 'USD',
         reference: `pro_upgrade_${userId}_${Date.now()}`,
         callback_url: `${req.headers.get('origin') || 'https://localhost:3000'}/settings`,

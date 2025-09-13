@@ -395,18 +395,57 @@ export default function Analyze() {
           </TabsContent>
 
           <TabsContent value="ai-insights" className="space-y-6">
+            {/* Premium AI Coach Header */}
+            <div className="relative overflow-hidden rounded-2xl p-8 glass-effect border border-violet/20">
+              <div className="absolute inset-0 bg-gradient-to-r from-violet/20 via-violet/10 to-violet/20" />
+              <div className="relative z-10 text-center space-y-4">
+                <div className="mx-auto w-16 h-16 rounded-full bg-violet text-white flex items-center justify-center shadow-premium">
+                  <Brain className="w-8 h-8" />
+                </div>
+                <h2 className="text-3xl font-bold text-violet">AI Trading Coach</h2>
+                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                  Your personal AI mentor analyzing every aspect of your trading performance to maximize profitability
+                </p>
+              </div>
+            </div>
+
+            {/* Premium Navigation Buttons */}
+            <div className="flex flex-wrap gap-3 justify-center">
+              <Button variant="violet" size="lg" className="shadow-strong">
+                <Target className="w-5 h-5 mr-2" />
+                Risk Management
+              </Button>
+              <Button variant="outline" size="lg" className="border-violet/30 hover:bg-violet/10">
+                <TrendingUp className="w-5 h-5 mr-2" />
+                Performance Patterns
+              </Button>
+              <Button variant="outline" size="lg" className="border-violet/30 hover:bg-violet/10">
+                <Clock className="w-5 h-5 mr-2" />
+                Timing Analysis
+              </Button>
+              <Button variant="outline" size="lg" className="border-violet/30 hover:bg-violet/10">
+                <BarChart3 className="w-5 h-5 mr-2" />
+                Setup Optimization
+              </Button>
+            </div>
+
             {/* AI Analysis Results */}
             {analysis && (
-              <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+              <Card className="card-premium border-violet/30 bg-gradient-to-br from-violet/5 to-transparent">
                 <CardHeader>
-                  <div className="flex items-center space-x-2">
-                    <Brain className="w-6 h-6 text-primary" />
-                    <CardTitle>AI Trading Coach Analysis</CardTitle>
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 rounded-lg bg-violet/10">
+                      <Brain className="w-6 h-6 text-violet" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-2xl text-violet">AI Trading Coach Analysis</CardTitle>
+                      <CardDescription className="text-base">Personalized insights from your trading data</CardDescription>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <div className="prose dark:prose-invert max-w-none">
-                    <div className="whitespace-pre-wrap text-sm leading-relaxed bg-background/50 p-4 rounded-lg border">
+                    <div className="whitespace-pre-wrap text-sm leading-relaxed glass-effect p-6 rounded-xl border border-violet/20">
                       {analysis}
                     </div>
                   </div>
@@ -414,38 +453,98 @@ export default function Analyze() {
               </Card>
             )}
 
-            {/* Weekly Summary Generator */}
-            <Card>
+            {/* Premium AI Coach Description */}
+            <Card className="card-premium">
               <CardHeader>
-                <div className="flex items-center space-x-2">
-                  <TrendingUp className="w-6 h-6 text-primary" />
-                  <CardTitle>Weekly Performance Summary</CardTitle>
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 rounded-lg bg-violet/10">
+                    <TrendingUp className="w-6 h-6 text-violet" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-2xl text-violet">What Your AI Coach Analyzes</CardTitle>
+                    <CardDescription className="text-base">Comprehensive trading performance analysis</CardDescription>
+                  </div>
                 </div>
-                <CardDescription>
-                  Get personalized insights and actionable recommendations from your AI trading coach
-                </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div className="p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
-                    <h4 className="font-medium text-blue-900 dark:text-blue-200 mb-2">💡 Your AI Trading Coach</h4>
-                    <p className="text-sm text-blue-700 dark:text-blue-300">
-                      I analyze your trading patterns to provide precise, actionable insights. Think of me as your personal trading mentor,
-                      helping you identify what's working and where you can improve.
-                    </p>
-                  </div>
-                  
-                  {!analysis && (
-                    <div className="text-center py-8">
-                      <Brain className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                      <p className="text-muted-foreground mb-4">
-                        Ready to analyze your trading patterns and get personalized coaching insights?
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div className="glass-effect p-4 rounded-xl border border-violet/20">
+                      <h4 className="font-semibold text-violet mb-2 flex items-center">
+                        <Target className="w-4 h-4 mr-2" />
+                        Risk Management Analysis
+                      </h4>
+                      <p className="text-sm text-muted-foreground">
+                        Analyzes your position sizing, risk-to-reward ratios, and stop-loss placement to identify optimal risk levels and prevent overexposure.
                       </p>
                     </div>
-                  )}
+                    <div className="glass-effect p-4 rounded-xl border border-violet/20">
+                      <h4 className="font-semibold text-violet mb-2 flex items-center">
+                        <Clock className="w-4 h-4 mr-2" />
+                        Timing & Session Performance
+                      </h4>
+                      <p className="text-sm text-muted-foreground">
+                        Identifies your most profitable trading hours and market sessions to help you focus your efforts when you perform best.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="glass-effect p-4 rounded-xl border border-violet/20">
+                      <h4 className="font-semibold text-violet mb-2 flex items-center">
+                        <BarChart3 className="w-4 h-4 mr-2" />
+                        Setup & Pattern Recognition
+                      </h4>
+                      <p className="text-sm text-muted-foreground">
+                        Evaluates your trading setups and entry/exit patterns to highlight your most successful strategies and eliminate losing patterns.
+                      </p>
+                    </div>
+                    <div className="glass-effect p-4 rounded-xl border border-violet/20">
+                      <h4 className="font-semibold text-violet mb-2 flex items-center">
+                        <TrendingUp className="w-4 h-4 mr-2" />
+                        Profitability Optimization
+                      </h4>
+                      <p className="text-sm text-muted-foreground">
+                        Provides actionable recommendations to improve win rates, reduce drawdowns, and maximize your overall trading profitability.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-6 p-6 bg-gradient-to-r from-violet/10 via-violet/5 to-violet/10 rounded-xl border border-violet/20">
+                  <h4 className="font-bold text-violet mb-3 text-lg">🎯 Key Benefits of AI Analysis</h4>
+                  <div className="grid md:grid-cols-2 gap-4 text-sm">
+                    <div className="flex items-start space-x-2">
+                      <div className="w-2 h-2 bg-violet rounded-full mt-2"></div>
+                      <span><strong>Identify blind spots</strong> in your trading that you might miss</span>
+                    </div>
+                    <div className="flex items-start space-x-2">
+                      <div className="w-2 h-2 bg-violet rounded-full mt-2"></div>
+                      <span><strong>Data-driven insights</strong> based on your actual performance</span>
+                    </div>
+                    <div className="flex items-start space-x-2">
+                      <div className="w-2 h-2 bg-violet rounded-full mt-2"></div>
+                      <span><strong>Personalized recommendations</strong> tailored to your trading style</span>
+                    </div>
+                    <div className="flex items-start space-x-2">
+                      <div className="w-2 h-2 bg-violet rounded-full mt-2"></div>
+                      <span><strong>Continuous improvement</strong> through regular analysis</span>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
+                  
+            {!analysis && (
+              <div className="text-center py-12">
+                <div className="mx-auto w-16 h-16 rounded-full bg-violet/10 flex items-center justify-center mb-6">
+                  <Brain className="w-8 h-8 text-violet" />
+                </div>
+                <h3 className="text-xl font-semibold text-violet mb-2">Ready for AI Analysis</h3>
+                <p className="text-muted-foreground mb-8">
+                  Analyze your trades to unlock personalized insights and optimization strategies.
+                </p>
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </div>

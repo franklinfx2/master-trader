@@ -182,11 +182,11 @@ export default function Settings() {
               </div>
             ) : (
               <div className="space-y-4">
-                <div className="space-y-3">
-                  <h3 className="text-2xl font-bold text-violet">Upgrade to Pro</h3>
-                   <p className="text-muted-foreground text-lg">
-                     Unlock unlimited trades, advanced AI analytics, premium insights, and exclusive features for just {formatCentsToDollars(PLANS.pro.price)}/month.
-                   </p>
+                 <div className="space-y-3">
+                   <h3 className="text-2xl font-bold text-violet">Upgrade to Pro</h3>
+                    <p className="text-muted-foreground text-lg">
+                      Unlock unlimited trades, advanced AI analytics, premium insights, and exclusive features for just $9/month.
+                    </p>
                   <div className="flex flex-wrap gap-2 mt-3">
                     <span className="status-premium text-sm">Unlimited Trades</span>
                     <span className="status-premium text-sm">AI Analysis</span>
@@ -229,12 +229,12 @@ export default function Settings() {
                       Processing Payment...
                     </>
                   ) : (
-                     <>
-                       <Crown className="w-5 h-5 mr-2" />
-                       Upgrade to Pro - {formatCentsToDollars(PLANS.pro.price)}/month
-                     </>
-                  )}
-                </Button>
+                      <>
+                        <Crown className="w-5 h-5 mr-2" />
+                        Upgrade to Pro - $9/month
+                      </>
+                   )}
+                 </Button>
               </div>
             )}
           </CardContent>
