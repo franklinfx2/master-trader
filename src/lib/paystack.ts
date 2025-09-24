@@ -7,8 +7,8 @@ export const PAYSTACK_CONFIG = {
     ? import.meta.env.VITE_PAYSTACK_LIVE_PUBLIC_KEY || 'pk_live_your_public_key_here'
     : import.meta.env.VITE_PAYSTACK_TEST_PUBLIC_KEY || 'pk_test_your_test_key_here',
   baseUrl: 'https://api.paystack.co',
-  currency: 'USD',
-  channels: ['card'],
+  currency: 'GHS',
+  channels: ['card', 'mobile_money'],
   isProduction
 };
 
@@ -17,13 +17,13 @@ export const formatAmountToCents = (amount: number): number => {
   return Math.round(amount * 100);
 };
 
-// Utility function to format cents to dollars
-export const formatCentsToDollars = (cents: number): string => {
-  const dollars = cents / 100;
-  return new Intl.NumberFormat('en-US', {
+// Utility function to format pesewas to cedis
+export const formatPesewasToGHS = (pesewas: number): string => {
+  const cedis = pesewas / 100;
+  return new Intl.NumberFormat('en-GH', {
     style: 'currency',
-    currency: 'USD',
-  }).format(dollars);
+    currency: 'GHS',
+  }).format(cedis);
 };
 
 // Check if user is in free trial period (3 days)
@@ -57,7 +57,7 @@ export const PLANS = {
   },
   pro: {
     name: 'Pro',
-    price: 900, // $9.00 in cents
+    price: 12000, // ₵120.00 in pesewas
     features: [
       'Unlimited trades',
       'Advanced analytics', 

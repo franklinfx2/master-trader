@@ -24,18 +24,15 @@ serve(async (req) => {
       )
     }
 
-    // Get environment variables for Paystack keys
-    const isProduction = req.headers.get('host')?.includes('strat-guru.lovable.app') || false;
-    const paystackSecretKey = isProduction 
-      ? Deno.env.get('PAYSTACK_LIVE_SECRET_KEY')
-      : Deno.env.get('PAYSTACK_TEST_SECRET_KEY');
+    // Always use live keys for production
+    const paystackSecretKey = Deno.env.get('PAYSTACK_LIVE_SECRET_KEY');
       
     if (!paystackSecretKey) {
-      throw new Error(`Paystack ${isProduction ? 'live' : 'test'} secret key not configured`)
+      throw new Error('Paystack live secret key not configured')
     }
 
-    // Single Pro plan pricing - $9/month
-    const amount = 900; // $9.00 in cents
+    // Single Pro plan pricing - ₵120/month
+    const amount = 12000; // ₵120.00 in pesewas
 
     // Create Paystack checkout session
     const paystackResponse = await fetch('https://api.paystack.co/transaction/initialize', {
@@ -47,7 +44,7 @@ serve(async (req) => {
       body: JSON.stringify({
         email: email,
         amount: amount,
-        currency: 'USD',
+        currency: 'GHS',
         reference: `${plan}_upgrade_${userId}_${Date.now()}`,
         callback_url: 'https://strat-guru.lovable.app/callback',
         metadata: {
@@ -55,7 +52,7 @@ serve(async (req) => {
           plan: plan,
           upgrade: true
         },
-        channels: ['card']
+        channels: ['card', 'mobile_money']
       }),
     })
 

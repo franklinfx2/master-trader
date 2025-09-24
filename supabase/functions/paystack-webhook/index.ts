@@ -13,15 +13,11 @@ serve(async (req) => {
   }
 
   try {
-    // Get the appropriate secret key based on environment
-    const host = req.headers.get('host') || '';
-    const isProduction = host.includes('strat-guru.lovable.app');
-    const paystackSecretKey = isProduction 
-      ? Deno.env.get('PAYSTACK_LIVE_SECRET_KEY')
-      : Deno.env.get('PAYSTACK_TEST_SECRET_KEY');
+    // Always use live keys for production
+    const paystackSecretKey = Deno.env.get('PAYSTACK_LIVE_SECRET_KEY');
       
     if (!paystackSecretKey) {
-      throw new Error(`Paystack ${isProduction ? 'live' : 'test'} secret key not configured`)
+      throw new Error('Paystack live secret key not configured')
     }
 
     // Verify Paystack webhook signature
@@ -85,7 +81,7 @@ serve(async (req) => {
           throw error
         }
 
-        console.log(`Successfully upgraded user ${metadata.userId} to ${planToSet} plan - Amount: ${amount/100} USD`)
+        console.log(`Successfully upgraded user ${metadata.userId} to ${planToSet} plan - Amount: ₵${amount/100} GHS`)
       }
     } else if (event.event === 'charge.failed' || event.event === 'charge.abandoned') {
       // Handle failed or abandoned payments

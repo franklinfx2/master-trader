@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Crown, CreditCard, User, CheckCircle } from 'lucide-react';
-import { formatCentsToDollars, PLANS, isInFreeTrial, getTrialDaysRemaining } from '@/lib/paystack';
+import { formatPesewasToGHS, PLANS, isInFreeTrial, getTrialDaysRemaining } from '@/lib/paystack';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -209,7 +209,7 @@ export default function Settings() {
                 <div className="space-y-3">
                   <h3 className="text-2xl font-bold text-violet">Upgrade to Pro</h3>
                   <p className="text-muted-foreground text-lg">
-                    Unlock unlimited trades, advanced AI analytics, premium insights, and exclusive features for just $9/month.
+                    Unlock unlimited trades, advanced AI analytics, premium insights, and exclusive features for just ₵120/month.
                   </p>
                   <div className="flex flex-wrap gap-2 mt-3">
                     <span className="status-premium text-sm">Unlimited Trades</span>
@@ -229,7 +229,7 @@ export default function Settings() {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-medium mb-2 text-primary">Pro Plan ($9/month)</h4>
+                    <h4 className="font-medium mb-2 text-primary">Pro Plan (₵120/month)</h4>
                     <ul className="space-y-1 text-sm">
                       <li>• Unlimited trades</li>
                       <li>• Advanced analytics</li>
@@ -257,8 +257,8 @@ export default function Settings() {
                     <>
                       <Crown className="w-5 h-5 mr-2" />
                       {profile?.created_at && isInFreeTrial(profile.created_at) 
-                        ? 'Continue with Pro - $9/month' 
-                        : 'Upgrade to Pro - $9/month'
+                        ? 'Continue with Pro - ₵120/month' 
+                        : 'Upgrade to Pro - ₵120/month'
                       }
                     </>
                   )}
