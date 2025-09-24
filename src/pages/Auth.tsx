@@ -37,8 +37,8 @@ export default function Auth() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex items-center justify-center space-x-3 mb-4">
-            <img src={edgeMindLogo} alt="Edge Mind" className="w-12 h-12" />
-            <CardTitle className="text-2xl font-bold text-primary">Edge Mind</CardTitle>
+            <img src={edgeMindLogo} alt="Master Trader AI" className="w-12 h-12" />
+            <CardTitle className="text-2xl font-bold text-primary">Master Trader AI</CardTitle>
           </div>
           <CardDescription>
             AI-powered trading intelligence and analytics
