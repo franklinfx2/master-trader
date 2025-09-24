@@ -12,10 +12,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Plus, Edit, Trash2, Filter } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { ScreenshotUpload } from '@/components/trading/ScreenshotUpload';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Trades() {
   const { trades, loading, addTrade, updateTrade, deleteTrade } = useTrades();
   const { profile } = useProfile();
+  const { user } = useAuth();
   const { toast } = useToast();
   
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -50,6 +53,46 @@ export default function Trades() {
     setEditingTrade(null);
   };
 
+  const uploadScreenshots = async (screenshots: string[]): Promise<string[]> => {
+    if (!user || screenshots.length === 0) return [];
+
+    const uploadedUrls: string[] = [];
+    
+    for (const screenshot of screenshots) {
+      if (screenshot.startsWith('data:')) {
+        // Convert base64 to blob
+        const response = await fetch(screenshot);
+        const blob = await response.blob();
+        
+        // Generate unique filename
+        const fileExt = blob.type.split('/')[1];
+        const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+        
+        // Upload to Supabase storage
+        const { data, error } = await supabase.storage
+          .from('screenshots')
+          .upload(fileName, blob);
+          
+        if (error) {
+          console.error('Error uploading screenshot:', error);
+          continue;
+        }
+        
+        // Get the public URL
+        const { data: { publicUrl } } = supabase.storage
+          .from('screenshots')
+          .getPublicUrl(data.path);
+          
+        uploadedUrls.push(publicUrl);
+      } else {
+        // URL is already uploaded
+        uploadedUrls.push(screenshot);
+      }
+    }
+    
+    return uploadedUrls;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -63,48 +106,61 @@ export default function Trades() {
       return;
     }
 
-    const tradeData: any = {
-      pair: formData.pair,
-      direction: formData.direction,
-      entry: parseFloat(formData.entry),
-      exit: formData.exit ? parseFloat(formData.exit) : undefined,
-      sl: formData.sl ? parseFloat(formData.sl) : undefined,
-      tp: formData.tp ? parseFloat(formData.tp) : undefined,
-      risk_pct: formData.risk_pct ? parseFloat(formData.risk_pct) : undefined,
-      result: formData.result,
-      notes: formData.notes || undefined,
-      executed_at: new Date().toISOString(),
-    };
+    try {
+      // Upload screenshots first
+      const uploadedScreenshots = await uploadScreenshots(screenshots);
 
-    // Calculate P&L and RR if exit is provided
-    if (tradeData.exit) {
-      const entryPrice = tradeData.entry;
-      const exitPrice = tradeData.exit;
-      
-      if (formData.direction === 'long') {
-        tradeData.pnl = exitPrice - entryPrice;
-      } else {
-        tradeData.pnl = entryPrice - exitPrice;
+      const tradeData: any = {
+        pair: formData.pair,
+        direction: formData.direction,
+        entry: parseFloat(formData.entry),
+        exit: formData.exit ? parseFloat(formData.exit) : undefined,
+        sl: formData.sl ? parseFloat(formData.sl) : undefined,
+        tp: formData.tp ? parseFloat(formData.tp) : undefined,
+        risk_pct: formData.risk_pct ? parseFloat(formData.risk_pct) : undefined,
+        result: formData.result,
+        notes: formData.notes || undefined,
+        screenshot_url: uploadedScreenshots.length > 0 ? uploadedScreenshots[0] : undefined,
+        executed_at: new Date().toISOString(),
+      };
+
+      // Calculate P&L and RR if exit is provided
+      if (tradeData.exit) {
+        const entryPrice = tradeData.entry;
+        const exitPrice = tradeData.exit;
+        
+        if (formData.direction === 'long') {
+          tradeData.pnl = exitPrice - entryPrice;
+        } else {
+          tradeData.pnl = entryPrice - exitPrice;
+        }
+
+        // Calculate RR if stop loss is provided
+        if (tradeData.sl) {
+          const risk = Math.abs(entryPrice - tradeData.sl);
+          const reward = Math.abs(tradeData.pnl);
+          tradeData.rr = risk > 0 ? reward / risk : 0;
+        }
       }
 
-      // Calculate RR if stop loss is provided
-      if (tradeData.sl) {
-        const risk = Math.abs(entryPrice - tradeData.sl);
-        const reward = Math.abs(tradeData.pnl);
-        tradeData.rr = risk > 0 ? reward / risk : 0;
+      const { error } = editingTrade 
+        ? await updateTrade(editingTrade.id, tradeData)
+        : await addTrade(tradeData);
+
+      if (!error) {
+        setIsDialogOpen(false);
+        resetForm();
+        toast({
+          title: editingTrade ? "Trade Updated" : "Trade Added",
+          description: editingTrade ? "Trade has been updated successfully." : "New trade has been added successfully.",
+        });
       }
-    }
-
-    const { error } = editingTrade 
-      ? await updateTrade(editingTrade.id, tradeData)
-      : await addTrade(tradeData);
-
-    if (!error) {
-      setIsDialogOpen(false);
-      resetForm();
+    } catch (err) {
+      console.error('Error submitting trade:', err);
       toast({
-        title: editingTrade ? "Trade Updated" : "Trade Added",
-        description: editingTrade ? "Trade has been updated successfully." : "New trade has been added successfully.",
+        title: "Error",
+        description: "Failed to save trade. Please try again.",
+        variant: "destructive",
       });
     }
   };
@@ -122,6 +178,8 @@ export default function Trades() {
       result: trade.result,
       notes: trade.notes || '',
     });
+    // Load existing screenshot if available
+    setScreenshots(trade.screenshot_url ? [trade.screenshot_url] : []);
     setIsDialogOpen(true);
   };
 
