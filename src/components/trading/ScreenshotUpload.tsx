@@ -2,8 +2,11 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Camera, X, Eye } from 'lucide-react';
+import { Camera, X, Eye, Upload } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/components/ui/use-toast';
 
 interface ScreenshotUploadProps {
   screenshots: string[];
@@ -13,26 +16,116 @@ interface ScreenshotUploadProps {
 
 export const ScreenshotUpload = ({ screenshots, onScreenshotsChange, disabled }: ScreenshotUploadProps) => {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const { user } = useAuth();
+  const { toast } = useToast();
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (!files) return;
+    if (!files || !user) return;
 
-    Array.from(files).forEach(file => {
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const result = e.target?.result as string;
-          if (result) {
-            onScreenshotsChange([...screenshots, result]);
-          }
-        };
-        reader.readAsDataURL(file);
+    if (screenshots.length + files.length > 5) {
+      toast({
+        title: "Too many files",
+        description: "You can only upload up to 5 screenshots per trade.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setUploading(true);
+    const newScreenshots: string[] = [];
+
+    try {
+      for (const file of Array.from(files)) {
+        // Validate file type
+        if (!file.type.startsWith('image/') || 
+            !['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)) {
+          toast({
+            title: "Invalid file type",
+            description: "Please upload PNG, JPG, or JPEG files only.",
+            variant: "destructive",
+          });
+          continue;
+        }
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          toast({
+            title: "File too large",
+            description: `${file.name} is too large. Maximum size is 5MB.`,
+            variant: "destructive",
+          });
+          continue;
+        }
+
+        // Generate unique filename
+        const fileExt = file.name.split('.').pop() || 'jpg';
+        const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+        // Upload to Supabase storage
+        const { data, error } = await supabase.storage
+          .from('screenshots')
+          .upload(fileName, file);
+
+        if (error) {
+          console.error('Upload error:', error);
+          toast({
+            title: "Upload failed",
+            description: `Failed to upload ${file.name}. Please try again.`,
+            variant: "destructive",
+          });
+          continue;
+        }
+
+        // Get the public URL
+        const { data: { publicUrl } } = supabase.storage
+          .from('screenshots')
+          .getPublicUrl(data.path);
+
+        newScreenshots.push(publicUrl);
       }
-    });
+
+      if (newScreenshots.length > 0) {
+        onScreenshotsChange([...screenshots, ...newScreenshots]);
+        toast({
+          title: "Upload successful",
+          description: `${newScreenshots.length} screenshot(s) uploaded successfully.`,
+        });
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        title: "Upload error",
+        description: "An unexpected error occurred during upload.",
+        variant: "destructive",
+      });
+    } finally {
+      setUploading(false);
+      // Reset the input
+      event.target.value = '';
+    }
   };
 
-  const removeScreenshot = (index: number) => {
+  const removeScreenshot = async (index: number) => {
+    const screenshotUrl = screenshots[index];
+    
+    // If it's a Supabase storage URL, delete from storage
+    if (screenshotUrl.includes('supabase') && user) {
+      try {
+        // Extract file path from URL
+        const urlParts = screenshotUrl.split('/');
+        const fileName = urlParts[urlParts.length - 1];
+        const filePath = `${user.id}/${fileName}`;
+        
+        await supabase.storage
+          .from('screenshots')
+          .remove([filePath]);
+      } catch (error) {
+        console.error('Error deleting file:', error);
+      }
+    }
+    
     const newScreenshots = screenshots.filter((_, i) => i !== index);
     onScreenshotsChange(newScreenshots);
   };
@@ -50,27 +143,34 @@ export const ScreenshotUpload = ({ screenshots, onScreenshotsChange, disabled }:
       <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
         <input
           type="file"
-          accept="image/*"
+          accept="image/png,image/jpeg,image/jpg"
           multiple
           onChange={handleFileUpload}
           className="hidden"
           id="screenshot-upload"
-          disabled={disabled || screenshots.length >= 5}
+          disabled={disabled || screenshots.length >= 5 || uploading}
         />
         <label 
           htmlFor="screenshot-upload" 
-          className={`cursor-pointer ${disabled ? 'cursor-not-allowed opacity-50' : ''}`}
+          className={`cursor-pointer ${disabled || uploading ? 'cursor-not-allowed opacity-50' : ''}`}
         >
           <div className="flex flex-col items-center space-y-2">
             <div className="p-3 rounded-full bg-violet/10">
-              <Camera className="w-6 h-6 text-violet" />
+              {uploading ? (
+                <Upload className="w-6 h-6 text-violet animate-pulse" />
+              ) : (
+                <Camera className="w-6 h-6 text-violet" />
+              )}
             </div>
             <div>
               <p className="text-sm font-medium">
-                {screenshots.length >= 5 ? 'Maximum screenshots reached' : 'Upload trade screenshots'}
+                {uploading ? 'Uploading...' :
+                 screenshots.length >= 5 ? 'Maximum screenshots reached' : 
+                 disabled ? 'Upgrade to Pro to upload screenshots' :
+                 'Upload trade screenshots'}
               </p>
               <p className="text-xs text-muted-foreground">
-                PNG, JPG up to 5MB each (max 5 files)
+                PNG, JPG, JPEG up to 5MB each (max 5 files)
               </p>
             </div>
           </div>

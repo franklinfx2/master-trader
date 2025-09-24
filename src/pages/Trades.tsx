@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus, Edit, Trash2, Filter } from 'lucide-react';
+import { Plus, Edit, Trash2, Filter, Eye } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { ScreenshotUpload } from '@/components/trading/ScreenshotUpload';
 import { supabase } from '@/integrations/supabase/client';
@@ -53,45 +53,6 @@ export default function Trades() {
     setEditingTrade(null);
   };
 
-  const uploadScreenshots = async (screenshots: string[]): Promise<string[]> => {
-    if (!user || screenshots.length === 0) return [];
-
-    const uploadedUrls: string[] = [];
-    
-    for (const screenshot of screenshots) {
-      if (screenshot.startsWith('data:')) {
-        // Convert base64 to blob
-        const response = await fetch(screenshot);
-        const blob = await response.blob();
-        
-        // Generate unique filename
-        const fileExt = blob.type.split('/')[1];
-        const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-        
-        // Upload to Supabase storage
-        const { data, error } = await supabase.storage
-          .from('screenshots')
-          .upload(fileName, blob);
-          
-        if (error) {
-          console.error('Error uploading screenshot:', error);
-          continue;
-        }
-        
-        // Get the public URL
-        const { data: { publicUrl } } = supabase.storage
-          .from('screenshots')
-          .getPublicUrl(data.path);
-          
-        uploadedUrls.push(publicUrl);
-      } else {
-        // URL is already uploaded
-        uploadedUrls.push(screenshot);
-      }
-    }
-    
-    return uploadedUrls;
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,9 +68,6 @@ export default function Trades() {
     }
 
     try {
-      // Upload screenshots first
-      const uploadedScreenshots = await uploadScreenshots(screenshots);
-
       const tradeData: any = {
         pair: formData.pair,
         direction: formData.direction,
@@ -120,7 +78,7 @@ export default function Trades() {
         risk_pct: formData.risk_pct ? parseFloat(formData.risk_pct) : undefined,
         result: formData.result,
         notes: formData.notes || undefined,
-        screenshot_url: uploadedScreenshots.length > 0 ? uploadedScreenshots[0] : undefined,
+        screenshot_url: screenshots.length > 0 ? screenshots[0] : undefined,
         executed_at: new Date().toISOString(),
       };
 
@@ -354,6 +312,12 @@ export default function Trades() {
                   onScreenshotsChange={setScreenshots}
                   disabled={profile?.plan !== 'pro'}
                 />
+                
+                {profile?.plan !== 'pro' && (
+                  <div className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
+                    <p>📷 Screenshot uploads are available for Pro users only.</p>
+                  </div>
+                )}
 
                 <div className="flex justify-end space-x-2">
                   <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
@@ -453,6 +417,30 @@ export default function Trades() {
                   {trade.notes && (
                     <div className="mt-4 p-3 bg-muted rounded-md">
                       <p className="text-sm">{trade.notes}</p>
+                    </div>
+                  )}
+                  {trade.screenshot_url && (
+                    <div className="mt-4">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="sm">
+                            <Eye className="w-4 h-4 mr-2" />
+                            View Screenshot
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-4xl">
+                          <DialogHeader>
+                            <DialogTitle>Trade Screenshot - {trade.pair}</DialogTitle>
+                          </DialogHeader>
+                          <div className="max-h-[70vh] overflow-auto">
+                            <img
+                              src={trade.screenshot_url}
+                              alt={`Screenshot for ${trade.pair} trade`}
+                              className="w-full h-auto rounded-md"
+                            />
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   )}
                 </CardContent>
