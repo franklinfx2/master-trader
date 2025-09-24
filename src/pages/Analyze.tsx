@@ -13,6 +13,9 @@ import { TimeOfDayChart } from '@/components/trading/TimeOfDayChart';
 import { SetupAnalysisChart } from '@/components/trading/SetupAnalysisChart';
 import { AIInsightCard } from '@/components/trading/AIInsightCard';
 import { TradeFilters } from '@/components/trading/TradeFilters';
+import { OpenAITester } from '@/components/testing/OpenAITester';
+import { AIFeaturesSummary } from '@/components/ai/AIFeaturesSummary';
+import { EndToEndAITest } from '@/components/testing/EndToEndAITest';
 
 export default function Analyze() {
   const { trades } = useTrades();
@@ -80,7 +83,18 @@ export default function Analyze() {
         body: { trades: recentTrades }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw error;
+      }
+
+      if (!data) {
+        throw new Error('No data received from analysis function');
+      }
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
 
       setAnalysis(data.analysis);
       
@@ -95,9 +109,28 @@ export default function Analyze() {
       });
     } catch (error) {
       console.error('Analysis error:', error);
+      
+      let errorMessage = "There was an error analyzing your trades. Please try again.";
+      
+      if (error instanceof Error) {
+        if (error.message.includes('API key')) {
+          errorMessage = "OpenAI API key is not configured. Please check your settings.";
+        } else if (error.message.includes('quota')) {
+          errorMessage = "OpenAI API quota exceeded. Please check your billing or try again later.";
+        } else if (error.message.includes('401')) {
+          errorMessage = "Invalid OpenAI API key. Please check your configuration.";
+        } else if (error.message.includes('429')) {
+          errorMessage = "OpenAI API quota exceeded. Please check your billing or try again later.";
+        } else if (error.message.includes('No data received')) {
+          errorMessage = "Analysis service is not responding. Please try again.";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       toast({
         title: "Analysis Failed",
-        description: "There was an error analyzing your trades. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -168,6 +201,13 @@ export default function Analyze() {
               )}
             </Button>
           </div>
+        </div>
+
+        {/* AI System Status & Testing */}
+        <div className="grid lg:grid-cols-3 gap-6">
+          <OpenAITester />
+          <AIFeaturesSummary />
+          <EndToEndAITest />
         </div>
 
         {/* Analysis Card */}

@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { AIStatusIndicator } from '@/components/ai/AIStatusIndicator';
 // import edgeMindLogo from '@/assets/edge-mind-logo.png';
 
 interface LayoutProps {
@@ -105,6 +106,28 @@ export const Layout = ({ children }: LayoutProps) => {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Premium Desktop Header */}
+        <div className="hidden lg:block glass-effect border-b border-violet/20 backdrop-blur-md">
+          <div className="flex items-center justify-between p-4">
+            <div className="flex items-center space-x-4">
+              <h1 className="text-xl font-bold text-violet tracking-tight">
+                Master Trader <span className="text-violet/80 font-light">AI</span>
+              </h1>
+            </div>
+            <div className="flex items-center space-x-4">
+              <AIStatusIndicator />
+              <Button 
+                variant="outline" 
+                size="sm"
+                asChild
+                className="border-violet/30 text-violet hover:bg-violet/10"
+              >
+                <Link to="/settings">Settings</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+
         {/* Premium Mobile header */}
         <div className="lg:hidden glass-effect border-b border-violet/20 backdrop-blur-md">
           <div className="flex items-center justify-between p-4">
@@ -121,7 +144,7 @@ export const Layout = ({ children }: LayoutProps) => {
                 Master Trader <span className="text-violet/80 font-light">AI</span>
               </h1>
             </div>
-            <div className="w-10"></div>
+            <AIStatusIndicator />
           </div>
         </div>
 
