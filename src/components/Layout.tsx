@@ -12,6 +12,8 @@ import {
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { AIStatusIndicator } from '@/components/ai/AIStatusIndicator';
+import { MobileBottomNav } from '@/components/MobileBottomNav';
+import { useIsMobile } from '@/hooks/use-mobile';
 // import edgeMindLogo from '@/assets/edge-mind-logo.png';
 
 interface LayoutProps {
@@ -22,6 +24,7 @@ export const Layout = ({ children }: LayoutProps) => {
   const { signOut } = useAuth();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -149,12 +152,21 @@ export const Layout = ({ children }: LayoutProps) => {
         </div>
 
         {/* Premium Page content */}
-        <main className="flex-1 overflow-auto bg-gradient-to-br from-background via-background to-violet/5">
-          <div className="p-6 lg:p-8">
+        <main className={cn(
+          "flex-1 overflow-auto bg-gradient-to-br from-background via-background to-violet/5",
+          isMobile ? "pb-20" : ""
+        )}>
+          <div className={cn(
+            "transition-all duration-300",
+            isMobile ? "p-4 space-y-4" : "p-6 lg:p-8"
+          )}>
             {children}
           </div>
         </main>
       </div>
+      
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav />
     </div>
   );
 };

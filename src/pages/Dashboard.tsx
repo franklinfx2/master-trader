@@ -5,10 +5,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Plus, TrendingUp, TrendingDown, BarChart3, DollarSign } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { cn } from '@/lib/utils';
 
 export default function Dashboard() {
   const { trades, stats, loading } = useTrades();
   const { profile } = useProfile();
+  const isMobile = useIsMobile();
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -31,28 +34,51 @@ export default function Dashboard() {
 
   return (
     <Layout>
-      <div className="space-y-8 p-2">
-        {/* Premium Hero Section */}
-        <div className="relative overflow-hidden rounded-3xl p-8 md:p-12">
+      <div className={cn(
+        "animate-fade-in",
+        isMobile ? "space-y-4" : "space-y-8 p-2"
+      )}>
+        {/* Premium Hero Section - Mobile Optimized */}
+        <div className={cn(
+          "relative overflow-hidden rounded-3xl animate-scale-in",
+          isMobile ? "p-6" : "p-8 md:p-12"
+        )}>
           <div className="absolute inset-0 gradient-hero opacity-90" />
-          <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between">
-            <div className="space-y-4 text-white">
-              <h1 className="text-4xl md:text-5xl font-bold">
+          <div className="relative z-10 flex flex-col items-start justify-between space-y-6">
+            <div className="space-y-3 text-white">
+              <h1 className={cn(
+                "font-bold leading-tight",
+                isMobile ? "text-2xl" : "text-4xl md:text-5xl"
+              )}>
                 Welcome back, Trader! 
               </h1>
-              <p className="text-lg md:text-xl text-white/90 max-w-2xl">
-                Track your performance, analyze your trades, and maximize your trading potential with our premium analytics suite.
+              <p className={cn(
+                "text-white/90 leading-relaxed",
+                isMobile ? "text-base" : "text-lg md:text-xl max-w-2xl"
+              )}>
+                Track your performance, analyze your trades, and maximize your trading potential.
               </p>
             </div>
-            <div className="mt-6 md:mt-0 flex flex-col sm:flex-row gap-3">
-              <Link to="/trades">
-                <Button variant="premium" size="lg" className="w-full sm:w-auto shadow-powerful">
+            <div className={cn(
+              "flex gap-3 w-full",
+              isMobile ? "flex-col" : "flex-col sm:flex-row"
+            )}>
+              <Link to="/trades" className={isMobile ? "w-full" : ""}>
+                <Button 
+                  variant="premium" 
+                  size={isMobile ? "default" : "lg"} 
+                  className="w-full shadow-powerful transition-transform hover:scale-105"
+                >
                   <Plus className="w-5 h-5 mr-2" />
                   Add New Trade
                 </Button>
               </Link>
-              <Link to="/analyze">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto bg-white/10 border-white/20 text-white hover:bg-white/20">
+              <Link to="/analyze" className={isMobile ? "w-full" : ""}>
+                <Button 
+                  variant="outline" 
+                  size={isMobile ? "default" : "lg"} 
+                  className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20 transition-transform hover:scale-105"
+                >
                   <BarChart3 className="w-5 h-5 mr-2" />
                   View Analytics
                 </Button>
@@ -61,26 +87,39 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Premium Plan Notice */}
+        {/* Premium Plan Notice - Mobile Optimized */}
         {profile?.plan === 'free' && trades.length >= 20 && (
-          <Card className="card-premium border-violet/20 bg-violet/5">
-            <CardContent className="pt-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="flex items-start space-x-4">
-                  <div className="p-3 rounded-xl bg-violet/10 text-violet">
-                    <TrendingUp className="w-6 h-6" />
+          <Card className="card-premium border-violet/20 bg-violet/5 animate-slide-up">
+            <CardContent className={cn("pt-6", isMobile && "p-4")}>
+              <div className="flex flex-col gap-4">
+                <div className="flex items-start space-x-3">
+                  <div className={cn(
+                    "rounded-xl bg-violet/10 text-violet transition-transform hover:scale-105",
+                    isMobile ? "p-2" : "p-3"
+                  )}>
+                    <TrendingUp className={cn(isMobile ? "w-5 h-5" : "w-6 h-6")} />
                   </div>
-                  <div className="space-y-1">
-                    <p className="text-violet font-semibold text-lg">
+                  <div className="space-y-1 flex-1">
+                    <p className={cn(
+                      "text-violet font-semibold",
+                      isMobile ? "text-base" : "text-lg"
+                    )}>
                       You've reached the 20 trade limit
                     </p>
-                    <p className="text-muted-foreground">
+                    <p className={cn(
+                      "text-muted-foreground",
+                      isMobile ? "text-sm" : ""
+                    )}>
                       Unlock unlimited trades, advanced analytics, and premium features with Pro.
                     </p>
                   </div>
                 </div>
-                <Link to="/settings">
-                  <Button variant="premium" size="lg" className="w-full sm:w-auto shadow-premium">
+                <Link to="/settings" className="w-full">
+                  <Button 
+                    variant="premium" 
+                    size={isMobile ? "default" : "lg"} 
+                    className="w-full shadow-premium transition-transform hover:scale-105"
+                  >
                     Upgrade to Pro
                   </Button>
                 </Link>
@@ -89,35 +128,80 @@ export default function Dashboard() {
           </Card>
         )}
 
-        {/* Premium Stats Grid */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Premium Stats Grid - Mobile Optimized */}
+        <div className={cn(
+          "grid gap-4 animate-fade-in",
+          isMobile ? "grid-cols-2" : "gap-6 sm:grid-cols-2 lg:grid-cols-4"
+        )}>
           <Card className="card-premium group hover:scale-105 transition-all duration-300">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Total Trades</CardTitle>
-              <div className="p-2 rounded-lg bg-violet/10 group-hover:bg-violet/20 transition-colors">
-                <BarChart3 className="h-5 w-5 text-violet" />
+            <CardHeader className={cn(
+              "flex flex-row items-center justify-between space-y-0",
+              isMobile ? "pb-2 p-4" : "pb-3"
+            )}>
+              <CardTitle className={cn(
+                "font-medium text-muted-foreground",
+                isMobile ? "text-xs" : "text-sm"
+              )}>
+                Total Trades
+              </CardTitle>
+              <div className={cn(
+                "rounded-lg bg-violet/10 group-hover:bg-violet/20 transition-colors",
+                isMobile ? "p-1.5" : "p-2"
+              )}>
+                <BarChart3 className={cn(
+                  "text-violet",
+                  isMobile ? "h-4 w-4" : "h-5 w-5"
+                )} />
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-violet mb-1">{stats?.trade_count || 0}</div>
-              <p className="text-sm text-muted-foreground">
+            <CardContent className={cn(isMobile && "px-4 pb-4")}>
+              <div className={cn(
+                "font-bold text-violet mb-1",
+                isMobile ? "text-xl" : "text-3xl"
+              )}>
+                {stats?.trade_count || 0}
+              </div>
+              <p className={cn(
+                "text-muted-foreground",
+                isMobile ? "text-xs" : "text-sm"
+              )}>
                 {profile?.plan === 'free' ? `${20 - (stats?.trade_count || 0)} remaining` : 'Unlimited'}
               </p>
             </CardContent>
           </Card>
 
           <Card className="card-premium group hover:scale-105 transition-all duration-300">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Win Rate</CardTitle>
-              <div className="p-2 rounded-lg bg-profit/10 group-hover:bg-profit/20 transition-colors">
-                <TrendingUp className="h-5 w-5 text-profit" />
+            <CardHeader className={cn(
+              "flex flex-row items-center justify-between space-y-0",
+              isMobile ? "pb-2 p-4" : "pb-3"
+            )}>
+              <CardTitle className={cn(
+                "font-medium text-muted-foreground",
+                isMobile ? "text-xs" : "text-sm"
+              )}>
+                Win Rate
+              </CardTitle>
+              <div className={cn(
+                "rounded-lg bg-profit/10 group-hover:bg-profit/20 transition-colors",
+                isMobile ? "p-1.5" : "p-2"
+              )}>
+                <TrendingUp className={cn(
+                  "text-profit",
+                  isMobile ? "h-4 w-4" : "h-5 w-5"
+                )} />
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-profit mb-1">
+            <CardContent className={cn(isMobile && "px-4 pb-4")}>
+              <div className={cn(
+                "font-bold text-profit mb-1",
+                isMobile ? "text-xl" : "text-3xl"
+              )}>
                 {stats?.win_rate ? `${stats.win_rate.toFixed(1)}%` : '0%'}
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className={cn(
+                "text-muted-foreground",
+                isMobile ? "text-xs" : "text-sm"
+              )}>
                 {stats?.win_rate && stats.win_rate > 50 ? 'Above average 🎯' : 'Keep improving 📈'}
               </p>
             </CardContent>

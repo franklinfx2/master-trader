@@ -8,11 +8,14 @@ import { Crown, CreditCard, User, CheckCircle } from 'lucide-react';
 import { formatPesewasToGHS, PLANS, isInFreeTrial, getTrialDaysRemaining } from '@/lib/paystack';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { cn } from '@/lib/utils';
 
 export default function Settings() {
   const { profile, updateProfile, fetchProfile } = useProfile();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const isMobile = useIsMobile();
 
   // Check for payment verification on page load
   useEffect(() => {
@@ -105,31 +108,70 @@ export default function Settings() {
 
   return (
     <Layout>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold">Settings</h1>
-          <p className="text-muted-foreground">
+      <div className={cn(
+        "animate-fade-in",
+        isMobile ? "space-y-4" : "space-y-6"
+      )}>
+        <div className="space-y-1">
+          <h1 className={cn(
+            "font-bold text-violet",
+            isMobile ? "text-2xl" : "text-3xl"
+          )}>
+            Settings
+          </h1>
+          <p className={cn(
+            "text-muted-foreground",
+            isMobile ? "text-sm" : ""
+          )}>
             Manage your account and subscription
           </p>
         </div>
 
-        {/* Profile Card */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center space-x-2">
-              <User className="w-6 h-6" />
-              <CardTitle>Profile</CardTitle>
+        {/* Profile Card - Mobile Optimized */}
+        <Card className="card-premium animate-scale-in">
+          <CardHeader className={cn(isMobile && "p-4 pb-2")}>
+            <div className="flex items-center space-x-3">
+              <div className="p-2 rounded-lg bg-violet/10">
+                <User className={cn(
+                  "text-violet",
+                  isMobile ? "w-5 h-5" : "w-6 h-6"
+                )} />
+              </div>
+              <CardTitle className={cn(
+                "text-violet",
+                isMobile ? "text-lg" : "text-xl"
+              )}>
+                Profile
+              </CardTitle>
             </div>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
+          <CardContent className={cn(isMobile && "p-4 pt-2")}>
+            <div className={cn(isMobile ? "space-y-3" : "space-y-4")}>
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Email</label>
-                <p className="text-lg">{profile?.email}</p>
+                <label className={cn(
+                  "font-medium text-muted-foreground",
+                  isMobile ? "text-xs" : "text-sm"
+                )}>
+                  Email
+                </label>
+                <p className={cn(
+                  "font-medium",
+                  isMobile ? "text-base" : "text-lg"
+                )}>
+                  {profile?.email}
+                </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Member Since</label>
-                <p className="text-lg">
+                <label className={cn(
+                  "font-medium text-muted-foreground",
+                  isMobile ? "text-xs" : "text-sm"
+                )}>
+                  Member Since
+                </label>
+                <p className={cn(
+                  "font-medium",
+                  isMobile ? "text-base" : "text-lg"
+                )}>
                   {profile?.created_at 
                     ? new Date(profile.created_at).toLocaleDateString()
                     : 'Unknown'

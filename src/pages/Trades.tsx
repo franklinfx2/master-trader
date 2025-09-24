@@ -14,12 +14,15 @@ import { useToast } from '@/components/ui/use-toast';
 import { ScreenshotUpload } from '@/components/trading/ScreenshotUpload';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { cn } from '@/lib/utils';
 
 export default function Trades() {
   const { trades, loading, addTrade, updateTrade, deleteTrade } = useTrades();
   const { profile } = useProfile();
   const { user } = useAuth();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingTrade, setEditingTrade] = useState<Trade | null>(null);
@@ -170,17 +173,38 @@ export default function Trades() {
 
   return (
     <Layout>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold">Trades</h1>
-            <p className="text-muted-foreground">
+      <div className={cn(
+        "animate-fade-in",
+        isMobile ? "space-y-4" : "space-y-6"
+      )}>
+        <div className={cn(
+          "flex justify-between gap-4",
+          isMobile ? "flex-col" : "items-center"
+        )}>
+          <div className="space-y-1">
+            <h1 className={cn(
+              "font-bold text-violet",
+              isMobile ? "text-2xl" : "text-3xl"
+            )}>
+              Trades
+            </h1>
+            <p className={cn(
+              "text-muted-foreground",
+              isMobile ? "text-sm" : ""
+            )}>
               Manage your trading history and performance
             </p>
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button onClick={resetForm}>
+              <Button 
+                onClick={resetForm}
+                size={isMobile ? "default" : "default"}
+                className={cn(
+                  "shadow-strong transition-transform hover:scale-105",
+                  isMobile ? "w-full" : ""
+                )}
+              >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Trade
               </Button>
@@ -332,13 +356,16 @@ export default function Trades() {
           </Dialog>
         </div>
 
-        {/* Filter */}
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center space-x-4">
-              <Filter className="w-4 h-4" />
+        {/* Filter - Mobile Optimized */}
+        <Card className="card-premium animate-scale-in">
+          <CardContent className={cn("pt-6", isMobile && "p-4")}>
+            <div className="flex items-center space-x-3">
+              <Filter className={cn(isMobile ? "w-4 h-4" : "w-5 h-5")} />
               <Select value={filter} onValueChange={setFilter}>
-                <SelectTrigger className="w-40">
+                <SelectTrigger className={cn(
+                  "transition-colors",
+                  isMobile ? "flex-1" : "w-40"
+                )}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -353,13 +380,31 @@ export default function Trades() {
           </CardContent>
         </Card>
 
-        {/* Trades List */}
+        {/* Trades List - Mobile Optimized */}
         {filteredTrades.length === 0 ? (
-          <Card>
-            <CardContent className="pt-6">
+          <Card className="card-premium">
+            <CardContent className={cn("pt-6", isMobile && "p-6")}>
               <div className="text-center py-8">
-                <p className="text-muted-foreground mb-4">No trades found</p>
-                <Button onClick={() => setIsDialogOpen(true)}>
+                <div className="mx-auto w-16 h-16 rounded-full bg-violet/10 flex items-center justify-center mb-4">
+                  <Plus className="w-8 h-8 text-violet" />
+                </div>
+                <h3 className={cn(
+                  "font-semibold text-violet mb-2",
+                  isMobile ? "text-lg" : "text-xl"
+                )}>
+                  No trades found
+                </h3>
+                <p className={cn(
+                  "text-muted-foreground mb-6",
+                  isMobile ? "text-sm" : ""
+                )}>
+                  Start tracking your trading performance
+                </p>
+                <Button 
+                  onClick={() => setIsDialogOpen(true)}
+                  size={isMobile ? "default" : "lg"}
+                  className="shadow-premium transition-transform hover:scale-105"
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   Add Your First Trade
                 </Button>
@@ -367,53 +412,136 @@ export default function Trades() {
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-4">
+          <div className={cn(isMobile ? "space-y-3" : "space-y-4")}>
             {filteredTrades.map((trade) => (
-              <Card key={trade.id}>
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-6">
-                      <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        trade.direction === 'long' 
-                          ? 'bg-profit/20 text-profit' 
-                          : 'bg-loss/20 text-loss'
-                      }`}>
-                        {trade.direction.toUpperCase()}
+              <Card key={trade.id} className="card-premium group hover:scale-[1.02] transition-all duration-300">
+                <CardContent className={cn("pt-6", isMobile && "p-4")}>
+                  {isMobile ? (
+                    // Mobile layout - vertical stacking
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className={cn(
+                            "px-3 py-1.5 rounded-xl text-xs font-bold border-2 transition-colors",
+                            trade.direction === 'long' 
+                              ? 'bg-profit/10 text-profit border-profit/30 group-hover:bg-profit/20' 
+                              : 'bg-loss/10 text-loss border-loss/30 group-hover:bg-loss/20'
+                          )}>
+                            {trade.direction.toUpperCase()}
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-lg">{trade.pair}</h3>
+                            <p className="text-xs text-muted-foreground">
+                              {new Date(trade.executed_at).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className={cn(
+                            "font-bold text-lg",
+                            trade.result === 'win' ? 'text-profit' :
+                            trade.result === 'loss' ? 'text-loss' :
+                            trade.result === 'open' ? 'text-violet' :
+                            'text-neutral'
+                          )}>
+                            {trade.result === 'open' ? 'ACTIVE' : 
+                             trade.pnl ? `${trade.pnl > 0 ? '+' : ''}$${trade.pnl.toFixed(2)}` : '-'}
+                          </div>
+                          <div className={cn(
+                            "text-xs font-medium px-2 py-1 rounded-lg mt-1",
+                            trade.result === 'win' ? 'bg-profit/10 text-profit' :
+                            trade.result === 'loss' ? 'bg-loss/10 text-loss' :
+                            trade.result === 'open' ? 'bg-violet/10 text-violet' :
+                            'bg-neutral/10 text-neutral'
+                          )}>
+                            {trade.result === 'open' ? 'Active' : trade.result.toUpperCase()}
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-semibold">{trade.pair}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          Entry: ${trade.entry} {trade.exit && `→ Exit: $${trade.exit}`}
-                        </p>
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        {new Date(trade.executed_at).toLocaleDateString()}
+                      
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="space-y-1">
+                          <p className="text-muted-foreground">
+                            Entry: <span className="font-medium text-foreground">${trade.entry}</span>
+                          </p>
+                          {trade.exit && (
+                            <p className="text-muted-foreground">
+                              Exit: <span className="font-medium text-foreground">${trade.exit}</span>
+                            </p>
+                          )}
+                          {trade.rr && (
+                            <p className="text-muted-foreground">
+                              R:R <span className="font-medium text-foreground">1:{trade.rr.toFixed(2)}</span>
+                            </p>
+                          )}
+                        </div>
+                        
+                        <div className="flex space-x-2">
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            onClick={() => handleEdit(trade)}
+                            className="h-8 w-8 p-0 hover:scale-110 transition-transform"
+                          >
+                            <Edit className="w-3 h-3" />
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            onClick={() => handleDelete(trade.id)}
+                            className="h-8 w-8 p-0 hover:scale-110 transition-transform"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-4">
-                      <div className="text-right">
-                        <div className={`font-semibold ${
-                          trade.result === 'win' ? 'text-profit' :
-                          trade.result === 'loss' ? 'text-loss' :
-                          'text-neutral'
+                  ) : (
+                    // Desktop layout - horizontal
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-6">
+                        <div className={`px-3 py-1 rounded-full text-sm font-medium ${
+                          trade.direction === 'long' 
+                            ? 'bg-profit/20 text-profit' 
+                            : 'bg-loss/20 text-loss'
                         }`}>
-                          {trade.result === 'open' ? 'Open' : 
-                           trade.pnl ? `${trade.pnl > 0 ? '+' : ''}$${trade.pnl.toFixed(2)}` : '-'}
+                          {trade.direction.toUpperCase()}
+                        </div>
+                        <div>
+                          <h3 className="font-semibold">{trade.pair}</h3>
+                          <p className="text-sm text-muted-foreground">
+                            Entry: ${trade.entry} {trade.exit && `→ Exit: $${trade.exit}`}
+                          </p>
                         </div>
                         <div className="text-sm text-muted-foreground">
-                          {trade.rr && `R:R 1:${trade.rr.toFixed(2)}`}
+                          {new Date(trade.executed_at).toLocaleDateString()}
                         </div>
                       </div>
-                      <div className="flex space-x-2">
-                        <Button size="sm" variant="outline" onClick={() => handleEdit(trade)}>
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                        <Button size="sm" variant="outline" onClick={() => handleDelete(trade.id)}>
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                      <div className="flex items-center space-x-4">
+                        <div className="text-right">
+                          <div className={`font-semibold ${
+                            trade.result === 'win' ? 'text-profit' :
+                            trade.result === 'loss' ? 'text-loss' :
+                            'text-neutral'
+                          }`}>
+                            {trade.result === 'open' ? 'Open' : 
+                             trade.pnl ? `${trade.pnl > 0 ? '+' : ''}$${trade.pnl.toFixed(2)}` : '-'}
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {trade.rr && `R:R 1:${trade.rr.toFixed(2)}`}
+                          </div>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Button size="sm" variant="outline" onClick={() => handleEdit(trade)}>
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={() => handleDelete(trade.id)}>
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
                   {trade.notes && (
                     <div className="mt-4 p-3 bg-muted rounded-md">
                       <p className="text-sm">{trade.notes}</p>
