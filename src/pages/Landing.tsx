@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart3, Brain, Shield, Zap, CheckCircle, TrendingUp } from 'lucide-react';
-import edgeMindLogo from '@/assets/edge-mind-logo.png';
+
 
 export default function Landing() {
   return (
@@ -10,8 +10,7 @@ export default function Landing() {
       {/* Header */}
       <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <img src={edgeMindLogo} alt="Master Trader AI" className="w-10 h-10" />
+          <div className="flex items-center">
             <h1 className="text-2xl font-bold text-gradient">Master Trader AI</h1>
           </div>
           <div className="space-x-2">
