@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { email, userId } = await req.json()
+    const { email, userId, plan = 'pro' } = await req.json()
 
     if (!email || !userId) {
       return new Response(
@@ -30,7 +30,16 @@ serve(async (req) => {
       throw new Error('Paystack secret key not configured')
     }
 
-    // Create Paystack checkout session for Pro plan subscription
+    // Plan pricing mapping
+    const planPricing = {
+      starter: 900,  // $9.00 in cents
+      growth: 1900,  // $19.00 in cents
+      pro: 4900      // $49.00 in cents
+    }
+
+    const amount = planPricing[plan as keyof typeof planPricing] || planPricing.pro;
+
+    // Create Paystack checkout session
     const paystackResponse = await fetch('https://api.paystack.co/transaction/initialize', {
       method: 'POST',
       headers: {
@@ -39,13 +48,13 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         email: email,
-        amount: 900, // $9.00 in cents (for Pro plan)
+        amount: amount,
         currency: 'USD',
-        reference: `pro_upgrade_${userId}_${Date.now()}`,
-        callback_url: `${req.headers.get('origin') || 'https://localhost:3000'}/settings`,
+        reference: `${plan}_upgrade_${userId}_${Date.now()}`,
+        callback_url: 'https://strat-guru.lovable.app/callback',
         metadata: {
           userId: userId,
-          plan: 'pro',
+          plan: plan,
           upgrade: true
         },
         channels: ['card']

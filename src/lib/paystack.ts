@@ -31,6 +31,28 @@ export const PLANS = {
       'AI analysis (weekly)'
     ]
   },
+  starter: {
+    name: 'Starter',
+    price: 900, // $9.00 in cents
+    features: [
+      'Up to 100 trades',
+      'Advanced analytics',
+      'AI analysis (daily)',
+      'Email alerts'
+    ]
+  },
+  growth: {
+    name: 'Growth',
+    price: 1900, // $19.00 in cents
+    features: [
+      'Up to 500 trades',
+      'Advanced analytics',
+      'Unlimited AI analysis',
+      'CSV export',
+      'Priority support',
+      'Custom indicators'
+    ]
+  },
   pro: {
     name: 'Pro',
     price: 4900, // $49.00 in cents
@@ -39,7 +61,10 @@ export const PLANS = {
       'Advanced analytics', 
       'Unlimited AI analysis',
       'CSV export',
-      'Priority support'
+      'Priority support',
+      'Custom indicators',
+      'API access',
+      'White-label options'
     ]
   }
 };

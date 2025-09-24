@@ -52,17 +52,20 @@ serve(async (req) => {
     if (data.status === 'success') {
       const { customer, metadata } = data
 
-      if (metadata && metadata.userId && metadata.plan === 'pro') {
+      if (metadata && metadata.userId && metadata.plan) {
+        const allowedPlans = ['starter', 'growth', 'pro'];
+        const planToSet = allowedPlans.includes(metadata.plan) ? metadata.plan : 'pro';
+
         // Initialize Supabase client
         const supabaseUrl = Deno.env.get('SUPABASE_URL')!
         const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
         const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
-        // Update user profile to Pro plan
+        // Update user profile to the purchased plan
         const { error } = await supabase
           .from('profiles')
           .update({
-            plan: 'pro',
+            plan: planToSet,
             paystack_customer_code: customer.customer_code,
             updated_at: new Date().toISOString()
           })
@@ -73,11 +76,13 @@ serve(async (req) => {
           throw error
         }
 
+        console.log(`Successfully upgraded user ${metadata.userId} to ${planToSet} plan`)
+
         return new Response(
           JSON.stringify({
             success: true,
-            message: 'Payment verified and account upgraded successfully',
-            plan: 'pro'
+            message: `Payment verified and account upgraded to ${planToSet} successfully`,
+            plan: planToSet
           }),
           { 
             headers: { ...corsHeaders, 'Content-Type': 'application/json' }

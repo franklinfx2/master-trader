@@ -11,6 +11,8 @@ import Dashboard from "./pages/Dashboard";
 import Trades from "./pages/Trades";
 import Analyze from "./pages/Analyze";
 import Settings from "./pages/Settings";
+import Callback from "./pages/Callback";
+import Webhook from "./pages/Webhook";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +31,8 @@ const App = () => (
             <Route path="/trades" element={<ProtectedRoute><Trades /></ProtectedRoute>} />
             <Route path="/analyze" element={<ProtectedRoute><Analyze /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+            <Route path="/callback" element={<ProtectedRoute><Callback /></ProtectedRoute>} />
+            <Route path="/webhook" element={<Webhook />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
