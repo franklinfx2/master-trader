@@ -5,26 +5,31 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-soft hover:shadow-strong hover:scale-105 active:scale-95",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-soft hover:shadow-strong hover:scale-105 active:scale-95",
-        outline: "border border-border bg-background hover:bg-accent hover:text-accent-foreground shadow-soft hover:shadow-strong",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-soft hover:shadow-strong",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
-        premium: "gradient-primary text-primary-foreground font-semibold shadow-premium hover:shadow-powerful hover:scale-105 active:scale-95",
-        violet: "gradient-violet text-white font-medium shadow-soft hover:shadow-strong hover:scale-105 active:scale-95",
-        success: "gradient-success text-white shadow-soft hover:shadow-strong hover:scale-105 active:scale-95",
-        danger: "gradient-danger text-white shadow-soft hover:shadow-strong hover:scale-105 active:scale-95",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-neon hover:shadow-orb transition-neural hover:scale-105 active:scale-95",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-soft hover:shadow-neural hover:scale-105 active:scale-95",
+        outline: "border border-primary/20 bg-background/50 hover:bg-primary/10 hover:text-primary hover:border-primary/40 backdrop-blur-sm transition-smooth",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-soft hover:shadow-neural transition-smooth",
+        ghost: "hover:bg-primary/10 hover:text-primary backdrop-blur-sm transition-smooth",
+        link: "text-primary underline-offset-4 hover:underline text-cyber-blue hover:text-cyber-purple transition-smooth",
+        // Cyberpunk Button Variants
+        neural: "gradient-neural text-background hover:shadow-orb transition-neural hover:scale-105 active:scale-95 font-semibold",
+        holographic: "gradient-holographic text-background hover:shadow-holographic transition-warp hover:scale-110 active:scale-95 font-semibold",
+        cyber: "bg-cyber-blue text-background hover:bg-cyber-blue/90 shadow-neon hover:shadow-orb transition-smooth hover:scale-105 active:scale-95 font-semibold",
+        ghost_cyber: "bg-cyber-blue/10 text-cyber-blue border border-cyber-blue/20 hover:bg-cyber-blue/20 hover:border-cyber-blue/40 transition-smooth font-medium backdrop-blur-sm",
+        orb: "relative overflow-hidden bg-gradient-to-r from-cyber-blue to-cyber-purple text-background hover:from-cyber-purple hover:to-cyber-blue shadow-orb hover:shadow-neural transition-neural hover:scale-105 active:scale-95 font-semibold",
+        premium: "gradient-primary text-primary-foreground hover:scale-105 transition-spring shadow-soft hover:shadow-neon active:scale-95 font-semibold",
+        // Legacy Compatibility
+        violet: "gradient-primary text-primary-foreground hover:scale-105 transition-spring shadow-soft hover:shadow-neon active:scale-95 font-semibold",
       },
       size: {
-        default: "h-11 px-6 py-3",
-        sm: "h-9 rounded-lg px-4 py-2",
-        lg: "h-13 rounded-xl px-8 py-4 text-base",
-        icon: "h-11 w-11",
+        default: "h-12 px-6 py-3",
+        sm: "h-10 rounded-lg px-4 py-2",
+        lg: "h-14 rounded-xl px-8 py-4 text-lg",
+        icon: "h-12 w-12",
       },
     },
     defaultVariants: {

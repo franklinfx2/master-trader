@@ -69,6 +69,14 @@ export default {
           DEFAULT: "hsl(var(--neutral))",
           foreground: "hsl(var(--neutral-foreground))",
         },
+        // Cyberpunk Colors
+        "cyber-blue": "hsl(var(--cyber-blue))",
+        "cyber-indigo": "hsl(var(--cyber-indigo))",
+        "cyber-green": "hsl(var(--cyber-green))",
+        "cyber-purple": "hsl(var(--cyber-purple))",
+        "cyber-pink": "hsl(var(--cyber-pink))",
+        "neon-cyan": "hsl(var(--neon-cyan))",
+        "holographic": "hsl(var(--holographic))",
       },
       borderRadius: {
         lg: "var(--radius)",
