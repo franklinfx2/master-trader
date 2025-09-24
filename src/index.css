@@ -146,6 +146,33 @@
   body {
     @apply bg-background text-foreground font-mono;
     font-family: 'SF Mono', 'Monaco', 'Consolas', 'Roboto Mono', monospace;
+    /* Mobile stability fixes */
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    overscroll-behavior: none;
+  }
+
+  /* Prevent zoom on inputs */
+  input, textarea, select {
+    font-size: 16px !important;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Disable unwanted mobile animations */
+  @media (max-width: 1024px) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    
+    /* Keep essential smooth transitions only */
+    .keep-transition, .keep-transition * {
+      animation-duration: revert !important;
+      transition-duration: revert !important;
+    }
   }
 
   /* Cyberpunk Scrollbars */
