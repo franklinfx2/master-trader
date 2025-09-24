@@ -13,10 +13,13 @@ import { useToast } from '@/components/ui/use-toast';
 
 interface DailyRisk {
   id?: string;
+  user_id: string;
   date: string;
   risk_limit: number;
   used_risk: number;
   trades_count: number;
+  created_at?: string;
+  updated_at?: string;
 }
 
 const RiskCalculator = () => {
@@ -65,9 +68,9 @@ const RiskCalculator = () => {
         .select('*')
         .eq('user_id', user.id)
         .eq('date', today)
-        .single();
+        .maybeSingle();
 
-      if (riskError && riskError.code !== 'PGRST116') {
+      if (riskError) {
         throw riskError;
       }
 
@@ -92,7 +95,7 @@ const RiskCalculator = () => {
           risk_limit: dailyRiskLimit,
           used_risk: currentRiskUsed,
           trades_count: todaysTrades
-        });
+        } as any);
 
       if (error) throw error;
 
@@ -177,7 +180,7 @@ const RiskCalculator = () => {
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-medium">Used: ${currentRiskUsed.toFixed(2)}</span>
-                  <Badge variant={riskStatus.color}>{riskStatus.text}</Badge>
+                  <Badge variant={riskStatus.color === 'warning' || riskStatus.color === 'success' ? 'default' : riskStatus.color as any}>{riskStatus.text}</Badge>
                 </div>
                 <Progress value={Math.min(riskPercentage, 100)} className="w-full" />
                 <div className="flex justify-between text-xs text-muted-foreground">

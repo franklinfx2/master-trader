@@ -30,7 +30,7 @@ const PositionCalculator = () => {
 
     if (instrument === 'forex') {
       // For forex, position size is in lots
-      const pips = stopLossDistance * (instrument === 'jpy' ? 100 : 10000);
+      const pips = stopLossDistance * 10000; // Convert to pips
       positionSize = riskAmount / (pips * pipValue);
       positionValue = positionSize * 100000 * entryPrice; // Standard lot = 100,000 units
     } else if (instrument === 'crypto') {
