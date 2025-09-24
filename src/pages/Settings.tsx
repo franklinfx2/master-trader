@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Crown, CreditCard, User, CheckCircle } from 'lucide-react';
-import { formatCentsToDollars, PLANS } from '@/lib/paystack';
+import { formatCentsToDollars, PLANS, isInFreeTrial, getTrialDaysRemaining } from '@/lib/paystack';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -182,11 +182,35 @@ export default function Settings() {
               </div>
             ) : (
               <div className="space-y-4">
-                 <div className="space-y-3">
-                   <h3 className="text-2xl font-bold text-violet">Upgrade to Pro</h3>
-                    <p className="text-muted-foreground text-lg">
-                      Unlock unlimited trades, advanced AI analytics, premium insights, and exclusive features for just $9/month.
+                {/* Free Trial Status */}
+                {profile?.created_at && isInFreeTrial(profile.created_at) ? (
+                  <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <CheckCircle className="w-5 h-5 text-primary" />
+                      <span className="font-medium">Free Trial Active</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      You have {getTrialDaysRemaining(profile.created_at)} days left in your free trial. 
+                      Enjoy all Pro features!
                     </p>
+                  </div>
+                ) : (
+                  <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Crown className="w-5 h-5 text-destructive" />
+                      <span className="font-medium">Free Trial Expired</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Your 3-day free trial has ended. Upgrade to Pro to continue using all features.
+                    </p>
+                  </div>
+                )}
+                
+                <div className="space-y-3">
+                  <h3 className="text-2xl font-bold text-violet">Upgrade to Pro</h3>
+                  <p className="text-muted-foreground text-lg">
+                    Unlock unlimited trades, advanced AI analytics, premium insights, and exclusive features for just $9/month.
+                  </p>
                   <div className="flex flex-wrap gap-2 mt-3">
                     <span className="status-premium text-sm">Unlimited Trades</span>
                     <span className="status-premium text-sm">AI Analysis</span>
@@ -197,21 +221,22 @@ export default function Settings() {
                 
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <h4 className="font-medium mb-2 text-muted-foreground">Free Plan</h4>
+                    <h4 className="font-medium mb-2 text-muted-foreground">Free Trial (3 Days)</h4>
                     <ul className="space-y-1 text-sm">
-                      <li>• Up to 20 trades</li>
-                      <li>• Basic analytics</li>
-                      <li>• AI analysis (weekly)</li>
+                      <li>• All Pro features included</li>
+                      <li>• No credit card required</li>
+                      <li>• Full access for 3 days</li>
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-medium mb-2 text-primary">Pro Plan</h4>
+                    <h4 className="font-medium mb-2 text-primary">Pro Plan ($9/month)</h4>
                     <ul className="space-y-1 text-sm">
                       <li>• Unlimited trades</li>
                       <li>• Advanced analytics</li>
                       <li>• Unlimited AI analysis</li>
                       <li>• CSV export</li>
                       <li>• Priority support</li>
+                      <li>• API access</li>
                     </ul>
                   </div>
                 </div>
@@ -229,12 +254,15 @@ export default function Settings() {
                       Processing Payment...
                     </>
                   ) : (
-                      <>
-                        <Crown className="w-5 h-5 mr-2" />
-                        Upgrade to Pro - $9/month
-                      </>
-                   )}
-                 </Button>
+                    <>
+                      <Crown className="w-5 h-5 mr-2" />
+                      {profile?.created_at && isInFreeTrial(profile.created_at) 
+                        ? 'Continue with Pro - $9/month' 
+                        : 'Upgrade to Pro - $9/month'
+                      }
+                    </>
+                  )}
+                </Button>
               </div>
             )}
           </CardContent>
@@ -260,37 +288,45 @@ export default function Settings() {
                 </thead>
                 <tbody className="text-sm">
                   <tr className="border-b">
+                    <td className="py-2 px-4">Free trial period</td>
+                    <td className="text-center py-2 px-4">3 days</td>
+                    <td className="text-center py-2 px-4">-</td>
+                  </tr>
+                  <tr className="border-b">
                     <td className="py-2 px-4">Number of trades</td>
-                    <td className="text-center py-2 px-4">20</td>
+                    <td className="text-center py-2 px-4">Unlimited*</td>
                     <td className="text-center py-2 px-4">Unlimited</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-2 px-4">Basic analytics</td>
-                    <td className="text-center py-2 px-4">✓</td>
-                    <td className="text-center py-2 px-4">✓</td>
-                  </tr>
-                  <tr className="border-b">
                     <td className="py-2 px-4">Advanced analytics</td>
-                    <td className="text-center py-2 px-4">✗</td>
+                    <td className="text-center py-2 px-4">✓*</td>
                     <td className="text-center py-2 px-4">✓</td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-2 px-4">AI analysis</td>
-                    <td className="text-center py-2 px-4">Weekly</td>
+                    <td className="text-center py-2 px-4">Unlimited*</td>
                     <td className="text-center py-2 px-4">Unlimited</td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-2 px-4">CSV export</td>
-                    <td className="text-center py-2 px-4">✗</td>
+                    <td className="text-center py-2 px-4">✓*</td>
                     <td className="text-center py-2 px-4">✓</td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-2 px-4">Priority support</td>
-                    <td className="text-center py-2 px-4">✗</td>
+                    <td className="text-center py-2 px-4">✓*</td>
+                    <td className="text-center py-2 px-4">✓</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-2 px-4">API access</td>
+                    <td className="text-center py-2 px-4">✓*</td>
                     <td className="text-center py-2 px-4">✓</td>
                   </tr>
                 </tbody>
               </table>
+              <p className="text-xs text-muted-foreground mt-2">
+                * Available during 3-day free trial period only
+              </p>
             </div>
           </CardContent>
         </Card>

@@ -24,20 +24,18 @@ serve(async (req) => {
       )
     }
 
-    // Get Paystack secret key from environment
-    const paystackSecretKey = Deno.env.get('PAYSTACK_SECRET_KEY')
+    // Get environment variables for Paystack keys
+    const isProduction = req.headers.get('host')?.includes('strat-guru.lovable.app') || false;
+    const paystackSecretKey = isProduction 
+      ? Deno.env.get('PAYSTACK_LIVE_SECRET_KEY')
+      : Deno.env.get('PAYSTACK_TEST_SECRET_KEY');
+      
     if (!paystackSecretKey) {
-      throw new Error('Paystack secret key not configured')
+      throw new Error(`Paystack ${isProduction ? 'live' : 'test'} secret key not configured`)
     }
 
-    // Plan pricing mapping
-    const planPricing = {
-      starter: 900,  // $9.00 in cents
-      growth: 1900,  // $19.00 in cents
-      pro: 4900      // $49.00 in cents
-    }
-
-    const amount = planPricing[plan as keyof typeof planPricing] || planPricing.pro;
+    // Single Pro plan pricing - $9/month
+    const amount = 900; // $9.00 in cents
 
     // Create Paystack checkout session
     const paystackResponse = await fetch('https://api.paystack.co/transaction/initialize', {

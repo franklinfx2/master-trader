@@ -13,9 +13,15 @@ serve(async (req) => {
   }
 
   try {
-    const paystackSecretKey = Deno.env.get('PAYSTACK_SECRET_KEY')
+    // Get the appropriate secret key based on environment
+    const host = req.headers.get('host') || '';
+    const isProduction = host.includes('strat-guru.lovable.app');
+    const paystackSecretKey = isProduction 
+      ? Deno.env.get('PAYSTACK_LIVE_SECRET_KEY')
+      : Deno.env.get('PAYSTACK_TEST_SECRET_KEY');
+      
     if (!paystackSecretKey) {
-      throw new Error('Paystack secret key not configured')
+      throw new Error(`Paystack ${isProduction ? 'live' : 'test'} secret key not configured`)
     }
 
     // Verify Paystack webhook signature
@@ -55,9 +61,9 @@ serve(async (req) => {
     if (event.event === 'charge.success') {
       const { customer, metadata, status, amount } = event.data
 
-      if (metadata && metadata.userId && metadata.plan) {
-        const allowedPlans = ['starter', 'growth', 'pro'];
-        const planToSet = allowedPlans.includes(metadata.plan) ? metadata.plan : 'pro';
+      if (metadata && metadata.userId) {
+        // Only Pro plan is available now
+        const planToSet = 'pro';
 
         // Initialize Supabase client
         const supabaseUrl = Deno.env.get('SUPABASE_URL')!

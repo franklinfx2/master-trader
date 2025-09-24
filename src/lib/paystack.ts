@@ -1,9 +1,15 @@
-// Paystack configuration for live mode
+// Environment detection
+const isProduction = window.location.hostname === 'strat-guru.lovable.app';
+
+// Paystack configuration with environment switching
 export const PAYSTACK_CONFIG = {
-  publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || 'pk_live_your_public_key_here',
-  baseUrl: 'https://api.paystack.co', // Live endpoint
+  publicKey: isProduction 
+    ? import.meta.env.VITE_PAYSTACK_LIVE_PUBLIC_KEY || 'pk_live_your_public_key_here'
+    : import.meta.env.VITE_PAYSTACK_TEST_PUBLIC_KEY || 'pk_test_your_test_key_here',
+  baseUrl: 'https://api.paystack.co',
   currency: 'USD',
-  channels: ['card']
+  channels: ['card'],
+  isProduction
 };
 
 // Utility function to format amount in cents
@@ -20,42 +26,38 @@ export const formatCentsToDollars = (cents: number): string => {
   }).format(dollars);
 };
 
-// Plan configurations
+// Check if user is in free trial period (3 days)
+export const isInFreeTrial = (createdAt: string): boolean => {
+  const created = new Date(createdAt);
+  const now = new Date();
+  const threeDaysInMs = 3 * 24 * 60 * 60 * 1000;
+  return (now.getTime() - created.getTime()) < threeDaysInMs;
+};
+
+// Get days remaining in trial
+export const getTrialDaysRemaining = (createdAt: string): number => {
+  const created = new Date(createdAt);
+  const now = new Date();
+  const threeDaysInMs = 3 * 24 * 60 * 60 * 1000;
+  const timeLeft = threeDaysInMs - (now.getTime() - created.getTime());
+  return Math.max(0, Math.ceil(timeLeft / (24 * 60 * 60 * 1000)));
+};
+
+// Single Pro Plan configuration
 export const PLANS = {
   free: {
-    name: 'Free',
+    name: 'Free Trial',
     price: 0,
+    trialDays: 3,
     features: [
-      'Up to 20 trades',
-      'Basic analytics',
-      'AI analysis (weekly)'
-    ]
-  },
-  starter: {
-    name: 'Starter',
-    price: 900, // $9.00 in cents
-    features: [
-      'Up to 100 trades',
-      'Advanced analytics',
-      'AI analysis (daily)',
-      'Email alerts'
-    ]
-  },
-  growth: {
-    name: 'Growth',
-    price: 1900, // $19.00 in cents
-    features: [
-      'Up to 500 trades',
-      'Advanced analytics',
-      'Unlimited AI analysis',
-      'CSV export',
-      'Priority support',
-      'Custom indicators'
+      '3-day free trial',
+      'All Pro features included',
+      'No credit card required'
     ]
   },
   pro: {
     name: 'Pro',
-    price: 4900, // $49.00 in cents
+    price: 900, // $9.00 in cents
     features: [
       'Unlimited trades',
       'Advanced analytics', 
@@ -64,7 +66,7 @@ export const PLANS = {
       'Priority support',
       'Custom indicators',
       'API access',
-      'White-label options'
+      'Real-time insights'
     ]
   }
 };
