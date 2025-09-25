@@ -34,11 +34,11 @@ export const Layout = ({ children }: LayoutProps) => {
   ];
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-screen bg-background overflow-hidden">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-background/80 backdrop-blur-md z-40 lg:hidden"
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -132,18 +132,19 @@ export const Layout = ({ children }: LayoutProps) => {
         </div>
 
         {/* Premium Mobile header */}
-        <div className="lg:hidden glass-effect border-b border-violet/20 backdrop-blur-md">
-          <div className="flex items-center justify-between p-4">
+        <div className="lg:hidden glass-effect border-b border-violet/20 backdrop-blur-md sticky top-0 z-30">
+          <div className="flex items-center justify-between p-4 min-h-[64px]">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setSidebarOpen(true)}
-              className="text-violet hover:bg-violet/10"
+              className="text-violet hover:bg-violet/10 z-50 relative touch-manipulation touch-target mobile-stable"
+              aria-label="Open navigation menu"
             >
               <Menu className="w-5 h-5" />
             </Button>
-            <div className="flex items-center space-x-2">
-              <h1 className="text-lg font-bold text-violet tracking-tight">
+            <div className="flex items-center space-x-2 absolute left-1/2 transform -translate-x-1/2">
+              <h1 className="text-lg font-bold text-violet tracking-tight whitespace-nowrap">
                 Master Trader <span className="text-violet/80 font-light">AI</span>
               </h1>
             </div>
@@ -152,9 +153,9 @@ export const Layout = ({ children }: LayoutProps) => {
         </div>
 
         {/* Premium Page content */}
-        <main className="flex-1 overflow-auto bg-gradient-to-br from-background via-background to-violet/5">
+        <main className="flex-1 overflow-auto bg-gradient-to-br from-background via-background to-violet/5 relative">
           <div className={cn(
-            "transition-all duration-300",
+            "w-full min-h-full",
             isMobile ? "p-4 space-y-4" : "p-6 lg:p-8"
           )}>
             {children}
