@@ -14,6 +14,67 @@ export type Database = {
   }
   public: {
     Tables: {
+      commissions: {
+        Row: {
+          amount: number
+          commission_rate: number
+          created_at: string
+          id: string
+          paid_at: string | null
+          payment_reference: string | null
+          referral_id: string
+          referred_id: string
+          referrer_id: string
+          status: string
+        }
+        Insert: {
+          amount?: number
+          commission_rate?: number
+          created_at?: string
+          id?: string
+          paid_at?: string | null
+          payment_reference?: string | null
+          referral_id: string
+          referred_id: string
+          referrer_id: string
+          status?: string
+        }
+        Update: {
+          amount?: number
+          commission_rate?: number
+          created_at?: string
+          id?: string
+          paid_at?: string | null
+          payment_reference?: string | null
+          referral_id?: string
+          referred_id?: string
+          referrer_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commissions_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commissions_referred_id_fkey"
+            columns: ["referred_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commissions_referrer_id_fkey"
+            columns: ["referrer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       daily_risk_tracker: {
         Row: {
           created_at: string
@@ -47,15 +108,73 @@ export type Database = {
         }
         Relationships: []
       }
+      payout_requests: {
+        Row: {
+          admin_notes: string | null
+          affiliate_id: string
+          amount: number
+          id: string
+          payment_details: Json | null
+          payment_method: string | null
+          processed_at: string | null
+          processed_by: string | null
+          requested_at: string
+          status: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          affiliate_id: string
+          amount: number
+          id?: string
+          payment_details?: Json | null
+          payment_method?: string | null
+          processed_at?: string | null
+          processed_by?: string | null
+          requested_at?: string
+          status?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          affiliate_id?: string
+          amount?: number
+          id?: string
+          payment_details?: Json | null
+          payment_method?: string | null
+          processed_at?: string | null
+          processed_by?: string | null
+          requested_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payout_requests_affiliate_id_fkey"
+            columns: ["affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payout_requests_processed_by_fkey"
+            columns: ["processed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           ai_last_analysis_at: string | null
           created_at: string | null
           email: string | null
           id: string
+          is_admin: boolean | null
           paystack_customer_code: string | null
           paystack_subscription_code: string | null
+          pending_balance: number | null
           plan: string
+          referral_code: string | null
+          total_earnings: number | null
           updated_at: string | null
         }
         Insert: {
@@ -63,9 +182,13 @@ export type Database = {
           created_at?: string | null
           email?: string | null
           id: string
+          is_admin?: boolean | null
           paystack_customer_code?: string | null
           paystack_subscription_code?: string | null
+          pending_balance?: number | null
           plan?: string
+          referral_code?: string | null
+          total_earnings?: number | null
           updated_at?: string | null
         }
         Update: {
@@ -73,12 +196,55 @@ export type Database = {
           created_at?: string | null
           email?: string | null
           id?: string
+          is_admin?: boolean | null
           paystack_customer_code?: string | null
           paystack_subscription_code?: string | null
+          pending_balance?: number | null
           plan?: string
+          referral_code?: string | null
+          total_earnings?: number | null
           updated_at?: string | null
         }
         Relationships: []
+      }
+      referrals: {
+        Row: {
+          created_at: string
+          id: string
+          referral_code: string
+          referred_id: string
+          referrer_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          referral_code: string
+          referred_id: string
+          referrer_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          referral_code?: string
+          referred_id?: string
+          referrer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referrals_referred_id_fkey"
+            columns: ["referred_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referrals_referrer_id_fkey"
+            columns: ["referrer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       trades: {
         Row: {
@@ -170,7 +336,10 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      is_admin: {
+        Args: { user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
