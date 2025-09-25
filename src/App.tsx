@@ -16,6 +16,13 @@ import Callback from "./pages/Callback";
 import Webhook from "./pages/Webhook";
 import AdminTestMode from "./pages/AdminTestMode";
 import NotFound from "./pages/NotFound";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import Disclaimer from "./pages/Disclaimer";
+import CookiePolicy from "./pages/CookiePolicy";
+import FAQ from "./pages/FAQ";
+import Contact from "./pages/Contact";
+import Affiliate from "./pages/Affiliate";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +43,13 @@ const App = () => (
             <Route path="/callback" element={<ProtectedRoute><Callback /></ProtectedRoute>} />
             <Route path="/webhook" element={<Webhook />} />
             <Route path="/admin/test-mode" element={<ProtectedRoute><AdminTestMode /></ProtectedRoute>} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/disclaimer" element={<Disclaimer />} />
+            <Route path="/cookie-policy" element={<CookiePolicy />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/affiliate" element={<Affiliate />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

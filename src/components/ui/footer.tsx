@@ -28,14 +28,11 @@ export function FullFooter() {
               <Link to="/faq" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
                 FAQ
               </Link>
-              <Link to="/support" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Support
-              </Link>
-              <Link to="/blog" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Blog
-              </Link>
               <Link to="/contact" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Contact
+              </Link>
+              <Link to="/affiliate" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                Affiliate Program
               </Link>
             </div>
           </div>
@@ -44,17 +41,17 @@ export function FullFooter() {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-foreground">Legal & Partners</h3>
             <div className="space-y-2">
-              <Link to="/privacy" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <Link to="/privacy-policy" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Privacy Policy
               </Link>
-              <Link to="/terms" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <Link to="/terms-of-service" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Terms of Service
               </Link>
               <Link to="/disclaimer" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Disclaimer
               </Link>
-              <Link to="/partners" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Partnerships & Affiliates
+              <Link to="/cookie-policy" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                Cookie Policy
               </Link>
             </div>
           </div>
@@ -86,7 +83,7 @@ export function FullFooter() {
                   <Facebook className="w-5 h-5" />
                 </a>
                 <a 
-                  href="https://twitter.com" 
+                  href="https://twitter.com/mastertraderai" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-primary transition-colors"
@@ -94,7 +91,7 @@ export function FullFooter() {
                   <Twitter className="w-5 h-5" />
                 </a>
                 <a 
-                  href="https://linkedin.com" 
+                  href="https://linkedin.com/company/mastertraderai" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-primary transition-colors"
@@ -102,12 +99,14 @@ export function FullFooter() {
                   <Linkedin className="w-5 h-5" />
                 </a>
                 <a 
-                  href="https://instagram.com" 
+                  href="https://tiktok.com/@mastertraderai" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
-                  <Instagram className="w-5 h-5" />
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                  </svg>
                 </a>
               </div>
             </div>
@@ -137,13 +136,13 @@ export function MiniFooter() {
           </p>
           <div className="flex gap-4 text-sm">
             <Link 
-              to="/privacy" 
+              to="/privacy-policy" 
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Privacy Policy
             </Link>
             <Link 
-              to="/terms" 
+              to="/terms-of-service" 
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Terms of Service
