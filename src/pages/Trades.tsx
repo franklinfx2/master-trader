@@ -38,8 +38,32 @@ export default function Trades() {
     result: 'open' as 'win' | 'loss' | 'be' | 'open',
     notes: '',
     time: '',
-    tradingSession: 'manual' as 'manual' | 'auto',
+    tradingSession: '' as string,
   });
+
+  // Function to detect trading session based on time (GMT)
+  const detectTradingSession = (timeString: string): string => {
+    if (!timeString) return '';
+    
+    const [hours] = timeString.split(':').map(Number);
+    
+    // Convert local time to GMT (approximate - users can adjust manually if needed)
+    const now = new Date();
+    const localHour = hours;
+    const gmtOffset = now.getTimezoneOffset() / 60;
+    const gmtHour = (localHour + gmtOffset) % 24;
+    
+    // Trading sessions in GMT
+    if ((gmtHour >= 23) || (gmtHour < 8)) {
+      return 'Asian';
+    } else if (gmtHour >= 8 && gmtHour < 17) {
+      return 'London';
+    } else if (gmtHour >= 13 && gmtHour < 22) {
+      return gmtHour >= 17 ? 'New York' : 'London/New York Overlap';
+    }
+    
+    return 'New York';
+  };
   const [screenshots, setScreenshots] = useState<string[]>([]);
 
   const resetForm = () => {
@@ -54,7 +78,7 @@ export default function Trades() {
       result: 'open',
       notes: '',
       time: '',
-      tradingSession: 'manual',
+      tradingSession: '',
     });
     setScreenshots([]);
     setEditingTrade(null);
@@ -93,7 +117,7 @@ export default function Trades() {
         tp: formData.tp ? parseFloat(formData.tp) : undefined,
         risk_pct: formData.risk_pct ? parseFloat(formData.risk_pct) : undefined,
         result: formData.result,
-        notes: `${formData.notes || ''}${formData.tradingSession === 'auto' ? ' [AUTO TRADING]' : ''}`.trim(),
+        notes: `${formData.notes || ''}${formData.tradingSession ? ` [${formData.tradingSession.toUpperCase()} SESSION]` : ''}`.trim(),
         screenshot_url: screenshots.length > 0 ? screenshots[0] : undefined,
         executed_at: executedAt,
       };
@@ -146,9 +170,15 @@ export default function Trades() {
     const tradeTime = trade.executed_at ? new Date(trade.executed_at) : new Date();
     const timeString = `${tradeTime.getHours().toString().padStart(2, '0')}:${tradeTime.getMinutes().toString().padStart(2, '0')}`;
     
-    // Check if trade notes contain auto trading indicator
-    const isAutoTrading = trade.notes?.includes('[AUTO TRADING]') || false;
-    const cleanNotes = trade.notes?.replace(' [AUTO TRADING]', '').trim() || '';
+    // Extract trading session from notes
+    let detectedSession = '';
+    let cleanNotes = trade.notes || '';
+    
+    const sessionMatches = cleanNotes.match(/\[(ASIAN|LONDON|NEW YORK|LONDON\/NEW YORK OVERLAP) SESSION\]/i);
+    if (sessionMatches) {
+      detectedSession = sessionMatches[1];
+      cleanNotes = cleanNotes.replace(sessionMatches[0], '').trim();
+    }
     
     setFormData({
       pair: trade.pair,
@@ -161,7 +191,7 @@ export default function Trades() {
       result: trade.result,
       notes: cleanNotes,
       time: timeString,
-      tradingSession: isAutoTrading ? 'auto' : 'manual',
+      tradingSession: detectedSession,
     });
     // Load existing screenshot if available
     setScreenshots(trade.screenshot_url ? [trade.screenshot_url] : []);
@@ -352,18 +382,28 @@ export default function Trades() {
                       id="time"
                       type="time"
                       value={formData.time}
-                      onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                      onChange={(e) => {
+                        const newTime = e.target.value;
+                        const detectedSession = detectTradingSession(newTime);
+                        setFormData({ 
+                          ...formData, 
+                          time: newTime,
+                          tradingSession: detectedSession
+                        });
+                      }}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="tradingSession">Trading Session</Label>
-                    <Select value={formData.tradingSession} onValueChange={(value: 'manual' | 'auto') => setFormData({ ...formData, tradingSession: value })}>
+                    <Label htmlFor="tradingSession">Trading Session (Auto-detected)</Label>
+                    <Select value={formData.tradingSession} onValueChange={(value: string) => setFormData({ ...formData, tradingSession: value })}>
                       <SelectTrigger>
-                        <SelectValue />
+                        <SelectValue placeholder="Select time first" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="manual">Manual Trading</SelectItem>
-                        <SelectItem value="auto">Auto Trading</SelectItem>
+                        <SelectItem value="Asian">Asian Session</SelectItem>
+                        <SelectItem value="London">London Session</SelectItem>
+                        <SelectItem value="New York">New York Session</SelectItem>
+                        <SelectItem value="London/New York Overlap">London/NY Overlap</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
