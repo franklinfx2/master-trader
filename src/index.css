@@ -150,19 +150,17 @@
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
-    overscroll-behavior: none;
-    /* Prevent layout shifts */
-    position: fixed;
+    /* Allow natural scrolling */
     width: 100%;
-    height: 100%;
-    overflow: hidden;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
   /* Root container fixes */
   #root {
     width: 100%;
-    height: 100%;
-    overflow: hidden;
+    min-height: 100vh;
   }
 
   /* Prevent zoom on inputs */

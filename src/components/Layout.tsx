@@ -34,7 +34,7 @@ export const Layout = ({ children }: LayoutProps) => {
   ];
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
+    <div className="flex min-h-screen bg-background">{/* Removed overflow-hidden to allow scrolling */}
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div 
@@ -50,7 +50,7 @@ export const Layout = ({ children }: LayoutProps) => {
       )}>
         <div className="flex flex-col h-full">
           {/* Premium Logo Header */}
-          <div className="relative overflow-hidden">
+          <div className="relative">{/* Removed overflow-hidden to allow scrolling */}
             <div className="absolute inset-0 gradient-violet opacity-90" />
             <div className="relative z-10 flex items-center px-6 py-6">
               <div>
@@ -108,7 +108,7 @@ export const Layout = ({ children }: LayoutProps) => {
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col">{/* Removed overflow-hidden to allow scrolling */}
         {/* Premium Desktop Header */}
         <div className="hidden lg:block glass-effect border-b border-violet/20 backdrop-blur-md">
           <div className="flex items-center justify-between p-4">
