@@ -324,18 +324,20 @@ export type Database = {
           user_id: string | null
           win_rate: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "trades_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Functions: {
+      get_user_trade_stats: {
+        Args: { target_user_id?: string }
+        Returns: {
+          avg_rr: number
+          total_pnl: number
+          trade_count: number
+          user_id: string
+          win_rate: number
+        }[]
+      }
       is_admin: {
         Args: { user_id: string }
         Returns: boolean
