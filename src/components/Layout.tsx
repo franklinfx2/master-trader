@@ -12,7 +12,7 @@ import {
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { AIStatusIndicator } from '@/components/ai/AIStatusIndicator';
-import { MobileBottomNav } from '@/components/MobileBottomNav';
+
 import { useIsMobile } from '@/hooks/use-mobile';
 // import edgeMindLogo from '@/assets/edge-mind-logo.png';
 
@@ -45,7 +45,7 @@ export const Layout = ({ children }: LayoutProps) => {
 
       {/* Premium Sidebar */}
       <div className={cn(
-        "fixed inset-y-0 left-0 z-50 w-72 glass-effect border-r border-violet/20 transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0",
+        "fixed inset-y-0 left-0 z-50 w-72 glass-effect border-r border-violet/20 transform transition-transform duration-300 ease-out lg:translate-x-0 lg:static lg:inset-0 keep-transition",
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="flex flex-col h-full">
@@ -152,10 +152,7 @@ export const Layout = ({ children }: LayoutProps) => {
         </div>
 
         {/* Premium Page content */}
-        <main className={cn(
-          "flex-1 overflow-auto bg-gradient-to-br from-background via-background to-violet/5",
-          isMobile ? "pb-20" : ""
-        )}>
+        <main className="flex-1 overflow-auto bg-gradient-to-br from-background via-background to-violet/5">
           <div className={cn(
             "transition-all duration-300",
             isMobile ? "p-4 space-y-4" : "p-6 lg:p-8"
@@ -164,9 +161,6 @@ export const Layout = ({ children }: LayoutProps) => {
           </div>
         </main>
       </div>
-      
-      {/* Mobile Bottom Navigation */}
-      <MobileBottomNav />
     </div>
   );
 };
