@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart3, Brain, Shield, Zap, CheckCircle, TrendingUp } from 'lucide-react';
+import { FullFooter } from '@/components/ui/footer';
 
 
 export default function Landing() {
@@ -242,11 +243,7 @@ export default function Landing() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t py-8 px-4">
-        <div className="container mx-auto max-w-6xl text-center text-muted-foreground">
-          <p>&copy; 2024 Master Trader AI. All rights reserved.</p>
-        </div>
-      </footer>
+      <FullFooter />
     </div>
   );
 }
