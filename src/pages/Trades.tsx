@@ -37,6 +37,8 @@ export default function Trades() {
     risk_pct: '',
     result: 'open' as 'win' | 'loss' | 'be' | 'open',
     notes: '',
+    time: '',
+    tradingSession: 'manual' as 'manual' | 'auto',
   });
   const [screenshots, setScreenshots] = useState<string[]>([]);
 
@@ -51,6 +53,8 @@ export default function Trades() {
       risk_pct: '',
       result: 'open',
       notes: '',
+      time: '',
+      tradingSession: 'manual',
     });
     setScreenshots([]);
     setEditingTrade(null);
@@ -71,6 +75,15 @@ export default function Trades() {
     }
 
     try {
+      // Combine date and time for executed_at
+      let executedAt = new Date().toISOString();
+      if (formData.time) {
+        const today = new Date();
+        const [hours, minutes] = formData.time.split(':');
+        today.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+        executedAt = today.toISOString();
+      }
+
       const tradeData: any = {
         pair: formData.pair,
         direction: formData.direction,
@@ -80,9 +93,9 @@ export default function Trades() {
         tp: formData.tp ? parseFloat(formData.tp) : undefined,
         risk_pct: formData.risk_pct ? parseFloat(formData.risk_pct) : undefined,
         result: formData.result,
-        notes: formData.notes || undefined,
+        notes: `${formData.notes || ''}${formData.tradingSession === 'auto' ? ' [AUTO TRADING]' : ''}`.trim(),
         screenshot_url: screenshots.length > 0 ? screenshots[0] : undefined,
-        executed_at: new Date().toISOString(),
+        executed_at: executedAt,
       };
 
       // Calculate P&L and RR if exit is provided
@@ -128,6 +141,15 @@ export default function Trades() {
 
   const handleEdit = (trade: Trade) => {
     setEditingTrade(trade);
+    
+    // Extract time from executed_at
+    const tradeTime = trade.executed_at ? new Date(trade.executed_at) : new Date();
+    const timeString = `${tradeTime.getHours().toString().padStart(2, '0')}:${tradeTime.getMinutes().toString().padStart(2, '0')}`;
+    
+    // Check if trade notes contain auto trading indicator
+    const isAutoTrading = trade.notes?.includes('[AUTO TRADING]') || false;
+    const cleanNotes = trade.notes?.replace(' [AUTO TRADING]', '').trim() || '';
+    
     setFormData({
       pair: trade.pair,
       direction: trade.direction,
@@ -137,7 +159,9 @@ export default function Trades() {
       tp: trade.tp?.toString() || '',
       risk_pct: trade.risk_pct?.toString() || '',
       result: trade.result,
-      notes: trade.notes || '',
+      notes: cleanNotes,
+      time: timeString,
+      tradingSession: isAutoTrading ? 'auto' : 'manual',
     });
     // Load existing screenshot if available
     setScreenshots(trade.screenshot_url ? [trade.screenshot_url] : []);
@@ -316,6 +340,30 @@ export default function Trades() {
                         <SelectItem value="win">Win</SelectItem>
                         <SelectItem value="loss">Loss</SelectItem>
                         <SelectItem value="be">Break Even</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="time">Time</Label>
+                    <Input
+                      id="time"
+                      type="time"
+                      value={formData.time}
+                      onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="tradingSession">Trading Session</Label>
+                    <Select value={formData.tradingSession} onValueChange={(value: 'manual' | 'auto') => setFormData({ ...formData, tradingSession: value })}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="manual">Manual Trading</SelectItem>
+                        <SelectItem value="auto">Auto Trading</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
