@@ -186,21 +186,11 @@ export default function Analyze() {
   return (
     <Layout>
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold">Analyze</h1>
-            <p className="text-muted-foreground">
-              Get AI-powered insights into your trading performance
-            </p>
-          </div>
-          <div className="flex space-x-2">
-            <Button variant="outline" onClick={exportTrades}>
-              Export CSV
-              {profile?.plan !== 'pro' && (
-                <span className="ml-2 text-xs bg-primary text-primary-foreground px-1 rounded">PRO</span>
-              )}
-            </Button>
-          </div>
+        <div>
+          <h1 className="text-3xl font-bold">Analyze</h1>
+          <p className="text-muted-foreground">
+            Get AI-powered insights into your trading performance
+          </p>
         </div>
 
         {/* Coming Soon - AI Trade Analysis */}
