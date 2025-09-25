@@ -8,7 +8,7 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signUp: (email: string, password: string) => Promise<{ error: any }>;
+  signUp: (email: string, password: string, referralCode?: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: any }>;
 }
@@ -66,16 +66,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error };
   };
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string, referralCode?: string) => {
     const redirectUrl = `${window.location.origin}/`;
     
-    const { error } = await supabase.auth.signUp({
+    // If there's a referral code, include it in metadata
+    const metadata = referralCode ? { referral_code: referralCode } : undefined;
+    
+    const { error, data } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: redirectUrl
+        emailRedirectTo: redirectUrl,
+        data: metadata
       }
     });
+
+    // If signup is successful and there's a referral code, handle the referral
+    if (!error && data.user && referralCode) {
+      handleReferralSignup(data.user.id, referralCode);
+    }
     
     if (error) {
       toast({
@@ -91,6 +100,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     
     return { error };
+  };
+
+  const handleReferralSignup = async (newUserId: string, referralCode: string) => {
+    try {
+      // Find the referrer by referral code
+      const { data: referrer } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('referral_code', referralCode)
+        .single();
+
+      if (referrer && referrer.id !== newUserId) { // Prevent self-referrals
+        // Create referral record
+        await supabase
+          .from('referrals')
+          .insert({
+            referrer_id: referrer.id,
+            referred_id: newUserId,
+            referral_code: referralCode
+          });
+      }
+    } catch (error) {
+      console.error('Error handling referral:', error);
+    }
   };
 
   const signOut = async () => {

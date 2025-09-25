@@ -11,6 +11,10 @@ interface Profile {
   ai_last_analysis_at: string | null;
   created_at: string;
   updated_at: string;
+  referral_code?: string;
+  total_earnings?: number;
+  pending_balance?: number;
+  is_admin?: boolean;
 }
 
 export const useProfile = () => {

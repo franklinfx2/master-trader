@@ -22,6 +22,15 @@ export default function Auth() {
   const [error, setError] = useState('');
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showResetForm, setShowResetForm] = useState(false);
+  const [referralCode, setReferralCode] = useState('');
+
+  useEffect(() => {
+    // Check for referral code in URL params
+    const refParam = searchParams.get('ref');
+    if (refParam) {
+      setReferralCode(refParam);
+    }
+  }, [searchParams]);
 
   const mode = searchParams.get('mode');
 
@@ -52,7 +61,7 @@ export default function Auth() {
     setError('');
     setLoading(true);
     
-    const { error } = await signUp(email, password);
+    const { error } = await signUp(email, password, referralCode || undefined);
     if (error) {
       setError(error.message);
     }
@@ -301,6 +310,25 @@ export default function Auth() {
                     minLength={6}
                   />
                 </div>
+                
+                {/* Referral Code Input */}
+                <div className="space-y-2">
+                  <Label htmlFor="referral-code">Referral Code (Optional)</Label>
+                  <Input
+                    id="referral-code"
+                    type="text"
+                    placeholder="Enter referral code"
+                    value={referralCode}
+                    onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                    className="uppercase"
+                  />
+                  {referralCode && (
+                    <p className="text-sm text-muted-foreground">
+                      You'll be helping your referrer earn commission!
+                    </p>
+                  )}
+                </div>
+                
                 <Button 
                   type="submit" 
                   className="w-full" 

@@ -4,18 +4,24 @@ import { Layout } from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Crown, CreditCard, User, CheckCircle } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Crown, CreditCard, User, CheckCircle, LogOut } from 'lucide-react';
 import { formatPesewasToGHS, PLANS, isInFreeTrial, getTrialDaysRemaining } from '@/lib/paystack';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
+import { ReferralDashboard } from '@/components/referrals/ReferralDashboard';
+import { AdminReferralDashboard } from '@/components/referrals/AdminReferralDashboard';
 
 export default function Settings() {
+  const { signOut } = useAuth();
   const { profile, updateProfile, fetchProfile } = useProfile();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const isMobile = useIsMobile();
+  const isAdmin = profile?.is_admin || false;
 
   // Check for payment verification on page load
   useEffect(() => {
@@ -127,6 +133,16 @@ export default function Settings() {
           </p>
         </div>
 
+        <Tabs defaultValue="account" className="w-full">
+          <TabsList className={`grid w-full ${isAdmin ? 'grid-cols-4' : 'grid-cols-3'}`}>
+            <TabsTrigger value="account">Account</TabsTrigger>
+            <TabsTrigger value="billing">Billing</TabsTrigger>
+            <TabsTrigger value="referrals">Referrals</TabsTrigger>
+            {isAdmin && <TabsTrigger value="admin">Admin</TabsTrigger>}
+          </TabsList>
+
+          <TabsContent value="account" className="space-y-6">
+
         {/* Profile Card - Mobile Optimized */}
         <Card className="card-premium animate-scale-in">
           <CardHeader className={cn(isMobile && "p-4 pb-2")}>
@@ -182,6 +198,153 @@ export default function Settings() {
           </CardContent>
         </Card>
 
+        {/* Subscription Card */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <CreditCard className="w-6 h-6" />
+                <CardTitle>Subscription</CardTitle>
+              </div>
+              <Badge variant={profile?.plan === 'pro' ? 'default' : 'secondary'}>
+                {profile?.plan === 'pro' ? (
+                  <div className="flex items-center space-x-1">
+                    <Crown className="w-3 h-3" />
+                    <span>Pro</span>
+                  </div>
+                ) : (
+                  'Free'
+                )}
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {profile?.plan === 'pro' ? (
+              <div className="space-y-4">
+                <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <CheckCircle className="w-5 h-5 text-primary" />
+                    <span className="font-medium">Pro Plan Active</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    You have access to all premium features including unlimited trades and AI analysis.
+                  </p>
+                </div>
+                <Button 
+                  variant="outline" 
+                  onClick={handleManageSubscription}
+                  className="w-full sm:w-auto"
+                >
+                  Manage Subscription
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {/* Free Trial Status */}
+                {profile?.created_at && isInFreeTrial(profile.created_at) ? (
+                  <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <CheckCircle className="w-5 h-5 text-primary" />
+                      <span className="font-medium">Free Trial Active</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      You have {getTrialDaysRemaining(profile.created_at)} days left in your free trial. 
+                      Enjoy all Pro features!
+                    </p>
+                  </div>
+                ) : (
+                  <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Crown className="w-5 h-5 text-destructive" />
+                      <span className="font-medium">Free Trial Expired</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Your 3-day free trial has ended. Upgrade to Pro to continue using all features.
+                    </p>
+                  </div>
+                )}
+                
+                <div className="space-y-3">
+                  <h3 className="text-2xl font-bold text-violet">Upgrade to Pro</h3>
+                  <p className="text-muted-foreground text-lg">
+                    Unlock unlimited trades, advanced AI analytics, premium insights, and exclusive features for just ₵120/month.
+                  </p>
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    <span className="status-premium text-sm">Unlimited Trades</span>
+                    <span className="status-premium text-sm">AI Analysis</span>
+                    <span className="status-premium text-sm">CSV Export</span>
+                    <span className="status-premium text-sm">Premium Charts</span>
+                  </div>
+                </div>
+                
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="font-medium mb-2 text-muted-foreground">Free Trial (3 Days)</h4>
+                    <ul className="space-y-1 text-sm">
+                      <li>• All Pro features included</li>
+                      <li>• No credit card required</li>
+                      <li>• Full access for 3 days</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-medium mb-2 text-primary">Pro Plan (₵120/month)</h4>
+                    <ul className="space-y-1 text-sm">
+                      <li>• Unlimited trades</li>
+                      <li>• Advanced analytics</li>
+                      <li>• Unlimited AI analysis</li>
+                      <li>• CSV export</li>
+                      <li>• Priority support</li>
+                      <li>• API access</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <Button 
+                  onClick={handleUpgrade}
+                  disabled={loading}
+                  variant="premium"
+                  size="lg"
+                  className="w-full sm:w-auto shadow-powerful"
+                >
+                  {loading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      Processing Payment...
+                    </>
+                  ) : (
+                    <>
+                      <Crown className="w-5 h-5 mr-2" />
+                      {profile?.created_at && isInFreeTrial(profile.created_at) 
+                        ? 'Continue with Pro - ₵120/month' 
+                        : 'Upgrade to Pro - ₵120/month'
+                      }
+                    </>
+                  )}
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Account Actions */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Account Actions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Button 
+              variant="outline" 
+              onClick={signOut}
+              className="w-full sm:w-auto"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Sign Out
+            </Button>
+          </CardContent>
+        </Card>
+        </TabsContent>
+
+        <TabsContent value="billing" className="space-y-6">
         {/* Subscription Card */}
         <Card>
           <CardHeader>
@@ -372,6 +535,18 @@ export default function Settings() {
             </div>
           </CardContent>
         </Card>
+        </TabsContent>
+
+        <TabsContent value="referrals">
+          <ReferralDashboard />
+        </TabsContent>
+
+        {isAdmin && (
+          <TabsContent value="admin">
+            <AdminReferralDashboard />
+          </TabsContent>
+        )}
+        </Tabs>
       </div>
     </Layout>
   );
