@@ -209,6 +209,9 @@ export default function Analyze() {
           }}
         />
 
+        {/* AI Co-Pro Analyzer - Coming Soon for Premium */}
+        <AICoProAnalyzer />
+
         {/* Enhanced Analysis Dashboard */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-5">
@@ -366,8 +369,6 @@ export default function Analyze() {
               userPlan={profile?.plan || 'free'}
               onUpgradeClick={() => navigate('/settings')}
             />
-            
-            <AICoProAnalyzer />
           </TabsContent>
         </Tabs>
       </div>
