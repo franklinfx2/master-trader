@@ -9,7 +9,7 @@ import { Crown, CreditCard, User, CheckCircle, LogOut } from 'lucide-react';
 import { formatPesewasToGHS, PLANS, isInFreeTrial, getTrialDaysRemaining } from '@/lib/paystack';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsMobileOrTablet } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { ReferralDashboard } from '@/components/referrals/ReferralDashboard';
@@ -20,7 +20,7 @@ export default function Settings() {
   const { profile, updateProfile, fetchProfile } = useProfile();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const isMobile = useIsMobile();
+  const isMobile = useIsMobileOrTablet();
   const isAdmin = profile?.is_admin || false;
 
   // Check for payment verification on page load

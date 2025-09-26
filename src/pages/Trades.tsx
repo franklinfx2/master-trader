@@ -15,7 +15,7 @@ import { ScreenshotUpload } from '@/components/trading/ScreenshotUpload';
 import { MobileTradeCard } from '@/components/trading/MobileTradeCard';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsMobileOrTablet } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 
 export default function Trades() {
@@ -23,7 +23,7 @@ export default function Trades() {
   const { profile } = useProfile();
   const { user } = useAuth();
   const { toast } = useToast();
-  const isMobile = useIsMobile();
+  const isMobile = useIsMobileOrTablet();
   
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingTrade, setEditingTrade] = useState<Trade | null>(null);

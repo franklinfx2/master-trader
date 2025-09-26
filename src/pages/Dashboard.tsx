@@ -5,13 +5,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Plus, TrendingUp, TrendingDown, BarChart3, DollarSign } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsMobileOrTablet } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 
 export default function Dashboard() {
   const { trades, stats, loading } = useTrades();
   const { profile } = useProfile();
-  const isMobile = useIsMobile();
+  const isMobile = useIsMobileOrTablet();
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
