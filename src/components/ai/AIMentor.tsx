@@ -103,43 +103,41 @@ export const AIMentor = ({ trades, userPlan, onUpgradeClick }: AIMentorProps) =>
         <div className="mx-auto w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-4">
           <Brain className="w-8 h-8 text-primary" />
         </div>
-        <CardTitle className="text-xl">Your Personal AI Trading Mentor is Waiting! 🧠</CardTitle>
-        <CardDescription className="text-base">
-          Get tailored insights, improve your strategy, and trade with confidence. 
-          Upgrade to Pro to unlock full access.
+        <CardTitle className="text-lg sm:text-xl">AI Trading Mentor 🧠</CardTitle>
+        <CardDescription className="text-sm sm:text-base">
+          Get AI insights & improve your strategy. Upgrade to Pro to unlock.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="grid md:grid-cols-2 gap-4">
-          <div className="p-4 rounded-lg bg-background/50 border">
-            <Target className="w-6 h-6 text-primary mb-2" />
-            <h4 className="font-semibold mb-1">Personalized Analysis</h4>
-            <p className="text-sm text-muted-foreground">Deep insights into your trading patterns and performance</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div className="p-3 sm:p-4 rounded-lg bg-background/50 border">
+            <Target className="w-5 h-5 sm:w-6 sm:h-6 text-primary mb-2" />
+            <h4 className="font-semibold text-sm sm:text-base mb-1">Personalized Analysis</h4>
+            <p className="text-xs sm:text-sm text-muted-foreground">Deep insights into your trading patterns</p>
           </div>
-          <div className="p-4 rounded-lg bg-background/50 border">
-            <TrendingUp className="w-6 h-6 text-primary mb-2" />
-            <h4 className="font-semibold mb-1">Improvement Roadmap</h4>
-            <p className="text-sm text-muted-foreground">Clear action steps to level up your trading game</p>
+          <div className="p-3 sm:p-4 rounded-lg bg-background/50 border">
+            <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-primary mb-2" />
+            <h4 className="font-semibold text-sm sm:text-base mb-1">Improvement Roadmap</h4>
+            <p className="text-xs sm:text-sm text-muted-foreground">Clear action steps to level up your trading</p>
           </div>
-          <div className="p-4 rounded-lg bg-background/50 border">
-            <CheckCircle className="w-6 h-6 text-primary mb-2" />
-            <h4 className="font-semibold mb-1">Strength Recognition</h4>
-            <p className="text-sm text-muted-foreground">Identify what you're already doing well</p>
+          <div className="p-3 sm:p-4 rounded-lg bg-background/50 border">
+            <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-primary mb-2" />
+            <h4 className="font-semibold text-sm sm:text-base mb-1">Strength Recognition</h4>
+            <p className="text-xs sm:text-sm text-muted-foreground">Identify what you're doing well</p>
           </div>
-          <div className="p-4 rounded-lg bg-background/50 border">
-            <AlertTriangle className="w-6 h-6 text-primary mb-2" />
-            <h4 className="font-semibold mb-1">Risk Management</h4>
-            <p className="text-sm text-muted-foreground">Optimize your position sizing and risk strategy</p>
+          <div className="p-3 sm:p-4 rounded-lg bg-background/50 border">
+            <AlertTriangle className="w-5 h-5 sm:w-6 sm:h-6 text-primary mb-2" />
+            <h4 className="font-semibold text-sm sm:text-base mb-1">Risk Management</h4>
+            <p className="text-xs sm:text-sm text-muted-foreground">Optimize your position sizing and risk</p>
           </div>
         </div>
         
         <div className="text-center">
           <Button 
             onClick={handleMentorClick}
-            size="lg"
-            className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold px-8 py-6 text-lg"
+            className="w-full sm:w-auto bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold px-4 sm:px-8 py-3 sm:py-6 text-sm sm:text-lg min-h-[44px]"
           >
-            <Star className="w-5 h-5 mr-2" />
+            <Star className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
             Unlock AI Mentor 💡
           </Button>
         </div>
@@ -162,7 +160,7 @@ export const AIMentor = ({ trades, userPlan, onUpgradeClick }: AIMentorProps) =>
         </CardContent>
       </Card>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         {/* Strengths */}
         <Card>
           <CardHeader>
@@ -243,9 +241,9 @@ export const AIMentor = ({ trades, userPlan, onUpgradeClick }: AIMentorProps) =>
             <div className="flex items-center space-x-2">
               <Brain className="w-6 h-6 text-primary" />
               <div>
-                <CardTitle>AI Trading Mentor</CardTitle>
-                <CardDescription>
-                  Get personalized insights and actionable advice from your AI trading coach
+                <CardTitle className="text-lg sm:text-xl">AI Trading Mentor</CardTitle>
+                <CardDescription className="text-sm sm:text-base">
+                  Get personalized insights from your AI trading coach
                 </CardDescription>
               </div>
             </div>
@@ -256,8 +254,7 @@ export const AIMentor = ({ trades, userPlan, onUpgradeClick }: AIMentorProps) =>
             <Button 
               onClick={handleMentorClick}
               disabled={loading || trades.length < 5}
-              size="lg"
-              className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold px-8 py-6 text-lg"
+              className="w-full sm:w-auto bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold px-4 sm:px-8 py-3 sm:py-6 text-sm sm:text-lg min-h-[44px]"
             >
               {loading ? (
                 <>

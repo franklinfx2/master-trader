@@ -197,20 +197,23 @@ export default function Analyze() {
             </p>
           </div>
 
-        {/* AI Trading Mentor */}
-        <AIMentor 
-          trades={trades} 
-          userPlan={profile?.plan || 'free'} 
-          onUpgradeClick={() => {
-            toast({
-              title: "Upgrade to Pro",
-              description: "Visit your settings to upgrade and unlock AI mentor features.",
-            });
-          }}
-        />
+        {/* AI Features Section - Responsive Layout */}
+        <div className="space-y-4 sm:space-y-6">
+          {/* AI Trading Mentor */}
+          <AIMentor 
+            trades={trades} 
+            userPlan={profile?.plan || 'free'} 
+            onUpgradeClick={() => {
+              toast({
+                title: "Upgrade to Pro",
+                description: "Visit your settings to upgrade and unlock AI mentor features.",
+              });
+            }}
+          />
 
-        {/* AI Co-Pro Analyzer - Coming Soon for Premium */}
-        <AICoProAnalyzer />
+          {/* AI Co-Pro Analyzer - Coming Soon for Premium */}
+          <AICoProAnalyzer />
+        </div>
 
         {/* Enhanced Analysis Dashboard - Responsive */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">

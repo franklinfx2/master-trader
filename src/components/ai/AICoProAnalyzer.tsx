@@ -42,50 +42,22 @@ export const AICoProAnalyzer = () => {
           <div className="mx-auto w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-amber-500 flex items-center justify-center mb-4 shadow-2xl">
             <Sparkles className="w-10 h-10 text-white animate-pulse" />
           </div>
-          <CardTitle className="text-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-amber-600 bg-clip-text text-transparent font-bold">
+          <CardTitle className="text-lg sm:text-xl lg:text-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-amber-600 bg-clip-text text-transparent font-bold">
             AI Co-Pro Analyzer
           </CardTitle>
-          <CardDescription className="text-base">
-            Your next-level trading partner - Coming Soon for Premium users
+          <CardDescription className="text-sm sm:text-base">
+            Coming Soon – Premium
           </CardDescription>
-          <Badge className="mx-auto mt-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white border-0">
-            Premium Exclusive
-          </Badge>
         </CardHeader>
 
-        <CardContent className="relative space-y-6">
-          {/* Feature preview grid */}
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="p-4 rounded-lg bg-gradient-to-br from-white/50 to-white/20 border border-white/30 backdrop-blur-sm">
-              <Camera className="w-6 h-6 text-blue-600 mb-2" />
-              <h4 className="font-semibold mb-1">Screenshot Analysis</h4>
-              <p className="text-sm text-muted-foreground">Upload market screenshots for instant AI insights</p>
-            </div>
-            <div className="p-4 rounded-lg bg-gradient-to-br from-white/50 to-white/20 border border-white/30 backdrop-blur-sm">
-              <BarChart3 className="w-6 h-6 text-purple-600 mb-2" />
-              <h4 className="font-semibold mb-1">Session Volatility</h4>
-              <p className="text-sm text-muted-foreground">Real-time volatility analysis and predictions</p>
-            </div>
-            <div className="p-4 rounded-lg bg-gradient-to-br from-white/50 to-white/20 border border-white/30 backdrop-blur-sm">
-              <Target className="w-6 h-6 text-amber-600 mb-2" />
-              <h4 className="font-semibold mb-1">Complete Setups</h4>
-              <p className="text-sm text-muted-foreground">Full trade setups with entries, TP, and SL</p>
-            </div>
-            <div className="p-4 rounded-lg bg-gradient-to-br from-white/50 to-white/20 border border-white/30 backdrop-blur-sm">
-              <Shield className="w-6 h-6 text-green-600 mb-2" />
-              <h4 className="font-semibold mb-1">Risk Management</h4>
-              <p className="text-sm text-muted-foreground">Optimal risk-to-reward ratio calculations</p>
-            </div>
-          </div>
-
+        <CardContent className="relative">
           <div className="text-center">
             <Button 
               onClick={() => setShowModal(true)}
-              size="lg"
-              className="bg-gradient-to-r from-blue-600 via-purple-600 to-amber-600 hover:from-blue-700 hover:via-purple-700 hover:to-amber-700 text-white font-semibold px-12 py-6 text-lg shadow-2xl transform hover:scale-105 transition-all duration-300 border-0"
+              className="w-full sm:w-auto bg-gradient-to-r from-blue-600 via-purple-600 to-amber-600 hover:from-blue-700 hover:via-purple-700 hover:to-amber-700 text-white font-semibold px-4 sm:px-8 py-3 sm:py-6 text-sm sm:text-lg shadow-2xl transform hover:scale-105 transition-all duration-300 border-0 min-h-[44px]"
             >
-              <Sparkles className="w-6 h-6 mr-3" />
-              Unlock AI Co-Pro Analyzer 🚀 (Coming Soon)
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+              Coming Soon – Premium
             </Button>
           </div>
         </CardContent>
@@ -93,7 +65,7 @@ export const AICoProAnalyzer = () => {
 
       {/* Teaser Modal */}
       <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <div className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-amber-500 flex items-center justify-center mb-4">
               <Sparkles className="w-8 h-8 text-white" />
@@ -117,7 +89,7 @@ export const AICoProAnalyzer = () => {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-500" />
