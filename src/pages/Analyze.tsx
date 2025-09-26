@@ -16,6 +16,7 @@ import { TradeFilters } from '@/components/trading/TradeFilters';
 import { OpenAITester } from '@/components/testing/OpenAITester';
 import { AIFeaturesSummary } from '@/components/ai/AIFeaturesSummary';
 import { EndToEndAITest } from '@/components/testing/EndToEndAITest';
+import { AIMentor } from '@/components/ai/AIMentor';
 
 export default function Analyze() {
   const { trades } = useTrades();
@@ -193,39 +194,17 @@ export default function Analyze() {
           </p>
         </div>
 
-        {/* Coming Soon - AI Trade Analysis */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Brain className="w-6 h-6 text-primary" />
-                <div>
-                  <CardTitle>AI Trading Analysis</CardTitle>
-                  <CardDescription>
-                    Smart insights for your trading performance
-                  </CardDescription>
-                </div>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-center py-8 space-y-4">
-              <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                <Brain className="w-8 h-8 text-primary" />
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold">🚀 AI Trade Analysis is on the way!</h3>
-                <p className="text-muted-foreground max-w-md mx-auto">
-                  We're working to bring you smart insights soon. This powerful feature will analyze your trading patterns and provide personalized recommendations.
-                </p>
-              </div>
-              <Button disabled variant="outline" className="mt-4">
-                <Brain className="w-4 h-4 mr-2" />
-                Coming Soon
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        {/* AI Trading Mentor */}
+        <AIMentor 
+          trades={trades} 
+          userPlan={profile?.plan || 'free'} 
+          onUpgradeClick={() => {
+            toast({
+              title: "Upgrade to Pro",
+              description: "Visit your settings to upgrade and unlock AI mentor features.",
+            });
+          }}
+        />
 
         {/* Enhanced Analysis Dashboard */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
