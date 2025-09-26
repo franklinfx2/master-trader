@@ -42,10 +42,10 @@ export const AICoProAnalyzer = () => {
           <div className="mx-auto w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-amber-500 flex items-center justify-center mb-4 shadow-2xl">
             <Sparkles className="w-10 h-10 text-white animate-pulse" />
           </div>
-          <CardTitle className="text-lg sm:text-xl lg:text-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-amber-600 bg-clip-text text-transparent font-bold">
+          <CardTitle className="text-lg lg:text-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-amber-600 bg-clip-text text-transparent font-bold">
             AI Co-Pro Analyzer
           </CardTitle>
-          <CardDescription className="text-sm sm:text-base">
+          <CardDescription className="text-sm lg:text-base">
             Coming Soon – Premium
           </CardDescription>
         </CardHeader>
@@ -54,9 +54,9 @@ export const AICoProAnalyzer = () => {
           <div className="text-center">
             <Button 
               onClick={() => setShowModal(true)}
-              className="w-full sm:w-auto bg-gradient-to-r from-blue-600 via-purple-600 to-amber-600 hover:from-blue-700 hover:via-purple-700 hover:to-amber-700 text-white font-semibold px-4 sm:px-8 py-3 sm:py-6 text-sm sm:text-lg shadow-2xl transform hover:scale-105 transition-all duration-300 border-0 min-h-[44px]"
+              className="w-full lg:w-auto bg-gradient-to-r from-blue-600 via-purple-600 to-amber-600 hover:from-blue-700 hover:via-purple-700 hover:to-amber-700 text-white font-semibold px-4 lg:px-8 py-3 lg:py-6 text-sm lg:text-lg shadow-2xl transform hover:scale-105 transition-all duration-300 border-0 min-h-[44px]"
             >
-              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+              <Sparkles className="w-4 h-4 lg:w-5 lg:h-5 mr-2" />
               Coming Soon – Premium
             </Button>
           </div>
@@ -89,7 +89,7 @@ export const AICoProAnalyzer = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4">
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-500" />
