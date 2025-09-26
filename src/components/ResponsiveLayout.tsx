@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { AIStatusIndicator } from '@/components/ai/AIStatusIndicator';
 import { MiniFooter } from '@/components/ui/footer';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsMobile, useIsMobileOrTablet } from '@/hooks/use-mobile';
 import { MobileBottomNav } from './MobileBottomNav';
 import { DesktopSidebar } from './DesktopSidebar';
 
@@ -17,11 +17,12 @@ export const ResponsiveLayout = ({ children }: ResponsiveLayoutProps) => {
   const { signOut } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
+  const isMobileOrTablet = useIsMobileOrTablet();
 
   return (
     <div className="flex min-h-screen bg-background">
-      {/* Mobile sidebar backdrop */}
-      {sidebarOpen && isMobile && (
+      {/* Mobile/Tablet sidebar backdrop */}
+      {sidebarOpen && isMobileOrTablet && (
         <div 
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
           onClick={() => setSidebarOpen(false)}
@@ -29,10 +30,10 @@ export const ResponsiveLayout = ({ children }: ResponsiveLayoutProps) => {
       )}
 
       {/* Desktop Sidebar */}
-      {!isMobile && <DesktopSidebar />}
+      {!isMobileOrTablet && <DesktopSidebar />}
 
-      {/* Mobile Sidebar */}
-      {isMobile && (
+      {/* Mobile/Tablet Sidebar */}
+      {isMobileOrTablet && (
         <div className={cn(
           "fixed inset-y-0 left-0 z-50 w-72 glass-effect border-r border-violet/20 transform transition-transform duration-300 ease-out",
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -46,11 +47,11 @@ export const ResponsiveLayout = ({ children }: ResponsiveLayoutProps) => {
         {/* Header */}
         <div className={cn(
           "glass-effect border-b border-violet/20 backdrop-blur-md",
-          isMobile ? "sticky top-0 z-30" : ""
+          isMobileOrTablet ? "sticky top-0 z-30" : ""
         )}>
           <div className="flex items-center justify-between p-4">
-            {isMobile ? (
-              // Mobile header
+            {isMobileOrTablet ? (
+              // Mobile/Tablet header
               <>
                 <Button
                   variant="ghost"
@@ -97,12 +98,12 @@ export const ResponsiveLayout = ({ children }: ResponsiveLayoutProps) => {
           <main className="flex-1 overflow-auto bg-gradient-to-br from-background via-background to-violet/5 relative">
             <div className={cn(
               "w-full min-h-full",
-              isMobile ? "p-4 space-y-4 pb-20" : "p-6 lg:p-8"
+              isMobileOrTablet ? "p-4 space-y-4 pb-20" : "p-6 lg:p-8"
             )}>
               {children}
             </div>
           </main>
-          {!isMobile && <MiniFooter />}
+          {!isMobileOrTablet && <MiniFooter />}
         </div>
       </div>
 
