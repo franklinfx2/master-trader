@@ -189,13 +189,13 @@ export default function Analyze() {
 
   return (
     <Layout>
-      <div className="container-responsive section-responsive">
-        <div className="text-center sm:text-left">
-          <h1 className="font-bold text-2xl sm:text-3xl lg:text-4xl">Analyze</h1>
-          <p className="text-muted-foreground text-sm sm:text-base lg:text-lg">
-            Get AI-powered insights into your trading performance
-          </p>
-        </div>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl space-y-4 sm:space-y-6 lg:space-y-8">
+          <div className="text-center sm:text-left">
+            <h1 className="font-bold text-lg sm:text-2xl lg:text-4xl leading-tight">Analyze</h1>
+            <p className="text-muted-foreground text-xs sm:text-sm lg:text-lg mt-1 sm:mt-2">
+              Get AI-powered insights into your trading performance
+            </p>
+          </div>
 
         {/* AI Trading Mentor */}
         <AIMentor 
@@ -213,20 +213,20 @@ export default function Analyze() {
         <AICoProAnalyzer />
 
         {/* Enhanced Analysis Dashboard - Responsive */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="section-responsive">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-1 sm:gap-2">
-            <TabsTrigger value="overview" className="text-xs sm:text-sm">Overview</TabsTrigger>
-            <TabsTrigger value="sessions" className="text-xs sm:text-sm">Sessions</TabsTrigger>
-            <TabsTrigger value="timing" className="text-xs sm:text-sm">Timing</TabsTrigger>
-            <TabsTrigger value="setups" className="text-xs sm:text-sm">Setups</TabsTrigger>
-            <TabsTrigger value="ai-insights" className="text-xs sm:text-sm col-span-2 sm:col-span-1">AI Mentor</TabsTrigger>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-0.5 sm:gap-1 lg:gap-2 h-auto p-1">
+            <TabsTrigger value="overview" className="text-[10px] sm:text-xs lg:text-sm py-1.5 sm:py-2 px-1 sm:px-2 lg:px-3 data-[state=active]:text-xs sm:data-[state=active]:text-sm">Overview</TabsTrigger>
+            <TabsTrigger value="sessions" className="text-[10px] sm:text-xs lg:text-sm py-1.5 sm:py-2 px-1 sm:px-2 lg:px-3 data-[state=active]:text-xs sm:data-[state=active]:text-sm">Sessions</TabsTrigger>
+            <TabsTrigger value="timing" className="text-[10px] sm:text-xs lg:text-sm py-1.5 sm:py-2 px-1 sm:px-2 lg:px-3 data-[state=active]:text-xs sm:data-[state=active]:text-sm">Timing</TabsTrigger>
+            <TabsTrigger value="setups" className="text-[10px] sm:text-xs lg:text-sm py-1.5 sm:py-2 px-1 sm:px-2 lg:px-3 data-[state=active]:text-xs sm:data-[state=active]:text-sm">Setups</TabsTrigger>
+            <TabsTrigger value="ai-insights" className="text-[10px] sm:text-xs lg:text-sm py-1.5 sm:py-2 px-1 sm:px-2 lg:px-3 col-span-2 sm:col-span-1 data-[state=active]:text-xs sm:data-[state=active]:text-sm">AI Mentor</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="section-responsive">
+          <TabsContent value="overview" className="space-y-4 sm:space-y-6">
             <TradeFilters trades={trades} onFilterChange={setFilteredTrades} />
             
             {/* AI Coaching Insights Grid - Responsive */}
-            <div className="cards-responsive">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
               <AIInsightCard trades={filteredTrades} type="session" />
               <AIInsightCard trades={filteredTrades} type="time" />
               <AIInsightCard trades={filteredTrades} type="setup" />
@@ -234,22 +234,22 @@ export default function Analyze() {
             </div>
 
             {/* Key Performance Metrics - Responsive */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Recent Performance</CardTitle>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+              <Card className="p-3 sm:p-4 lg:p-6">
+                <CardHeader className="p-0 pb-3 sm:pb-4">
+                  <CardTitle className="text-sm sm:text-base lg:text-lg">Recent Performance</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Last 10 trades:</span>
-                      <span className="font-medium">
+                <CardContent className="p-0">
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <div className="flex justify-between items-start gap-2">
+                      <span className="text-muted-foreground text-xs sm:text-sm flex-shrink-0">Last 10 trades:</span>
+                      <span className="font-medium text-xs sm:text-sm text-right">
                         {filteredTrades.slice(0, 10).filter(t => t.result === 'win').length}/10 wins
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Win rate:</span>
-                      <span className="font-medium">
+                    <div className="flex justify-between items-start gap-2">
+                      <span className="text-muted-foreground text-xs sm:text-sm flex-shrink-0">Win rate:</span>
+                      <span className="font-medium text-xs sm:text-sm text-right">
                         {filteredTrades.slice(0, 10).length > 0 
                           ? `${((filteredTrades.slice(0, 10).filter(t => t.result === 'win').length / filteredTrades.slice(0, 10).filter(t => t.result !== 'open').length) * 100).toFixed(1)}%`
                           : '0%'
@@ -260,21 +260,21 @@ export default function Analyze() {
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Trade Distribution</CardTitle>
+              <Card className="p-3 sm:p-4 lg:p-6">
+                <CardHeader className="p-0 pb-3 sm:pb-4">
+                  <CardTitle className="text-sm sm:text-base lg:text-lg">Trade Distribution</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Long trades:</span>
-                      <span className="font-medium">
+                <CardContent className="p-0">
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <div className="flex justify-between items-start gap-2">
+                      <span className="text-muted-foreground text-xs sm:text-sm flex-shrink-0">Long trades:</span>
+                      <span className="font-medium text-xs sm:text-sm text-right">
                         {filteredTrades.filter(t => t.direction === 'long').length}
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Short trades:</span>
-                      <span className="font-medium">
+                    <div className="flex justify-between items-start gap-2">
+                      <span className="text-muted-foreground text-xs sm:text-sm flex-shrink-0">Short trades:</span>
+                      <span className="font-medium text-xs sm:text-sm text-right">
                         {filteredTrades.filter(t => t.direction === 'short').length}
                       </span>
                     </div>
@@ -282,24 +282,24 @@ export default function Analyze() {
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Risk Management</CardTitle>
+              <Card className="p-3 sm:p-4 lg:p-6">
+                <CardHeader className="p-0 pb-3 sm:pb-4">
+                  <CardTitle className="text-sm sm:text-base lg:text-lg">Risk Management</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Avg risk:</span>
-                      <span className="font-medium">
+                <CardContent className="p-0">
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <div className="flex justify-between items-start gap-2">
+                      <span className="text-muted-foreground text-xs sm:text-sm flex-shrink-0">Avg risk:</span>
+                      <span className="font-medium text-xs sm:text-sm text-right">
                         {filteredTrades.filter(t => t.risk_pct).length > 0 
                           ? `${(filteredTrades.filter(t => t.risk_pct).reduce((sum, t) => sum + (t.risk_pct || 0), 0) / filteredTrades.filter(t => t.risk_pct).length).toFixed(1)}%`
                           : 'N/A'
                         }
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Avg R:R:</span>
-                      <span className="font-medium">
+                    <div className="flex justify-between items-start gap-2">
+                      <span className="text-muted-foreground text-xs sm:text-sm flex-shrink-0">Avg R:R:</span>
+                      <span className="font-medium text-xs sm:text-sm text-right">
                         {filteredTrades.filter(t => t.rr).length > 0 
                           ? `1:${(filteredTrades.filter(t => t.rr).reduce((sum, t) => sum + (t.rr || 0), 0) / filteredTrades.filter(t => t.rr).length).toFixed(2)}`
                           : 'N/A'
