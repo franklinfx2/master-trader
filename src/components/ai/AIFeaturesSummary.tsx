@@ -36,10 +36,11 @@ export function AIFeaturesSummary() {
       status: 'unknown'
     },
     {
-      name: 'Performance Coaching',
-      description: 'Personalized trading advice and improvement suggestions',
+      name: 'AI Mentor',
+      description: 'Your personal AI trading coach providing tailored insights',
       icon: <Clock className="w-5 h-5" />,
-      status: 'unknown'
+      status: 'unknown',
+      endpoint: 'ai-mentor'
     }
   ]);
   
