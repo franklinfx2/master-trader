@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
+import { CheckCircle } from 'lucide-react';
 
 
 export default function Auth() {
@@ -23,6 +24,7 @@ export default function Auth() {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showResetForm, setShowResetForm] = useState(false);
   const [referralCode, setReferralCode] = useState('');
+  const [showVerificationMessage, setShowVerificationMessage] = useState(false);
 
   useEffect(() => {
     // Check for referral code in URL params
@@ -30,7 +32,18 @@ export default function Auth() {
     if (refParam) {
       setReferralCode(refParam);
     }
-  }, [searchParams]);
+
+    // Check if user just verified their email
+    const verified = searchParams.get('verified');
+    if (verified === 'true') {
+      setShowVerificationMessage(true);
+      toast({
+        title: "Email Verified Successfully!",
+        description: "Your email has been verified. You can now sign in to your account.",
+        duration: 8000,
+      });
+    }
+  }, [searchParams, toast]);
 
   const mode = searchParams.get('mode');
 
@@ -61,9 +74,20 @@ export default function Auth() {
     setError('');
     setLoading(true);
     
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      setLoading(false);
+      return;
+    }
+    
     const { error } = await signUp(email, password, referralCode || undefined);
     if (error) {
       setError(error.message);
+    } else {
+      // Clear form on successful signup
+      setEmail('');
+      setPassword('');
+      setReferralCode('');
     }
     setLoading(false);
   };
@@ -232,6 +256,12 @@ export default function Auth() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {showVerificationMessage && (
+            <div className="mb-4 p-3 text-sm text-green-600 bg-green-50 border border-green-200 rounded-md flex items-center gap-2">
+              <CheckCircle className="h-4 w-4" />
+              <span>Email verified! You can now sign in to your account.</span>
+            </div>
+          )}
           {error && (
             <div className="mb-4 p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
               {error}
@@ -336,8 +366,9 @@ export default function Auth() {
                 >
                   {loading ? 'Creating Account...' : 'Create Account'}
                 </Button>
-                <div className="text-sm text-muted-foreground text-center">
-                  You'll receive a verification email after signing up
+                <div className="text-sm text-muted-foreground text-center space-y-1">
+                  <p>You'll receive a verification email after signing up</p>
+                  <p className="text-xs">⚠️ You must verify your email before you can sign in</p>
                 </div>
               </form>
             </TabsContent>

@@ -50,24 +50,42 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
     
     if (error) {
+      // Check if it's an email not confirmed error
+      if (error.message.includes('Email not confirmed')) {
+        toast({
+          title: "Email Not Verified",
+          description: "Please check your email and click the verification link before signing in.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Sign In Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    } else if (data.user && !data.user.email_confirmed_at) {
+      // Additional check for email confirmation
+      await supabase.auth.signOut();
       toast({
-        title: "Sign In Error",
-        description: error.message,
+        title: "Email Not Verified",
+        description: "Please verify your email address before signing in. Check your inbox for the verification link.",
         variant: "destructive",
       });
+      return { error: { message: "Email not verified" } };
     }
     
     return { error };
   };
 
   const signUp = async (email: string, password: string, referralCode?: string) => {
-    const redirectUrl = `${window.location.origin}/`;
+    const redirectUrl = `${window.location.origin}/auth?verified=true`;
     
     // If there's a referral code, include it in metadata
     const metadata = referralCode ? { referral_code: referralCode } : undefined;
@@ -94,8 +112,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
     } else {
       toast({
-        title: "Success",
-        description: "Check your email to confirm your account.",
+        title: "Account Created Successfully",
+        description: "Please check your email and click the verification link to activate your account. You cannot sign in until you verify your email.",
+        duration: 8000,
       });
     }
     
@@ -148,7 +167,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } else {
       toast({
         title: "Password Reset Email Sent",
-        description: "Check your email for password reset instructions.",
+        description: "Check your email for password reset instructions. Click the link in the email to reset your password.",
+        duration: 8000,
       });
     }
     
