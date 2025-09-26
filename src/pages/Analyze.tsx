@@ -189,10 +189,10 @@ export default function Analyze() {
 
   return (
     <Layout>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold">Analyze</h1>
-          <p className="text-muted-foreground">
+      <div className="container-responsive section-responsive">
+        <div className="text-center sm:text-left">
+          <h1 className="font-bold text-2xl sm:text-3xl lg:text-4xl">Analyze</h1>
+          <p className="text-muted-foreground text-sm sm:text-base lg:text-lg">
             Get AI-powered insights into your trading performance
           </p>
         </div>
@@ -212,29 +212,29 @@ export default function Analyze() {
         {/* AI Co-Pro Analyzer - Coming Soon for Premium */}
         <AICoProAnalyzer />
 
-        {/* Enhanced Analysis Dashboard */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="sessions">Sessions</TabsTrigger>
-            <TabsTrigger value="timing">Timing</TabsTrigger>
-            <TabsTrigger value="setups">Setups</TabsTrigger>
-            <TabsTrigger value="ai-insights">AI Mentor</TabsTrigger>
+        {/* Enhanced Analysis Dashboard - Responsive */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="section-responsive">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-1 sm:gap-2">
+            <TabsTrigger value="overview" className="text-xs sm:text-sm">Overview</TabsTrigger>
+            <TabsTrigger value="sessions" className="text-xs sm:text-sm">Sessions</TabsTrigger>
+            <TabsTrigger value="timing" className="text-xs sm:text-sm">Timing</TabsTrigger>
+            <TabsTrigger value="setups" className="text-xs sm:text-sm">Setups</TabsTrigger>
+            <TabsTrigger value="ai-insights" className="text-xs sm:text-sm col-span-2 sm:col-span-1">AI Mentor</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="space-y-6">
+          <TabsContent value="overview" className="section-responsive">
             <TradeFilters trades={trades} onFilterChange={setFilteredTrades} />
             
-            {/* AI Coaching Insights Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* AI Coaching Insights Grid - Responsive */}
+            <div className="cards-responsive">
               <AIInsightCard trades={filteredTrades} type="session" />
               <AIInsightCard trades={filteredTrades} type="time" />
               <AIInsightCard trades={filteredTrades} type="setup" />
               <AIInsightCard trades={filteredTrades} type="risk" />
             </div>
 
-            {/* Key Performance Metrics */}
-            <div className="grid md:grid-cols-3 gap-4">
+            {/* Key Performance Metrics - Responsive */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
               <Card>
                 <CardHeader>
                   <CardTitle className="text-lg">Recent Performance</CardTitle>

@@ -34,23 +34,17 @@ export default function Dashboard() {
 
   return (
     <Layout>
-      <div className={cn(
-        "animate-fade-in",
-        isMobile ? "space-y-4" : "space-y-8 p-2"
-      )}>
-        {/* Premium Hero Section - Mobile Optimized */}
-        <div className={cn(
-          "relative overflow-hidden rounded-3xl animate-scale-in",
-          isMobile ? "p-6" : "p-8 md:p-12"
-        )}>
+      <div className="container-responsive section-responsive animate-fade-in">
+        {/* Premium Hero Section - Fully Responsive */}
+        <div className="relative overflow-hidden rounded-2xl lg:rounded-3xl animate-scale-in p-4 sm:p-6 lg:p-8 xl:p-12">
           <div className="absolute inset-0 gradient-hero opacity-90" />
-          <div className="relative z-10 flex flex-col items-start justify-between space-y-6">
-            <div className="space-y-3 text-white">
-              <h1 className={cn(
-                "font-bold leading-tight",
-                isMobile ? "text-2xl" : "text-4xl md:text-5xl"
-              )}>
+          <div className="relative z-10 flex flex-col items-start justify-between space-y-4 sm:space-y-6">
+            <div className="space-y-2 sm:space-y-3 text-white">
+              <h1 className="font-bold leading-tight text-2xl sm:text-3xl lg:text-4xl xl:text-5xl">
                 Welcome back, Trader! 
+                <span className="block text-lg sm:text-xl lg:text-2xl text-blue-100 font-medium mt-2">
+                  Your trading insights await
+                </span>
               </h1>
               <p className={cn(
                 "text-white/90 leading-relaxed",
