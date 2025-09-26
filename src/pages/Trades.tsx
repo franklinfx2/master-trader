@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Plus, Edit, Trash2, Filter, Eye } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { ScreenshotUpload } from '@/components/trading/ScreenshotUpload';
+import { MobileTradeCard } from '@/components/trading/MobileTradeCard';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -501,91 +502,19 @@ export default function Trades() {
           </Card>
         ) : (
           <div className={cn(isMobile ? "space-y-3" : "space-y-4")}>
-            {filteredTrades.map((trade) => (
-              <Card key={trade.id} className="card-premium group hover:scale-[1.02] transition-all duration-300">
-                <CardContent className={cn("pt-6", isMobile && "p-4")}>
-                  {isMobile ? (
-                    // Mobile layout - vertical stacking
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <div className={cn(
-                            "px-3 py-1.5 rounded-xl text-xs font-bold border-2 transition-colors",
-                            trade.direction === 'long' 
-                              ? 'bg-profit/10 text-profit border-profit/30 group-hover:bg-profit/20' 
-                              : 'bg-loss/10 text-loss border-loss/30 group-hover:bg-loss/20'
-                          )}>
-                            {trade.direction.toUpperCase()}
-                          </div>
-                          <div>
-                            <h3 className="font-bold text-lg">{trade.pair}</h3>
-                            <p className="text-xs text-muted-foreground">
-                              {new Date(trade.executed_at).toLocaleDateString()}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <div className={cn(
-                            "font-bold text-lg",
-                            trade.result === 'win' ? 'text-profit' :
-                            trade.result === 'loss' ? 'text-loss' :
-                            trade.result === 'open' ? 'text-violet' :
-                            'text-neutral'
-                          )}>
-                            {trade.result === 'open' ? 'ACTIVE' : 
-                             trade.pnl ? `${trade.pnl > 0 ? '+' : ''}$${trade.pnl.toFixed(2)}` : '-'}
-                          </div>
-                          <div className={cn(
-                            "text-xs font-medium px-2 py-1 rounded-lg mt-1",
-                            trade.result === 'win' ? 'bg-profit/10 text-profit' :
-                            trade.result === 'loss' ? 'bg-loss/10 text-loss' :
-                            trade.result === 'open' ? 'bg-violet/10 text-violet' :
-                            'bg-neutral/10 text-neutral'
-                          )}>
-                            {trade.result === 'open' ? 'Active' : trade.result.toUpperCase()}
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center justify-between text-sm">
-                        <div className="space-y-1">
-                          <p className="text-muted-foreground">
-                            Entry: <span className="font-medium text-foreground">${trade.entry}</span>
-                          </p>
-                          {trade.exit && (
-                            <p className="text-muted-foreground">
-                              Exit: <span className="font-medium text-foreground">${trade.exit}</span>
-                            </p>
-                          )}
-                          {trade.rr && (
-                            <p className="text-muted-foreground">
-                              R:R <span className="font-medium text-foreground">1:{trade.rr.toFixed(2)}</span>
-                            </p>
-                          )}
-                        </div>
-                        
-                        <div className="flex space-x-2">
-                          <Button 
-                            size="sm" 
-                            variant="outline" 
-                            onClick={() => handleEdit(trade)}
-                            className="h-8 w-8 p-0 hover:scale-110 transition-transform"
-                          >
-                            <Edit className="w-3 h-3" />
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant="outline" 
-                            onClick={() => handleDelete(trade.id)}
-                            className="h-8 w-8 p-0 hover:scale-110 transition-transform"
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    // Desktop layout - horizontal
+            {filteredTrades.map((trade) => 
+              isMobile ? (
+                <MobileTradeCard
+                  key={trade.id}
+                  trade={trade}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                  onView={(trade) => {}}
+                />
+              ) : (
+                <Card key={trade.id} className="card-premium group hover:scale-[1.02] transition-all duration-300">
+                  <CardContent className="pt-6">
+                    {/* Desktop layout - horizontal */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-6">
                         <div className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -629,38 +558,37 @@ export default function Trades() {
                         </div>
                       </div>
                     </div>
-                  )}
-                  {trade.notes && (
-                    <div className="mt-4 p-3 bg-muted rounded-md">
-                      <p className="text-sm">{trade.notes}</p>
-                    </div>
-                  )}
-                  {trade.screenshot_url && (
-                    <div className="mt-4">
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="outline" size="sm">
-                            <Eye className="w-4 h-4 mr-2" />
-                            View Screenshot
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-4xl">
-                          <DialogHeader>
-                            <DialogTitle>Trade Screenshot - {trade.pair}</DialogTitle>
-                          </DialogHeader>
-                          <div className="max-h-[70vh] overflow-auto">
-                            <img
-                              src={trade.screenshot_url}
-                              alt={`Screenshot for ${trade.pair} trade`}
-                              className="w-full h-auto rounded-md"
-                            />
-                          </div>
-                        </DialogContent>
-                      </Dialog>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+                    {trade.notes && (
+                      <div className="mt-4 p-3 bg-muted rounded-md">
+                        <p className="text-sm">{trade.notes}</p>
+                      </div>
+                    )}
+                    {trade.screenshot_url && (
+                      <div className="mt-4">
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="outline" size="sm">
+                              <Eye className="w-4 h-4 mr-2" />
+                              View Screenshot
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-4xl">
+                            <DialogHeader>
+                              <DialogTitle>Trade Screenshot - {trade.pair}</DialogTitle>
+                            </DialogHeader>
+                            <div className="max-h-[70vh] overflow-auto">
+                              <img
+                                src={trade.screenshot_url}
+                                alt={`Screenshot for ${trade.pair} trade`}
+                                className="w-full h-auto rounded-md"
+                              />
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
             ))}
           </div>
         )}

@@ -131,12 +131,16 @@ export default function Dashboard() {
         {/* Premium Stats Grid - Mobile Optimized */}
         <div className={cn(
           "grid gap-4 animate-fade-in",
-          isMobile ? "grid-cols-2" : "gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          isMobile ? "grid-cols-1 space-y-2" : "gap-6 sm:grid-cols-2 lg:grid-cols-4"
         )}>
-          <Card className="card-premium group hover:scale-105 transition-all duration-300">
+          {/* Mobile: Stack all stats vertically for better readability */}
+          <Card className={cn(
+            "card-premium transition-all duration-300",
+            isMobile ? "hover:shadow-lg" : "group hover:scale-105"
+          )}>
             <CardHeader className={cn(
               "flex flex-row items-center justify-between space-y-0",
-              isMobile ? "pb-2 p-4" : "pb-3"
+              isMobile ? "pb-3 p-4" : "pb-3"
             )}>
               <CardTitle className={cn(
                 "font-medium text-muted-foreground",
@@ -170,10 +174,13 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="card-premium group hover:scale-105 transition-all duration-300">
+          <Card className={cn(
+            "card-premium transition-all duration-300",
+            isMobile ? "hover:shadow-lg" : "group hover:scale-105"
+          )}>
             <CardHeader className={cn(
               "flex flex-row items-center justify-between space-y-0",
-              isMobile ? "pb-2 p-4" : "pb-3"
+              isMobile ? "pb-3 p-4" : "pb-3"
             )}>
               <CardTitle className={cn(
                 "font-medium text-muted-foreground",
@@ -207,41 +214,85 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="card-premium group hover:scale-105 transition-all duration-300">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Risk:Reward</CardTitle>
-              <div className="p-2 rounded-lg bg-violet/10 group-hover:bg-violet/20 transition-colors">
-                <TrendingUp className="h-5 w-5 text-violet" />
+          <Card className={cn(
+            "card-premium transition-all duration-300",
+            isMobile ? "hover:shadow-lg" : "group hover:scale-105"
+          )}>
+            <CardHeader className={cn(
+              "flex flex-row items-center justify-between space-y-0",
+              isMobile ? "pb-3 p-4" : "pb-3"
+            )}>
+              <CardTitle className={cn(
+                "font-medium text-muted-foreground",
+                isMobile ? "text-xs" : "text-sm"
+              )}>
+                Risk:Reward
+              </CardTitle>
+              <div className={cn(
+                "rounded-lg bg-violet/10 group-hover:bg-violet/20 transition-colors",
+                isMobile ? "p-1.5" : "p-2"
+              )}>
+                <TrendingUp className={cn(
+                  "text-violet",
+                  isMobile ? "h-4 w-4" : "h-5 w-5"
+                )} />
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-violet mb-1">
+            <CardContent className={cn(isMobile && "px-4 pb-4")}>
+              <div className={cn(
+                "font-bold text-violet mb-1",
+                isMobile ? "text-xl" : "text-3xl"
+              )}>
                 {stats?.avg_rr ? `1:${stats.avg_rr.toFixed(2)}` : '1:0'}
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className={cn(
+                "text-muted-foreground",
+                isMobile ? "text-xs" : "text-sm"
+              )}>
                 {stats?.avg_rr && stats.avg_rr > 2 ? 'Excellent ratio ⭐' : 'Aim for 1:2+ 🎯'}
               </p>
             </CardContent>
           </Card>
 
-          <Card className="card-premium group hover:scale-105 transition-all duration-300">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Total P&L</CardTitle>
-              <div className={`p-2 rounded-lg transition-colors ${
-                (stats?.total_pnl || 0) >= 0 
-                  ? 'bg-profit/10 group-hover:bg-profit/20' 
-                  : 'bg-loss/10 group-hover:bg-loss/20'
-              }`}>
-                <DollarSign className={`h-5 w-5 ${(stats?.total_pnl || 0) >= 0 ? 'text-profit' : 'text-loss'}`} />
+          <Card className={cn(
+            "card-premium transition-all duration-300",
+            isMobile ? "hover:shadow-lg" : "group hover:scale-105"
+          )}>
+            <CardHeader className={cn(
+              "flex flex-row items-center justify-between space-y-0",
+              isMobile ? "pb-3 p-4" : "pb-3"
+            )}>
+              <CardTitle className={cn(
+                "font-medium text-muted-foreground",
+                isMobile ? "text-xs" : "text-sm"
+              )}>
+                Total P&L
+              </CardTitle>
+              <div className={cn(
+                `rounded-lg transition-colors ${
+                  (stats?.total_pnl || 0) >= 0 
+                    ? 'bg-profit/10 group-hover:bg-profit/20' 
+                    : 'bg-loss/10 group-hover:bg-loss/20'
+                }`,
+                isMobile ? "p-1.5" : "p-2"
+              )}>
+                <DollarSign className={cn(
+                  `${(stats?.total_pnl || 0) >= 0 ? 'text-profit' : 'text-loss'}`,
+                  isMobile ? "h-4 w-4" : "h-5 w-5"
+                )} />
               </div>
             </CardHeader>
-            <CardContent>
-              <div className={`text-3xl font-bold mb-1 ${
-                (stats?.total_pnl || 0) >= 0 ? 'text-profit' : 'text-loss'
-              }`}>
+            <CardContent className={cn(isMobile && "px-4 pb-4")}>
+              <div className={cn(
+                `font-bold mb-1 ${(stats?.total_pnl || 0) >= 0 ? 'text-profit' : 'text-loss'}`,
+                isMobile ? "text-xl" : "text-3xl"
+              )}>
                 {stats?.total_pnl ? formatCurrency(stats.total_pnl) : '$0.00'}
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className={cn(
+                "text-muted-foreground",
+                isMobile ? "text-xs" : "text-sm"
+              )}>
                 {(stats?.total_pnl || 0) >= 0 ? 'Profitable 💰' : 'Work on strategy 📚'}
               </p>
             </CardContent>
