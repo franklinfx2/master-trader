@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTrades } from '@/hooks/useTrades';
 import { useProfile } from '@/hooks/useProfile';
 import { Layout } from '@/components/Layout';
@@ -19,6 +20,7 @@ import { EndToEndAITest } from '@/components/testing/EndToEndAITest';
 import { AIMentor } from '@/components/ai/AIMentor';
 
 export default function Analyze() {
+  const navigate = useNavigate();
   const { trades } = useTrades();
   const { profile, updateProfile } = useProfile();
   const { toast } = useToast();
@@ -213,7 +215,7 @@ export default function Analyze() {
             <TabsTrigger value="sessions">Sessions</TabsTrigger>
             <TabsTrigger value="timing">Timing</TabsTrigger>
             <TabsTrigger value="setups">Setups</TabsTrigger>
-            <TabsTrigger value="ai-insights">AI Coach</TabsTrigger>
+            <TabsTrigger value="ai-insights">AI Mentor</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -358,44 +360,11 @@ export default function Analyze() {
           </TabsContent>
 
           <TabsContent value="ai-insights" className="space-y-6">
-            {/* Coming Soon - AI Coach */}
-            <div className="text-center py-12 space-y-6">
-              <div className="mx-auto w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
-                <Brain className="w-10 h-10 text-primary" />
-              </div>
-              <div className="space-y-2">
-                <h2 className="text-2xl font-bold">🚀 AI Trading Coach Coming Soon!</h2>
-                <p className="text-muted-foreground max-w-md mx-auto">
-                  We're developing an advanced AI coach that will provide personalized trading insights and recommendations based on your performance data.
-                </p>
-              </div>
-              
-              {/* Preview of Features */}
-              <div className="max-w-2xl mx-auto mt-8">
-                <div className="grid md:grid-cols-2 gap-4 text-sm">
-                  <div className="p-4 border rounded-lg space-y-2">
-                    <Target className="w-5 h-5 text-primary mx-auto" />
-                    <h4 className="font-semibold">Risk Analysis</h4>
-                    <p className="text-muted-foreground">Optimize your position sizing and risk management</p>
-                  </div>
-                  <div className="p-4 border rounded-lg space-y-2">
-                    <TrendingUp className="w-5 h-5 text-primary mx-auto" />
-                    <h4 className="font-semibold">Pattern Recognition</h4>
-                    <p className="text-muted-foreground">Identify your most profitable setups</p>
-                  </div>
-                  <div className="p-4 border rounded-lg space-y-2">
-                    <Clock className="w-5 h-5 text-primary mx-auto" />
-                    <h4 className="font-semibold">Timing Optimization</h4>
-                    <p className="text-muted-foreground">Find your best trading hours and sessions</p>
-                  </div>
-                  <div className="p-4 border rounded-lg space-y-2">
-                    <BarChart3 className="w-5 h-5 text-primary mx-auto" />
-                    <h4 className="font-semibold">Performance Insights</h4>
-                    <p className="text-muted-foreground">Get actionable recommendations for improvement</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <AIMentor 
+              trades={filteredTrades} 
+              userPlan={profile?.plan || 'free'}
+              onUpgradeClick={() => navigate('/settings')}
+            />
           </TabsContent>
         </Tabs>
       </div>
