@@ -166,42 +166,54 @@ export type Database = {
         Row: {
           ai_last_analysis_at: string | null
           created_at: string | null
+          current_streak: number | null
           email: string | null
+          highest_streak: number | null
           id: string
           is_admin: boolean | null
+          last_log_date: string | null
           paystack_customer_code: string | null
           paystack_subscription_code: string | null
           pending_balance: number | null
           plan: string
           referral_code: string | null
+          streak_shields: number | null
           total_earnings: number | null
           updated_at: string | null
         }
         Insert: {
           ai_last_analysis_at?: string | null
           created_at?: string | null
+          current_streak?: number | null
           email?: string | null
+          highest_streak?: number | null
           id: string
           is_admin?: boolean | null
+          last_log_date?: string | null
           paystack_customer_code?: string | null
           paystack_subscription_code?: string | null
           pending_balance?: number | null
           plan?: string
           referral_code?: string | null
+          streak_shields?: number | null
           total_earnings?: number | null
           updated_at?: string | null
         }
         Update: {
           ai_last_analysis_at?: string | null
           created_at?: string | null
+          current_streak?: number | null
           email?: string | null
+          highest_streak?: number | null
           id?: string
           is_admin?: boolean | null
+          last_log_date?: string | null
           paystack_customer_code?: string | null
           paystack_subscription_code?: string | null
           pending_balance?: number | null
           plan?: string
           referral_code?: string | null
+          streak_shields?: number | null
           total_earnings?: number | null
           updated_at?: string | null
         }

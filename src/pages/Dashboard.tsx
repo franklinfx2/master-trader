@@ -7,6 +7,7 @@ import { Plus, TrendingUp, TrendingDown, BarChart3, DollarSign } from 'lucide-re
 import { Link } from 'react-router-dom';
 import { useIsMobileOrTablet } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+import { StreakIndicator } from '@/components/streak/StreakIndicator';
 
 export default function Dashboard() {
   const { trades, stats, loading } = useTrades();
@@ -39,13 +40,20 @@ export default function Dashboard() {
         <div className="relative overflow-hidden rounded-2xl lg:rounded-3xl animate-scale-in p-4 sm:p-6 lg:p-8 xl:p-12">
           <div className="absolute inset-0 gradient-hero opacity-90" />
           <div className="relative z-10 flex flex-col items-start justify-between space-y-4 sm:space-y-6">
+            <div className="flex items-start justify-between w-full">
+              <div className="space-y-2 sm:space-y-3 text-white">
+                <h1 className="font-bold leading-tight text-2xl sm:text-3xl lg:text-4xl xl:text-5xl">
+                  Welcome back, Trader! 
+                  <span className="block text-lg sm:text-xl lg:text-2xl text-blue-100 font-medium mt-2">
+                    Your trading insights await
+                  </span>
+                </h1>
+              </div>
+              <div className="hidden sm:block">
+                <StreakIndicator />
+              </div>
+            </div>
             <div className="space-y-2 sm:space-y-3 text-white">
-              <h1 className="font-bold leading-tight text-2xl sm:text-3xl lg:text-4xl xl:text-5xl">
-                Welcome back, Trader! 
-                <span className="block text-lg sm:text-xl lg:text-2xl text-blue-100 font-medium mt-2">
-                  Your trading insights await
-                </span>
-              </h1>
               <p className={cn(
                 "text-white/90 leading-relaxed",
                 isMobile ? "text-base" : "text-lg md:text-xl max-w-2xl"
@@ -79,6 +87,11 @@ export default function Dashboard() {
               </Link>
             </div>
           </div>
+        </div>
+
+        {/* Mobile Streak Indicator */}
+        <div className="sm:hidden mb-4 flex justify-center">
+          <StreakIndicator />
         </div>
 
         {/* Premium Plan Notice - Mobile Optimized */}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useStreakTracker } from './useStreakTracker';
 
 export interface Trade {
   id: string;
@@ -31,6 +32,7 @@ export interface TradeStats {
 
 export const useTrades = () => {
   const { user } = useAuth();
+  const { updateStreak } = useStreakTracker();
   const [trades, setTrades] = useState<Trade[]>([]);
   const [stats, setStats] = useState<TradeStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -94,6 +96,10 @@ export const useTrades = () => {
 
     await fetchTrades();
     await fetchStats();
+    
+    // Update streak when adding a trade
+    await updateStreak(new Date(trade.executed_at));
+    
     return { error: null };
   };
 
