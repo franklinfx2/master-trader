@@ -3,6 +3,7 @@ import { useTrades, Trade } from '@/hooks/useTrades';
 import { useProfile } from '@/hooks/useProfile';
 import { Layout } from '@/components/Layout';
 import { Button } from '@/components/ui/button';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -220,7 +221,7 @@ export default function Trades() {
     return (
       <Layout>
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          <LoadingSpinner />
         </div>
       </Layout>
     );

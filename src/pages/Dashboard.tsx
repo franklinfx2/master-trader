@@ -3,6 +3,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { Layout } from '@/components/Layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Plus, TrendingUp, TrendingDown, BarChart3, DollarSign } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useIsMobileOrTablet } from '@/hooks/use-mobile';
@@ -27,7 +28,7 @@ export default function Dashboard() {
     return (
       <Layout>
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          <LoadingSpinner />
         </div>
       </Layout>
     );

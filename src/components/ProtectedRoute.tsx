@@ -1,4 +1,5 @@
 import { useAuth } from '@/contexts/AuthContext';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Navigate } from 'react-router-dom';
 
 interface ProtectedRouteProps {
@@ -11,7 +12,7 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <LoadingSpinner />
       </div>
     );
   }
