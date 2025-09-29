@@ -2,23 +2,34 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Camera, X, Eye, Upload } from 'lucide-react';
+import { Camera, X, Eye, Upload, Crown } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
+import { useScreenshotLimit } from '@/hooks/useScreenshotLimit';
+import { Link } from 'react-router-dom';
 
 interface ScreenshotUploadProps {
   screenshots: string[];
   onScreenshotsChange: (screenshots: string[]) => void;
-  disabled?: boolean;
 }
 
-export const ScreenshotUpload = ({ screenshots, onScreenshotsChange, disabled }: ScreenshotUploadProps) => {
+export const ScreenshotUpload = ({ screenshots, onScreenshotsChange }: ScreenshotUploadProps) => {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
+  const { 
+    screenshotCount, 
+    maxScreenshots, 
+    canUploadMore, 
+    remainingScreenshots, 
+    isProUser, 
+    loading: limitsLoading,
+    refreshCount 
+  } = useScreenshotLimit();
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -28,6 +39,16 @@ export const ScreenshotUpload = ({ screenshots, onScreenshotsChange, disabled }:
       toast({
         title: "Too many files",
         description: "You can only upload up to 5 screenshots per trade.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Check screenshot limit for free users
+    if (!isProUser && !canUploadMore) {
+      toast({
+        title: "Screenshot limit reached",
+        description: `Free users can upload up to ${maxScreenshots} screenshots. Upgrade to Pro for unlimited uploads.`,
         variant: "destructive",
       });
       return;
@@ -88,6 +109,10 @@ export const ScreenshotUpload = ({ screenshots, onScreenshotsChange, disabled }:
 
       if (newScreenshots.length > 0) {
         onScreenshotsChange([...screenshots, ...newScreenshots]);
+        // Refresh count after upload for free users
+        if (!isProUser) {
+          await refreshCount();
+        }
         toast({
           title: "Upload successful",
           description: `${newScreenshots.length} screenshot(s) uploaded successfully.`,
@@ -134,10 +159,42 @@ export const ScreenshotUpload = ({ screenshots, onScreenshotsChange, disabled }:
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <label className="text-sm font-medium">Trade Screenshots</label>
-        <Badge variant="outline" className="text-xs">
-          {screenshots.length}/5 uploaded
-        </Badge>
+        <div className="flex items-center gap-2">
+          {!isProUser && (
+            <Badge variant="secondary" className="text-xs">
+              {screenshotCount}/{maxScreenshots} used
+            </Badge>
+          )}
+          <Badge variant="outline" className="text-xs">
+            {screenshots.length}/5 per trade
+          </Badge>
+        </div>
       </div>
+
+      {/* Screenshot limit warning for free users */}
+      {!isProUser && remainingScreenshots <= 5 && remainingScreenshots > 0 && (
+        <Alert>
+          <AlertDescription className="text-sm">
+            ⚠️ You have {remainingScreenshots} screenshot{remainingScreenshots === 1 ? '' : 's'} remaining. 
+            <Link to="/auth" className="ml-1 text-primary underline hover:no-underline">
+              Upgrade to Pro
+            </Link> for unlimited uploads.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {/* Screenshot limit reached for free users */}
+      {!isProUser && !canUploadMore && (
+        <Alert>
+          <AlertDescription className="text-sm flex items-center gap-2">
+            <Crown className="w-4 h-4 text-amber-500" />
+            You've reached the free screenshot limit ({maxScreenshots}). 
+            <Link to="/auth" className="text-primary underline hover:no-underline">
+              Upgrade to Pro
+            </Link> for unlimited uploads.
+          </AlertDescription>
+        </Alert>
+      )}
 
       {/* Upload Button */}
       <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
@@ -148,11 +205,11 @@ export const ScreenshotUpload = ({ screenshots, onScreenshotsChange, disabled }:
           onChange={handleFileUpload}
           className="hidden"
           id="screenshot-upload"
-          disabled={disabled || screenshots.length >= 5 || uploading}
+          disabled={(!isProUser && !canUploadMore) || screenshots.length >= 5 || uploading}
         />
         <label 
           htmlFor="screenshot-upload" 
-          className={`cursor-pointer ${disabled || uploading ? 'cursor-not-allowed opacity-50' : ''}`}
+          className={`cursor-pointer ${((!isProUser && !canUploadMore) || uploading) ? 'cursor-not-allowed opacity-50' : ''}`}
         >
           <div className="flex flex-col items-center space-y-2">
             <div className="p-3 rounded-full bg-violet/10">
@@ -166,7 +223,7 @@ export const ScreenshotUpload = ({ screenshots, onScreenshotsChange, disabled }:
               <p className="text-sm font-medium">
                 {uploading ? 'Uploading...' :
                  screenshots.length >= 5 ? 'Maximum screenshots reached' : 
-                 disabled ? 'Upgrade to Pro to upload screenshots' :
+                 (!isProUser && !canUploadMore) ? 'Screenshot limit reached' :
                  'Upload trade screenshots'}
               </p>
               <p className="text-xs text-muted-foreground">

@@ -424,14 +424,7 @@ export default function Trades() {
                 <ScreenshotUpload
                   screenshots={screenshots}
                   onScreenshotsChange={setScreenshots}
-                  disabled={profile?.plan !== 'pro'}
                 />
-                
-                {profile?.plan !== 'pro' && (
-                  <div className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
-                    <p>📷 Screenshot uploads are available for Pro users only.</p>
-                  </div>
-                )}
 
                 <div className="flex justify-end space-x-2">
                   <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
