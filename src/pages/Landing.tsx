@@ -29,7 +29,7 @@ export default function Landing() {
       <section className="py-20 px-4 gradient-card">
         <div className="container mx-auto max-w-4xl text-center">
           <h2 className="text-6xl font-bold mb-8 text-gradient">
-            AI-Powered Trading Intelligence
+            AI-Powered Trading Journal
           </h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
             Master Trader AI combines advanced AI with powerful analytics to give you the mental edge in trading. 
