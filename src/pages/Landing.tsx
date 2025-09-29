@@ -224,6 +224,47 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Payment Options Section */}
+      <section className="py-16 px-4 bg-muted/20">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-12">
+            <h3 className="text-3xl font-bold mb-4 text-gradient">Payment Options</h3>
+            <p className="text-lg text-muted-foreground">
+              We accept local and international payments for fast and secure checkout.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+            <Card className="card-enhanced text-center">
+              <CardHeader>
+                <CardTitle className="text-xl mb-3">Local Payments</CardTitle>
+                <CardDescription className="mb-6">
+                  Pay with your local bank account, card, or mobile money
+                </CardDescription>
+                <Link to="/auth">
+                  <Button className="btn-gradient shadow-soft w-full" size="lg">
+                    Pay with Paystack
+                  </Button>
+                </Link>
+              </CardHeader>
+            </Card>
+
+            <Card className="card-enhanced text-center">
+              <CardHeader>
+                <CardTitle className="text-xl mb-3">International Payments</CardTitle>
+                <CardDescription className="mb-6">
+                  Secure cryptocurrency and international payment options
+                </CardDescription>
+                <Button variant="outline" className="interactive-scale w-full" size="lg" disabled>
+                  Pay with Cryptomus
+                </Button>
+                <p className="text-xs text-muted-foreground mt-2">Coming soon</p>
+              </CardHeader>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 px-4 gradient-primary">
         <div className="container mx-auto max-w-4xl text-center">
