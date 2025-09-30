@@ -253,12 +253,21 @@ export default function Landing() {
               <CardHeader>
                 <CardTitle className="text-xl mb-3">International Payments</CardTitle>
                 <CardDescription className="mb-6">
-                  Secure cryptocurrency and international payment options
+                  Pay with cryptocurrency for fast and secure checkout
                 </CardDescription>
-                <Button variant="outline" className="interactive-scale w-full" size="lg" disabled>
-                  Pay with Cryptomus
-                </Button>
-                <p className="text-xs text-muted-foreground mt-2">Coming soon</p>
+                <div className="flex justify-center">
+                  <a 
+                    href="https://nowpayments.io/payment/?iid=5934808029&source=button" 
+                    target="_blank" 
+                    rel="noreferrer noopener"
+                  >
+                    <img 
+                      src="https://nowpayments.io/images/embeds/payment-button-white.svg" 
+                      alt="Cryptocurrency & Bitcoin payment button by NOWPayments"
+                      className="h-12"
+                    />
+                  </a>
+                </div>
               </CardHeader>
             </Card>
           </div>

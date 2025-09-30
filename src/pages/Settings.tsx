@@ -299,28 +299,58 @@ export default function Settings() {
                   </div>
                 </div>
 
-                <Button 
-                  onClick={handleUpgrade}
-                  disabled={loading}
-                  variant="premium"
-                  size="lg"
-                  className="w-full sm:w-auto shadow-powerful"
-                >
-                  {loading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                      Processing Payment...
-                    </>
-                  ) : (
-                    <>
-                      <Crown className="w-5 h-5 mr-2" />
-                      {profile?.created_at && isInFreeTrial(profile.created_at) 
-                        ? 'Continue with Pro - ₵120/month' 
-                        : 'Upgrade to Pro - ₵120/month'
-                      }
-                    </>
-                  )}
-                </Button>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="text-sm font-medium mb-2">Local Payments (Paystack)</h4>
+                    <Button 
+                      onClick={handleUpgrade}
+                      disabled={loading}
+                      variant="premium"
+                      size="lg"
+                      className="w-full sm:w-auto shadow-powerful"
+                    >
+                      {loading ? (
+                        <>
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                          Processing Payment...
+                        </>
+                      ) : (
+                        <>
+                          <Crown className="w-5 h-5 mr-2" />
+                          {profile?.created_at && isInFreeTrial(profile.created_at) 
+                            ? 'Continue with Pro - ₵120/month' 
+                            : 'Upgrade to Pro - ₵120/month'
+                          }
+                        </>
+                      )}
+                    </Button>
+                  </div>
+
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-background px-2 text-muted-foreground">Or</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="text-sm font-medium mb-2">International Payments (Cryptocurrency)</h4>
+                    <a 
+                      href="https://nowpayments.io/payment/?iid=5934808029&source=button" 
+                      target="_blank" 
+                      rel="noreferrer noopener"
+                      className="inline-block"
+                    >
+                      <img 
+                        src="https://nowpayments.io/images/embeds/payment-button-white.svg" 
+                        alt="Cryptocurrency & Bitcoin payment button by NOWPayments"
+                        className="h-12"
+                      />
+                    </a>
+                  </div>
+                </div>
               </div>
             )}
           </CardContent>
@@ -446,28 +476,58 @@ export default function Settings() {
                   </div>
                 </div>
 
-                <Button 
-                  onClick={handleUpgrade}
-                  disabled={loading}
-                  variant="premium"
-                  size="lg"
-                  className="w-full sm:w-auto shadow-powerful"
-                >
-                  {loading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                      Processing Payment...
-                    </>
-                  ) : (
-                    <>
-                      <Crown className="w-5 h-5 mr-2" />
-                      {profile?.created_at && isInFreeTrial(profile.created_at) 
-                        ? 'Continue with Pro - ₵120/month' 
-                        : 'Upgrade to Pro - ₵120/month'
-                      }
-                    </>
-                  )}
-                </Button>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="text-sm font-medium mb-2">Local Payments (Paystack)</h4>
+                    <Button 
+                      onClick={handleUpgrade}
+                      disabled={loading}
+                      variant="premium"
+                      size="lg"
+                      className="w-full sm:w-auto shadow-powerful"
+                    >
+                      {loading ? (
+                        <>
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                          Processing Payment...
+                        </>
+                      ) : (
+                        <>
+                          <Crown className="w-5 h-5 mr-2" />
+                          {profile?.created_at && isInFreeTrial(profile.created_at) 
+                            ? 'Continue with Pro - ₵120/month' 
+                            : 'Upgrade to Pro - ₵120/month'
+                          }
+                        </>
+                      )}
+                    </Button>
+                  </div>
+
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-background px-2 text-muted-foreground">Or</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="text-sm font-medium mb-2">International Payments (Cryptocurrency)</h4>
+                    <a 
+                      href="https://nowpayments.io/payment/?iid=5934808029&source=button" 
+                      target="_blank" 
+                      rel="noreferrer noopener"
+                      className="inline-block"
+                    >
+                      <img 
+                        src="https://nowpayments.io/images/embeds/payment-button-white.svg" 
+                        alt="Cryptocurrency & Bitcoin payment button by NOWPayments"
+                        className="h-12"
+                      />
+                    </a>
+                  </div>
+                </div>
               </div>
             )}
           </CardContent>
