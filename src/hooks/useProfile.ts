@@ -25,6 +25,29 @@ export const useProfile = () => {
   useEffect(() => {
     if (user) {
       fetchProfile();
+
+      // ✅ Set up real-time subscription to profile changes
+      // This automatically updates the UI when payment webhooks update the plan
+      const channel = supabase
+        .channel('profile-changes')
+        .on(
+          'postgres_changes',
+          {
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'profiles',
+            filter: `id=eq.${user.id}`
+          },
+          (payload) => {
+            console.log('Profile updated in real-time:', payload.new);
+            setProfile(payload.new as Profile);
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
     } else {
       setProfile(null);
       setLoading(false);

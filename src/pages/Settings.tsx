@@ -67,6 +67,7 @@ export default function Settings() {
     }
   };
 
+  // ✅ Paystack upgrade handler with metadata
   const handleUpgrade = async () => {
     setLoading(true);
     
@@ -83,12 +84,50 @@ export default function Settings() {
       if (data.payUrl) {
         // Open Paystack checkout in new tab
         window.open(data.payUrl, '_blank');
+        toast({
+          title: "Redirecting to Paystack",
+          description: "Opening secure payment page...",
+        });
       }
     } catch (error) {
       console.error('Checkout error:', error);
       toast({
         title: "Checkout Failed",
         description: "There was an error starting the checkout process. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ✅ NOWPayments upgrade handler with metadata
+  const handleCryptoUpgrade = async () => {
+    setLoading(true);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('create-nowpayments-checkout', {
+        body: {
+          email: profile?.email,
+          userId: profile?.id,
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.payUrl) {
+        // Open NOWPayments checkout in new tab
+        window.open(data.payUrl, '_blank');
+        toast({
+          title: "Redirecting to NOWPayments",
+          description: "Opening secure cryptocurrency payment page...",
+        });
+      }
+    } catch (error) {
+      console.error('Crypto checkout error:', error);
+      toast({
+        title: "Checkout Failed",
+        description: "There was an error starting the crypto checkout. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -337,18 +376,25 @@ export default function Settings() {
 
                   <div>
                     <h4 className="text-sm font-medium mb-2">International Payments (Cryptocurrency)</h4>
-                    <a 
-                      href="https://nowpayments.io/payment/?iid=5934808029&source=button" 
-                      target="_blank" 
-                      rel="noreferrer noopener"
-                      className="inline-block"
+                    <Button 
+                      onClick={handleCryptoUpgrade}
+                      disabled={loading}
+                      variant="outline"
+                      size="lg"
+                      className="w-full sm:w-auto"
                     >
-                      <img 
-                        src="https://nowpayments.io/images/embeds/payment-button-white.svg" 
-                        alt="Cryptocurrency & Bitcoin payment button by NOWPayments"
-                        className="h-12"
-                      />
-                    </a>
+                      {loading ? (
+                        <>
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary mr-2"></div>
+                          Processing...
+                        </>
+                      ) : (
+                        'Pay with Cryptocurrency'
+                      )}
+                    </Button>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Bitcoin, Ethereum, and 150+ cryptocurrencies accepted
+                    </p>
                   </div>
                 </div>
               </div>
@@ -514,18 +560,25 @@ export default function Settings() {
 
                   <div>
                     <h4 className="text-sm font-medium mb-2">International Payments (Cryptocurrency)</h4>
-                    <a 
-                      href="https://nowpayments.io/payment/?iid=5934808029&source=button" 
-                      target="_blank" 
-                      rel="noreferrer noopener"
-                      className="inline-block"
+                    <Button 
+                      onClick={handleCryptoUpgrade}
+                      disabled={loading}
+                      variant="outline"
+                      size="lg"
+                      className="w-full sm:w-auto"
                     >
-                      <img 
-                        src="https://nowpayments.io/images/embeds/payment-button-white.svg" 
-                        alt="Cryptocurrency & Bitcoin payment button by NOWPayments"
-                        className="h-12"
-                      />
-                    </a>
+                      {loading ? (
+                        <>
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary mr-2"></div>
+                          Processing...
+                        </>
+                      ) : (
+                        'Pay with Cryptocurrency'
+                      )}
+                    </Button>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Bitcoin, Ethereum, and 150+ cryptocurrencies accepted
+                    </p>
                   </div>
                 </div>
               </div>
