@@ -1,1 +1,9 @@
 project_id = "lamwycpfcrfvwpbelhse"
+
+# ✅ Paystack webhook - No JWT verification (verified via signature)
+[functions.paystack-webhook]
+verify_jwt = false
+
+# ✅ NOWPayments webhook - No JWT verification (verified via signature)
+[functions.nowpayments-webhook]
+verify_jwt = false
