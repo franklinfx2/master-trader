@@ -99,12 +99,22 @@ export const ScreenshotUpload = ({ screenshots, onScreenshotsChange }: Screensho
           continue;
         }
 
-        // Get the public URL
-        const { data: { publicUrl } } = supabase.storage
+        // Generate signed URL for private bucket (valid for 5 years)
+        const { data: signedUrlData, error: urlError } = await supabase.storage
           .from('screenshots')
-          .getPublicUrl(data.path);
+          .createSignedUrl(data.path, 157680000); // 5 years in seconds
 
-        newScreenshots.push(publicUrl);
+        if (urlError || !signedUrlData) {
+          console.error('Error generating signed URL:', urlError);
+          toast({
+            title: "Upload failed",
+            description: `Failed to generate URL for ${file.name}.`,
+            variant: "destructive",
+          });
+          continue;
+        }
+
+        newScreenshots.push(signedUrlData.signedUrl);
       }
 
       if (newScreenshots.length > 0) {
