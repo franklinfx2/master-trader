@@ -37,6 +37,7 @@ serve(async (req) => {
     const currency = 'usd'
 
     // Create NOWPayments invoice with IPN callback
+    // Note: order_id format is "pro_upgrade_<userId>_<timestamp>" for webhook processing
     const nowpaymentsResponse = await fetch('https://api.nowpayments.io/v1/invoice', {
       method: 'POST',
       headers: {
@@ -51,15 +52,7 @@ serve(async (req) => {
         ipn_callback_url: 'https://lamwycpfcrfvwpbelhse.supabase.co/functions/v1/nowpayments-webhook',
         success_url: 'https://strat-guru.lovable.app/settings?payment=success',
         cancel_url: 'https://strat-guru.lovable.app/settings?payment=cancelled',
-        // Store user metadata for webhook processing
-        customer_email: email,
         is_fee_paid_by_user: true,
-        // Custom metadata to identify the user
-        metadata: {
-          userId: userId,
-          email: email,
-          plan: 'pro'
-        }
       }),
     })
 
