@@ -421,13 +421,13 @@ export default function Settings() {
         </TabsContent>
 
         <TabsContent value="billing" className="space-y-6">
-        {/* Subscription Card */}
+        {/* Subscription Status Card */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <CreditCard className="w-6 h-6" />
-                <CardTitle>Subscription</CardTitle>
+                <CardTitle>Current Plan</CardTitle>
               </div>
               <Badge variant={profile?.plan === 'pro' ? 'default' : 'secondary'}>
                 {profile?.plan === 'pro' ? (
@@ -482,105 +482,10 @@ export default function Settings() {
                       <span className="font-medium">Free Trial Expired</span>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      Your 3-day free trial has ended. Upgrade to Pro to continue using all features.
+                      Your 3-day free trial has ended. Visit the Account tab to upgrade to Pro.
                     </p>
                   </div>
                 )}
-                
-                <div className="space-y-3">
-                  <h3 className="text-2xl font-bold text-violet">Upgrade to Pro</h3>
-                  <p className="text-muted-foreground text-lg">
-                    Unlock unlimited trades, advanced AI analytics, premium insights, and exclusive features for just ₵120/month.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    <span className="status-premium text-sm">Unlimited Trades</span>
-                    <span className="status-premium text-sm">AI Analysis</span>
-                    <span className="status-premium text-sm">CSV Export</span>
-                    <span className="status-premium text-sm">Premium Charts</span>
-                  </div>
-                </div>
-                
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="font-medium mb-2 text-muted-foreground">Free Trial (3 Days)</h4>
-                    <ul className="space-y-1 text-sm">
-                      <li>• All Pro features included</li>
-                      <li>• No credit card required</li>
-                      <li>• Full access for 3 days</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-medium mb-2 text-primary">Pro Plan (₵120/month)</h4>
-                    <ul className="space-y-1 text-sm">
-                      <li>• Unlimited trades</li>
-                      <li>• Advanced analytics</li>
-                      <li>• Unlimited AI analysis</li>
-                      <li>• CSV export</li>
-                      <li>• Priority support</li>
-                      <li>• API access</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="text-sm font-medium mb-2">Local Payments (Paystack)</h4>
-                    <Button 
-                      onClick={handleUpgrade}
-                      disabled={loading}
-                      variant="premium"
-                      size="lg"
-                      className="w-full sm:w-auto shadow-powerful"
-                    >
-                      {loading ? (
-                        <>
-                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                          Processing Payment...
-                        </>
-                      ) : (
-                        <>
-                          <Crown className="w-5 h-5 mr-2" />
-                          {profile?.created_at && isInFreeTrial(profile.created_at) 
-                            ? 'Continue with Pro - ₵120/month' 
-                            : 'Upgrade to Pro - ₵120/month'
-                          }
-                        </>
-                      )}
-                    </Button>
-                  </div>
-
-                  <div className="relative">
-                    <div className="absolute inset-0 flex items-center">
-                      <span className="w-full border-t" />
-                    </div>
-                    <div className="relative flex justify-center text-xs uppercase">
-                      <span className="bg-background px-2 text-muted-foreground">Or</span>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="text-sm font-medium mb-2">International Payments (Cryptocurrency)</h4>
-                    <Button 
-                      onClick={handleCryptoUpgrade}
-                      disabled={loading}
-                      variant="outline"
-                      size="lg"
-                      className="w-full sm:w-auto"
-                    >
-                      {loading ? (
-                        <>
-                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary mr-2"></div>
-                          Processing...
-                        </>
-                      ) : (
-                        'Pay with Cryptocurrency'
-                      )}
-                    </Button>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      Bitcoin, Ethereum, and 150+ cryptocurrencies accepted
-                    </p>
-                  </div>
-                </div>
               </div>
             )}
           </CardContent>
