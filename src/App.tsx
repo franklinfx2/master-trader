@@ -15,6 +15,7 @@ import Settings from "./pages/Settings";
 import Callback from "./pages/Callback";
 import Webhook from "./pages/Webhook";
 import AdminTestMode from "./pages/AdminTestMode";
+import AdminFeedback from "./pages/AdminFeedback";
 import NotFound from "./pages/NotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
@@ -44,6 +45,7 @@ const App = () => (
             <Route path="/callback" element={<ProtectedRoute><Callback /></ProtectedRoute>} />
             <Route path="/webhook" element={<Webhook />} />
             <Route path="/admin/test-mode" element={<ProtectedRoute><AdminTestMode /></ProtectedRoute>} />
+            <Route path="/admin/feedback" element={<ProtectedRoute><AdminFeedback /></ProtectedRoute>} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/disclaimer" element={<Disclaimer />} />

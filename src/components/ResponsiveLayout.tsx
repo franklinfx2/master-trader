@@ -8,6 +8,7 @@ import { MiniFooter } from '@/components/ui/footer';
 import { useIsMobileOrTablet } from '@/hooks/use-mobile';
 import { MobileBottomNav } from './MobileBottomNav';
 import { DesktopSidebar } from './DesktopSidebar';
+import { FeedbackButton } from './feedback/FeedbackButton';
 
 interface ResponsiveLayoutProps {
   children: React.ReactNode;
@@ -108,6 +109,9 @@ export const ResponsiveLayout = ({ children }: ResponsiveLayoutProps) => {
 
       {/* Mobile Bottom Navigation */}
       {isMobile && <MobileBottomNav />}
+      
+      {/* Floating Feedback Button */}
+      <FeedbackButton />
     </div>
   );
 };
