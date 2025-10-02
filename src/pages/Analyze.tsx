@@ -203,12 +203,7 @@ export default function Analyze() {
           <AIMentor 
             trades={trades} 
             userPlan={profile?.plan || 'free'} 
-            onUpgradeClick={() => {
-              toast({
-                title: "Upgrade to Pro",
-                description: "Visit your settings to upgrade and unlock AI mentor features.",
-              });
-            }}
+            onUpgradeClick={() => navigate('/settings')}
           />
 
           {/* AI Co-Pro Analyzer - Coming Soon for Premium */}
