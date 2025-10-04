@@ -376,7 +376,7 @@ export default function Settings() {
 
                   <div>
                     <h4 className="text-sm font-medium mb-2">International Payments (Cryptocurrency)</h4>
-                    <a href="https://nowpayments.io/payment/?iid=5287205053&source=button" target="_blank" rel="noreferrer noopener">
+                    <a href="https://nowpayments.io/payment/?iid=6416176294&source=button" target="_blank" rel="noreferrer noopener">
                       <img src="https://nowpayments.io/images/embeds/payment-button-white.svg" alt="Cryptocurrency & Bitcoin payment button by NOWPayments" />
                     </a>
                     <p className="text-xs text-muted-foreground mt-2">
