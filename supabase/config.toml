@@ -7,3 +7,7 @@ verify_jwt = false
 # ✅ NOWPayments webhook - No JWT verification (verified via signature)
 [functions.nowpayments-webhook]
 verify_jwt = false
+
+# ✅ Lovable AI test - No JWT verification (public test endpoint)
+[functions.test-lovable-ai]
+verify_jwt = false

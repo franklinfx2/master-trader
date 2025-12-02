@@ -51,18 +51,18 @@ export function AIFeaturesSummary() {
   const testAllFeatures = async () => {
     setOverallStatus('testing');
     
-    // Test OpenAI connection first
+    // Test Lovable AI connection first
     try {
-      const { data: testData, error: testError } = await supabase.functions.invoke('test-openai');
+      const { data: testData, error: testError } = await supabase.functions.invoke('test-lovable-ai');
       
       if (testError || testData.status !== 'success') {
-        // If OpenAI test fails, mark all features as error
+        // If Lovable AI test fails, mark all features as error
         setFeatures(prev => prev.map(f => ({ ...f, status: 'error' as const })));
         setOverallStatus('error');
         
         toast({
           title: "AI System Offline",
-          description: testData.error || testError?.message || "OpenAI connection failed",
+          description: testData.error || testError?.message || "Lovable AI connection failed",
           variant: "destructive",
         });
         return;

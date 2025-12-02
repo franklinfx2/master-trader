@@ -296,15 +296,15 @@ const AdminTestMode = () => {
           }
 
         case 'ai-openai':
-          // Test OpenAI connection
+          // Test Lovable AI connection
           try {
-            const response = await supabase.functions.invoke('test-openai');
+            const response = await supabase.functions.invoke('test-lovable-ai');
             if (response.error) {
-              return { ...updatedTest, status: 'failed', message: 'OpenAI connection failed', details: response.error.message };
+              return { ...updatedTest, status: 'failed', message: 'Lovable AI connection failed', details: response.error.message };
             }
-            return { ...updatedTest, status: 'passed', message: 'OpenAI API is working correctly' };
+            return { ...updatedTest, status: 'passed', message: 'Lovable AI is working correctly' };
           } catch (err) {
-            return { ...updatedTest, status: 'failed', message: 'OpenAI test error', details: String(err) };
+            return { ...updatedTest, status: 'failed', message: 'Lovable AI test error', details: String(err) };
           }
 
         case 'ai-analysis':

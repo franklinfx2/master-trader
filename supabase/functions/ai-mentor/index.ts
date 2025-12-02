@@ -18,12 +18,12 @@ serve(async (req) => {
   }
 
   try {
-    const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+    const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
     
-    if (!openAIApiKey) {
-      console.error('OpenAI API key not found');
+    if (!lovableApiKey) {
+      console.error('Lovable AI API key not found');
       return new Response(
-        JSON.stringify({ error: 'OpenAI API key not configured. Please check your Supabase secrets.' }),
+        JSON.stringify({ error: 'Lovable AI key not configured. Please check your Supabase secrets.' }),
         { 
           status: 500, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -103,16 +103,16 @@ serve(async (req) => {
       }))
     };
 
-    console.log('Sending mentor analysis request to OpenAI for', trades.length, 'trades');
+    console.log('Sending mentor analysis request to Lovable AI for', trades.length, 'trades');
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
+        'Authorization': `Bearer ${lovableApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'google/gemini-2.5-flash',
         messages: [
           {
             role: 'system',
@@ -169,11 +169,11 @@ Please provide your mentor analysis in the exact JSON format specified.`
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      console.error('OpenAI API error:', response.status, response.statusText, errorData);
+      console.error('Lovable AI API error:', response.status, response.statusText, errorData);
       
       if (response.status === 401) {
         return new Response(
-          JSON.stringify({ error: 'Invalid OpenAI API key. Please check your configuration.' }),
+          JSON.stringify({ error: 'Invalid Lovable AI key. Please check your configuration.' }),
           { 
             status: 401, 
             headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -181,15 +181,23 @@ Please provide your mentor analysis in the exact JSON format specified.`
         );
       } else if (response.status === 429) {
         return new Response(
-          JSON.stringify({ error: 'OpenAI API quota exceeded. Please check your billing or try again later.' }),
+          JSON.stringify({ error: 'Rate limits exceeded, please try again later.' }),
           { 
             status: 429, 
             headers: { ...corsHeaders, 'Content-Type': 'application/json' }
           }
         );
+      } else if (response.status === 402) {
+        return new Response(
+          JSON.stringify({ error: 'Payment required, please add funds to your Lovable AI workspace.' }),
+          { 
+            status: 402, 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          }
+        );
       } else {
         return new Response(
-          JSON.stringify({ error: `OpenAI API error: ${response.status} ${response.statusText}` }),
+          JSON.stringify({ error: `Lovable AI error: ${response.status} ${response.statusText}` }),
           { 
             status: response.status, 
             headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -199,11 +207,11 @@ Please provide your mentor analysis in the exact JSON format specified.`
     }
 
     const data = await response.json();
-    console.log('OpenAI mentor analysis completed successfully');
+    console.log('Lovable AI mentor analysis completed successfully');
 
     if (!data.choices || !data.choices[0] || !data.choices[0].message) {
       return new Response(
-        JSON.stringify({ error: 'Invalid response from OpenAI API' }),
+        JSON.stringify({ error: 'Invalid response from Lovable AI' }),
         { 
           status: 500, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
