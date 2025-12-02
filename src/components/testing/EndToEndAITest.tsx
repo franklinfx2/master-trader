@@ -19,7 +19,7 @@ export function EndToEndAITest() {
   const [progress, setProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
   const [steps, setSteps] = useState<TestStep[]>([
-    { name: 'Test OpenAI API Connection', status: 'pending' },
+    { name: 'Test Lovable AI Connection', status: 'pending' },
     { name: 'Test Trade Analysis Function', status: 'pending' },
     { name: 'Generate Sample Analysis', status: 'pending' },
     { name: 'Verify Response Quality', status: 'pending' }
@@ -41,19 +41,19 @@ export function EndToEndAITest() {
     setSteps(prev => prev.map(step => ({ ...step, status: 'pending', result: undefined, error: undefined })));
 
     try {
-      // Step 1: Test OpenAI API Connection
+      // Step 1: Test Lovable AI Connection
       setCurrentStep(0);
       updateStep(0, { status: 'running' });
       setProgress(25);
 
-      const { data: connectionTest, error: connectionError } = await supabase.functions.invoke('test-openai');
+      const { data: connectionTest, error: connectionError } = await supabase.functions.invoke('test-lovable-ai');
       
       if (connectionError || connectionTest.status !== 'success') {
         updateStep(0, { 
           status: 'error', 
           error: connectionTest.error || connectionError?.message || 'Connection failed'
         });
-        throw new Error('OpenAI connection test failed');
+        throw new Error('Lovable AI connection test failed');
       }
 
       updateStep(0, { 
@@ -174,7 +174,7 @@ export function EndToEndAITest() {
 
       toast({
         title: "🎉 All Tests Passed!",
-        description: "Your OpenAI integration is fully functional and ready to use.",
+        description: "Your Lovable AI integration is fully functional and ready to use.",
       });
 
     } catch (error) {
@@ -291,7 +291,7 @@ export function EndToEndAITest() {
         <div className="text-xs text-muted-foreground space-y-1 pt-2 border-t">
           <p>🔸 This test verifies your entire AI pipeline is working correctly</p>
           <p>🔸 Tests API connectivity, function execution, and response quality</p>
-          <p>🔸 Run this test after setting up your OpenAI API key</p>
+          <p>🔸 Lovable AI is automatically configured and ready to use</p>
         </div>
       </CardContent>
     </Card>

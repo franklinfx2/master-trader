@@ -21,7 +21,7 @@ export function AIStatusIndicator({ showFullTest = false }: AIStatusIndicatorPro
     setErrorMessage(null);
 
     try {
-      const { data, error } = await supabase.functions.invoke('test-openai');
+      const { data, error } = await supabase.functions.invoke('test-lovable-ai');
 
       if (error) {
         throw error;

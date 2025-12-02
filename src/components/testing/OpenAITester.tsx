@@ -18,12 +18,12 @@ export function OpenAITester() {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  const testOpenAIConnection = async () => {
+  const testLovableAIConnection = async () => {
     setLoading(true);
-    setTestResult({ status: 'testing', message: 'Testing OpenAI API connection...' });
+    setTestResult({ status: 'testing', message: 'Testing Lovable AI connection...' });
 
     try {
-      const { data, error } = await supabase.functions.invoke('test-openai');
+      const { data, error } = await supabase.functions.invoke('test-lovable-ai');
 
       if (error) {
         throw error;
@@ -103,9 +103,9 @@ export function OpenAITester() {
           <div className="flex items-center space-x-2">
             {getStatusIcon()}
             <div>
-              <CardTitle className="text-lg">OpenAI API Connection</CardTitle>
+              <CardTitle className="text-lg">Lovable AI Connection</CardTitle>
               <CardDescription>
-                Test your OpenAI integration and API key status
+                Test your Lovable AI integration status
               </CardDescription>
             </div>
           </div>
@@ -114,7 +114,7 @@ export function OpenAITester() {
       </CardHeader>
       <CardContent className="space-y-4">
         <Button 
-          onClick={testOpenAIConnection}
+          onClick={testLovableAIConnection}
           disabled={loading}
           className="w-full"
           variant={testResult?.status === 'success' ? 'outline' : 'default'}
@@ -127,7 +127,7 @@ export function OpenAITester() {
           ) : (
             <>
               <Zap className="w-4 h-4 mr-2" />
-              {testResult ? 'Test Again' : 'Test OpenAI Connection'}
+              {testResult ? 'Test Again' : 'Test Lovable AI Connection'}
             </>
           )}
         </Button>
@@ -171,9 +171,9 @@ export function OpenAITester() {
         )}
 
         <div className="text-xs text-muted-foreground space-y-1">
-          <p>• This test verifies your OpenAI API key configuration</p>
-          <p>• Make sure your API key is set in Supabase Edge Function secrets</p>
-          <p>• Check your OpenAI account for usage and billing status</p>
+          <p>• This test verifies your Lovable AI connection</p>
+          <p>• Lovable AI is automatically configured - no API key needed</p>
+          <p>• You get free monthly usage included with your plan</p>
         </div>
       </CardContent>
     </Card>
