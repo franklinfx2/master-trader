@@ -449,7 +449,72 @@ export default function Settings() {
                 </Button>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-6">
+                <h3 className="text-2xl font-bold text-violet">Choose Your Plan</h3>
+                
+                <div className="grid md:grid-cols-3 gap-4">
+                  {/* Free Plan */}
+                  <Card className={profile?.plan === 'free' ? 'ring-2 ring-primary' : ''}>
+                    <CardHeader>
+                      <CardTitle>Free</CardTitle>
+                      <div className="text-3xl font-bold">$0<span className="text-sm font-normal">/forever</span></div>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <ul className="space-y-2 text-sm">
+                        <li>• 20 AI credits/month</li>
+                        <li>• Slow AI responses</li>
+                        <li>• Basic analytics</li>
+                        <li>• Usage cooldown</li>
+                      </ul>
+                      {profile?.plan === 'free' && (
+                        <Badge className="w-full justify-center">Current Plan</Badge>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  {/* Go Plan */}
+                  <Card className="border-2 border-primary shadow-lg">
+                    <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary">Recommended</Badge>
+                    <CardHeader>
+                      <CardTitle>Go</CardTitle>
+                      <div className="text-3xl font-bold">$5.99<span className="text-sm font-normal">/month</span></div>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <ul className="space-y-2 text-sm">
+                        <li>• 200 AI credits/month</li>
+                        <li>• Fast AI responses</li>
+                        <li>• No branding</li>
+                        <li>• Advanced analytics</li>
+                        <li>• CSV/PDF export</li>
+                      </ul>
+                      <Button onClick={handleUpgrade} disabled={loading} className="w-full">
+                        Upgrade to Go
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  {/* Pro Plan */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Pro</CardTitle>
+                      <div className="text-3xl font-bold">$9<span className="text-sm font-normal">/month</span></div>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <ul className="space-y-2 text-sm">
+                        <li>• Unlimited AI credits</li>
+                        <li>• Fastest priority AI</li>
+                        <li>• Everything in Go</li>
+                        <li>• Deep analytics</li>
+                        <li>• Weekly AI reports</li>
+                      </ul>
+                      <Button onClick={handleUpgrade} disabled={loading} variant="premium" className="w-full">
+                        Upgrade to Pro
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            )}
                 {/* Free Trial Status */}
                 {profile?.created_at && isInFreeTrial(profile.created_at) ? (
                   <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg">

@@ -24,6 +24,7 @@ import CookiePolicy from "./pages/CookiePolicy";
 import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
 import Affiliate from "./pages/Affiliate";
+import Pricing from "./pages/Pricing";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ const App = () => (
             <Route path="/trades" element={<ProtectedRoute><Trades /></ProtectedRoute>} />
             <Route path="/analyze" element={<ProtectedRoute><Analyze /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+            <Route path="/pricing" element={<Pricing />} />
             <Route path="/callback" element={<ProtectedRoute><Callback /></ProtectedRoute>} />
             <Route path="/webhook" element={<Webhook />} />
             <Route path="/admin/test-mode" element={<ProtectedRoute><AdminTestMode /></ProtectedRoute>} />

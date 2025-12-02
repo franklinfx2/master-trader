@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { useIsMobileOrTablet } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { StreakIndicator } from '@/components/streak/StreakIndicator';
+import { AICreditDisplay } from '@/components/ai/AICreditDisplay';
 
 export default function Dashboard() {
   const { trades, stats, loading } = useTrades();
@@ -94,6 +95,9 @@ export default function Dashboard() {
         <div className="sm:hidden mb-4 flex justify-center">
           <StreakIndicator />
         </div>
+
+        {/* AI Credits Display */}
+        <AICreditDisplay />
 
         {/* Premium Plan Notice - Mobile Optimized */}
         {profile?.plan === 'free' && trades.length >= 20 && (

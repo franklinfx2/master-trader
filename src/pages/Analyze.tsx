@@ -18,7 +18,8 @@ import { OpenAITester } from '@/components/testing/OpenAITester';
 import { AIFeaturesSummary } from '@/components/ai/AIFeaturesSummary';
 import { EndToEndAITest } from '@/components/testing/EndToEndAITest';
 import { AIMentor } from '@/components/ai/AIMentor';
-import { AICoProAnalyzer } from '@/components/ai/AICoProAnalyzer';
+import { AICoProAnalyzerActive } from '@/components/ai/AICoProAnalyzerActive';
+import { AICreditDisplay } from '@/components/ai/AICreditDisplay';
 
 export default function Analyze() {
   const navigate = useNavigate();
@@ -207,7 +208,8 @@ export default function Analyze() {
           />
 
           {/* AI Co-Pro Analyzer - Coming Soon for Premium */}
-          <AICoProAnalyzer />
+              <AICoProAnalyzerActive userPlan={profile?.plan || 'free'} />
+              <AICreditDisplay className="mt-4" />
         </div>
 
         {/* Enhanced Analysis Dashboard - Responsive */}

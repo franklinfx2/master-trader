@@ -11,3 +11,7 @@ verify_jwt = false
 # ✅ Lovable AI test - No JWT verification (public test endpoint)
 [functions.test-lovable-ai]
 verify_jwt = false
+
+# ✅ AI Co-Pro Analyzer - JWT verification required
+[functions.ai-copro-analyzer]
+verify_jwt = true

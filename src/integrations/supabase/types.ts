@@ -14,6 +14,38 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_credit_usage: {
+        Row: {
+          created_at: string | null
+          credits_used: number
+          feature_name: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          credits_used?: number
+          feature_name: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          credits_used?: number
+          feature_name?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_credit_usage_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cart_items: {
         Row: {
           created_at: string
@@ -393,7 +425,11 @@ export type Database = {
       }
       profiles: {
         Row: {
+          ai_credits_monthly_limit: number | null
+          ai_credits_remaining: number | null
+          ai_credits_reset_date: string | null
           ai_last_analysis_at: string | null
+          ai_response_priority: string | null
           created_at: string | null
           current_streak: number | null
           email: string | null
@@ -411,7 +447,11 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          ai_credits_monthly_limit?: number | null
+          ai_credits_remaining?: number | null
+          ai_credits_reset_date?: string | null
           ai_last_analysis_at?: string | null
+          ai_response_priority?: string | null
           created_at?: string | null
           current_streak?: number | null
           email?: string | null
@@ -429,7 +469,11 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          ai_credits_monthly_limit?: number | null
+          ai_credits_remaining?: number | null
+          ai_credits_reset_date?: string | null
           ai_last_analysis_at?: string | null
+          ai_response_priority?: string | null
           created_at?: string | null
           current_streak?: number | null
           email?: string | null
@@ -569,6 +613,10 @@ export type Database = {
       }
     }
     Functions: {
+      deduct_ai_credits: {
+        Args: { p_credits: number; p_feature_name: string; p_user_id: string }
+        Returns: boolean
+      }
       get_user_trade_stats: {
         Args: { target_user_id?: string }
         Returns: {
@@ -580,6 +628,7 @@ export type Database = {
         }[]
       }
       is_admin: { Args: { user_id: string }; Returns: boolean }
+      reset_monthly_ai_credits: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
