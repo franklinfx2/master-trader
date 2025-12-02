@@ -5,6 +5,9 @@ import { Brain, Target, TrendingUp, AlertTriangle, CheckCircle, Loader2, Star } 
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Trade } from '@/hooks/useTrades';
+import { useAICredits } from '@/hooks/useAICredits';
+import { UpgradeModal } from './UpgradeModal';
+import { Badge } from '@/components/ui/badge';
 
 interface AIMentorProps {
   trades: Trade[];
@@ -22,15 +25,21 @@ interface MentorResponse {
 export const AIMentor = ({ trades, userPlan, onUpgradeClick }: AIMentorProps) => {
   const [loading, setLoading] = useState(false);
   const [mentorResponse, setMentorResponse] = useState<MentorResponse | null>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const { toast } = useToast();
+  const { credits, hasEnoughCredits, fetchCredits } = useAICredits();
 
-  const isPro = userPlan === 'pro';
+  const CREDIT_COST = 2; // AI Mentor uses 2 credits per analysis
+  const canUseMentor = userPlan === 'pro' || userPlan === 'go' || (userPlan === 'free' && hasEnoughCredits(CREDIT_COST));
 
   const handleMentorClick = async () => {
-    if (!isPro) {
-      if (onUpgradeClick) {
-        onUpgradeClick();
-      }
+    if (!hasEnoughCredits(CREDIT_COST)) {
+      setShowUpgradeModal(true);
+      toast({
+        title: "Insufficient Credits",
+        description: `You need ${CREDIT_COST} AI credits for mentor analysis. Upgrade to get more!`,
+        variant: "destructive",
+      });
       return;
     }
 
@@ -50,7 +59,10 @@ export const AIMentor = ({ trades, userPlan, onUpgradeClick }: AIMentorProps) =>
       const recentTrades = trades.slice(0, 20);
       
       const { data, error } = await supabase.functions.invoke('ai-mentor', {
-        body: { trades: recentTrades }
+        body: { 
+          trades: recentTrades,
+          creditsRequired: CREDIT_COST,
+        }
       });
 
       if (error) {
@@ -67,6 +79,7 @@ export const AIMentor = ({ trades, userPlan, onUpgradeClick }: AIMentorProps) =>
       }
 
       setMentorResponse(data.mentorResponse);
+      await fetchCredits(); // Refresh credit count
       
       toast({
         title: "AI Mentor Ready! 🚀",
@@ -229,31 +242,33 @@ export const AIMentor = ({ trades, userPlan, onUpgradeClick }: AIMentorProps) =>
     </div>
   );
 
-  if (!isPro) {
+  if (!canUseMentor && userPlan === 'free' && !hasEnoughCredits(CREDIT_COST)) {
     return <UpgradeTeaser />;
   }
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Brain className="w-6 h-6 text-primary" />
-              <div>
-                <CardTitle className="text-lg lg:text-xl">AI Trading Mentor</CardTitle>
-                <CardDescription className="text-sm lg:text-base">
-                  Get personalized insights from your AI trading coach
-                </CardDescription>
+    <>
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Brain className="w-6 h-6 text-primary" />
+                <div>
+                  <CardTitle className="text-lg lg:text-xl">AI Trading Mentor</CardTitle>
+                  <CardDescription className="text-sm lg:text-base">
+                    Get personalized insights from your AI trading coach
+                  </CardDescription>
+                </div>
               </div>
+              <Badge variant="default">{CREDIT_COST} credits</Badge>
             </div>
-          </div>
-        </CardHeader>
+          </CardHeader>
         <CardContent>
           <div className="text-center space-y-4">
             <Button 
               onClick={handleMentorClick}
-              disabled={loading || trades.length < 5}
+              disabled={loading || trades.length < 5 || !hasEnoughCredits(CREDIT_COST)}
               className="w-full lg:w-auto bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold px-4 lg:px-8 py-3 lg:py-6 text-sm lg:text-lg min-h-[44px]"
             >
               {loading ? (
@@ -264,7 +279,7 @@ export const AIMentor = ({ trades, userPlan, onUpgradeClick }: AIMentorProps) =>
               ) : (
                 <>
                   <Brain className="w-5 h-5 mr-2" />
-                  Ask Your AI Mentor 🚀
+                  Ask Your AI Mentor ({CREDIT_COST} credits)
                 </>
               )}
             </Button>
@@ -274,11 +289,24 @@ export const AIMentor = ({ trades, userPlan, onUpgradeClick }: AIMentorProps) =>
                 You need at least 5 trades for meaningful mentor insights
               </p>
             )}
+            
+            {!hasEnoughCredits(CREDIT_COST) && (
+              <p className="text-sm text-destructive font-medium">
+                Insufficient credits. You need {CREDIT_COST} credits but only have {credits?.remaining || 0} remaining.
+              </p>
+            )}
           </div>
         </CardContent>
       </Card>
 
       {mentorResponse && <MentorResults response={mentorResponse} />}
     </div>
+
+    <UpgradeModal
+      open={showUpgradeModal}
+      onClose={() => setShowUpgradeModal(false)}
+      reason="credits"
+    />
+  </>
   );
 };

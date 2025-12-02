@@ -15,6 +15,10 @@ interface Profile {
   total_earnings?: number;
   pending_balance?: number;
   is_admin?: boolean;
+  ai_credits_remaining?: number;
+  ai_credits_monthly_limit?: number;
+  ai_credits_reset_date?: string;
+  ai_response_priority?: string;
 }
 
 export const useProfile = () => {
