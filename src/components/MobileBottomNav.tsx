@@ -19,8 +19,8 @@ export const MobileBottomNav = () => {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
-      <div className="glass-effect border-t border-violet/20 backdrop-blur-md">
-        <div className="grid grid-cols-4 gap-1 p-2">
+      <div className="glass-card border-t border-border backdrop-blur-md rounded-none rounded-t-[24px]">
+        <div className="grid grid-cols-4 gap-1 p-2 pb-safe">
           {navigation.map((item) => {
             const isActive = location.pathname === item.href;
             return (
@@ -28,10 +28,10 @@ export const MobileBottomNav = () => {
                 key={item.name}
                 to={item.href}
                 className={cn(
-                  "flex flex-col items-center p-3 rounded-xl transition-all duration-200 text-xs font-medium",
+                  "flex flex-col items-center p-3 rounded-[16px] transition-all duration-200 text-xs font-medium",
                   isActive
-                    ? "bg-violet text-white shadow-lg scale-105"
-                    : "text-muted-foreground hover:text-violet hover:bg-violet/10"
+                    ? "bg-primary text-primary-foreground shadow-[0_4px_15px_rgba(77,139,255,0.25)]"
+                    : "text-muted-foreground hover:text-primary hover:bg-primary/8"
                 )}
               >
                 <item.icon className={cn(
