@@ -175,6 +175,48 @@ export default {
             opacity: "1"
           }
         },
+        "mesh-drift-1": {
+          "0%, 100%": {
+            transform: "translate(0%, 0%) scale(1)",
+          },
+          "25%": {
+            transform: "translate(3%, -2%) scale(1.03)",
+          },
+          "50%": {
+            transform: "translate(-2%, 3%) scale(0.97)",
+          },
+          "75%": {
+            transform: "translate(-3%, -1%) scale(1.02)",
+          },
+        },
+        "mesh-drift-2": {
+          "0%, 100%": {
+            transform: "translate(0%, 0%) scale(1)",
+          },
+          "33%": {
+            transform: "translate(-4%, 2%) scale(1.04)",
+          },
+          "66%": {
+            transform: "translate(2%, -3%) scale(0.96)",
+          },
+        },
+        "mesh-drift-3": {
+          "0%, 100%": {
+            transform: "translate(0%, 0%) scale(1)",
+          },
+          "20%": {
+            transform: "translate(2%, 3%) scale(0.98)",
+          },
+          "40%": {
+            transform: "translate(-3%, 1%) scale(1.03)",
+          },
+          "60%": {
+            transform: "translate(1%, -2%) scale(1.01)",
+          },
+          "80%": {
+            transform: "translate(-1%, 2%) scale(0.99)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -182,6 +224,9 @@ export default {
         "fade-in": "fade-in 0.3s ease-out",
         "scale-in": "scale-in 0.2s ease-out",
         "slide-up": "slide-up 0.3s ease-out",
+        "mesh-drift-1": "mesh-drift-1 25s ease-in-out infinite",
+        "mesh-drift-2": "mesh-drift-2 30s ease-in-out infinite",
+        "mesh-drift-3": "mesh-drift-3 35s ease-in-out infinite",
       },
     },
   },
