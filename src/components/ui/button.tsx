@@ -5,31 +5,30 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-neon hover:shadow-orb transition-neural hover:scale-105 active:scale-95",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-soft hover:shadow-neural hover:scale-105 active:scale-95",
-        outline: "border border-primary/20 bg-background/50 hover:bg-primary/10 hover:text-primary hover:border-primary/40 backdrop-blur-sm transition-smooth",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-soft hover:shadow-neural transition-smooth",
-        ghost: "hover:bg-primary/10 hover:text-primary backdrop-blur-sm transition-smooth",
-        link: "text-primary underline-offset-4 hover:underline text-cyber-blue hover:text-cyber-purple transition-smooth",
-        // Cyberpunk Button Variants
-        neural: "gradient-neural text-background hover:shadow-orb transition-neural hover:scale-105 active:scale-95 font-semibold",
-        holographic: "gradient-holographic text-background hover:shadow-holographic transition-warp hover:scale-110 active:scale-95 font-semibold",
-        cyber: "bg-cyber-blue text-background hover:bg-cyber-blue/90 shadow-neon hover:shadow-orb transition-smooth hover:scale-105 active:scale-95 font-semibold",
-        ghost_cyber: "bg-cyber-blue/10 text-cyber-blue border border-cyber-blue/20 hover:bg-cyber-blue/20 hover:border-cyber-blue/40 transition-smooth font-medium backdrop-blur-sm",
-        orb: "relative overflow-hidden bg-gradient-to-r from-cyber-blue to-cyber-purple text-background hover:from-cyber-purple hover:to-cyber-blue shadow-orb hover:shadow-neural transition-neural hover:scale-105 active:scale-95 font-semibold",
-        premium: "gradient-primary text-primary-foreground hover:scale-105 transition-spring shadow-soft hover:shadow-neon active:scale-95 font-semibold",
-        // Legacy Compatibility
-        violet: "gradient-primary text-primary-foreground hover:scale-105 transition-spring shadow-soft hover:shadow-neon active:scale-95 font-semibold",
+        default: "rounded-[20px] bg-primary text-primary-foreground shadow-[0_4px_15px_rgba(77,139,255,0.25)] hover:bg-primary/90 hover:shadow-[0_6px_20px_rgba(77,139,255,0.35)] hover:-translate-y-0.5 active:translate-y-0",
+        destructive: "rounded-[20px] bg-destructive text-destructive-foreground shadow-soft hover:bg-destructive/90 hover:shadow-medium",
+        outline: "rounded-[20px] border border-primary/30 bg-transparent text-primary hover:bg-primary/8 hover:border-primary/50 backdrop-blur-sm",
+        secondary: "rounded-[20px] bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-soft",
+        ghost: "rounded-[20px] hover:bg-primary/8 hover:text-primary backdrop-blur-sm",
+        link: "text-primary underline-offset-4 hover:underline",
+        // Premium variants
+        premium: "rounded-[20px] bg-primary text-primary-foreground shadow-[0_4px_15px_rgba(77,139,255,0.25)] hover:bg-primary/90 hover:shadow-[0_6px_20px_rgba(77,139,255,0.35)] hover:-translate-y-0.5 active:translate-y-0 font-semibold",
+        neural: "rounded-[20px] bg-gradient-to-r from-primary to-[hsl(230,65%,55%)] text-white shadow-[0_4px_20px_rgba(77,139,255,0.3)] hover:shadow-[0_6px_25px_rgba(77,139,255,0.4)] hover:-translate-y-0.5 active:translate-y-0 font-semibold",
+        holographic: "rounded-[20px] bg-gradient-to-r from-primary via-profit to-[hsl(262,83%,58%)] text-white shadow-[0_4px_20px_rgba(77,139,255,0.25)] hover:shadow-[0_6px_25px_rgba(77,139,255,0.35)] hover:-translate-y-0.5 active:translate-y-0 font-semibold",
+        cyber: "rounded-[20px] bg-primary text-primary-foreground shadow-[0_4px_15px_rgba(77,139,255,0.25)] hover:bg-primary/90 hover:shadow-[0_6px_20px_rgba(77,139,255,0.35)] hover:-translate-y-0.5 active:translate-y-0 font-semibold",
+        ghost_cyber: "rounded-[20px] border border-primary/30 bg-transparent text-primary hover:bg-primary/8 hover:border-primary/50 backdrop-blur-sm font-medium",
+        orb: "rounded-[20px] relative overflow-hidden bg-gradient-to-r from-primary to-[hsl(262,83%,58%)] text-white shadow-[0_4px_20px_rgba(77,139,255,0.3)] hover:from-[hsl(262,83%,58%)] hover:to-primary hover:shadow-[0_6px_25px_rgba(77,139,255,0.4)] hover:-translate-y-0.5 active:translate-y-0 font-semibold",
+        violet: "rounded-[20px] bg-gradient-to-r from-primary to-[hsl(262,83%,58%)] text-white shadow-[0_4px_20px_rgba(77,139,255,0.3)] hover:shadow-[0_6px_25px_rgba(77,139,255,0.4)] hover:-translate-y-0.5 active:translate-y-0 font-semibold",
       },
       size: {
-        default: "h-12 px-6 py-3",
-        sm: "h-10 rounded-lg px-4 py-2",
-        lg: "h-14 rounded-xl px-8 py-4 text-lg",
-        icon: "h-12 w-12",
+        default: "h-11 px-6 py-2.5",
+        sm: "h-9 rounded-[16px] px-4 py-2",
+        lg: "h-12 rounded-[22px] px-8 py-3 text-base",
+        icon: "h-11 w-11 rounded-full",
       },
     },
     defaultVariants: {

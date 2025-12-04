@@ -26,13 +26,13 @@ export const DesktopSidebar = ({ onNavigate }: DesktopSidebarProps) => {
   ];
 
   return (
-    <div className="w-72 glass-effect border-r border-violet/20 flex flex-col h-full">
+    <div className="w-72 glass-card border-r border-border flex flex-col h-full rounded-none">
       {/* Logo Header */}
-      <div className="relative">
-        <div className="absolute inset-0 gradient-violet opacity-90" />
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary to-[hsl(262,83%,58%)]" />
         <div className="relative z-10 flex items-center px-6 py-6">
           <div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">
+            <h1 className="text-2xl font-semibold text-white tracking-tight">
               Master Trader
               <span className="text-white/90 font-light"> AI</span>
             </h1>
@@ -50,18 +50,18 @@ export const DesktopSidebar = ({ onNavigate }: DesktopSidebarProps) => {
               key={item.name}
               to={item.href}
               className={cn(
-                "group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200",
+                "group flex items-center px-4 py-3 text-sm font-medium rounded-[16px] transition-all duration-200",
                 isActive
-                  ? "bg-violet text-white shadow-premium scale-105"
-                  : "text-muted-foreground hover:text-violet hover:bg-violet/10 hover:scale-105"
+                  ? "bg-primary text-primary-foreground shadow-[0_4px_15px_rgba(77,139,255,0.25)]"
+                  : "text-muted-foreground hover:text-primary hover:bg-primary/8"
               )}
               onClick={onNavigate}
             >
               <div className={cn(
-                "p-2 rounded-lg mr-3 transition-colors",
+                "p-2 rounded-[12px] mr-3 transition-colors",
                 isActive 
                   ? "bg-white/20" 
-                  : "bg-transparent group-hover:bg-violet/20"
+                  : "bg-transparent group-hover:bg-primary/10"
               )}>
                 <item.icon className="w-5 h-5" />
               </div>
@@ -72,11 +72,11 @@ export const DesktopSidebar = ({ onNavigate }: DesktopSidebarProps) => {
       </nav>
 
       {/* Sign Out */}
-      <div className="p-4 border-t border-violet/20">
+      <div className="p-4 border-t border-border">
         <Button
           variant="outline"
           onClick={signOut}
-          className="w-full justify-start border-violet/30 text-violet hover:bg-violet/10 hover:border-violet/50 transition-all duration-200"
+          className="w-full justify-start"
         >
           <LogOut className="w-4 h-4 mr-2" />
           Sign Out
