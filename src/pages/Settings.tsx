@@ -513,8 +513,7 @@ export default function Settings() {
                     </CardContent>
                   </Card>
                 </div>
-              </div>
-            )}
+
                 {/* Free Trial Status */}
                 {profile?.created_at && isInFreeTrial(profile.created_at) ? (
                   <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg">
