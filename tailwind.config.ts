@@ -217,6 +217,75 @@ export default {
             transform: "translate(-1%, 2%) scale(0.99)",
           },
         },
+        // Ice shape floating animations
+        "ice-float-0": {
+          "0%, 100%": {
+            transform: "translate(0, 0) rotate(0deg) scale(1)",
+          },
+          "25%": {
+            transform: "translate(15px, -20px) rotate(5deg) scale(1.05)",
+          },
+          "50%": {
+            transform: "translate(-10px, -35px) rotate(-3deg) scale(0.95)",
+          },
+          "75%": {
+            transform: "translate(20px, -15px) rotate(8deg) scale(1.02)",
+          },
+        },
+        "ice-float-1": {
+          "0%, 100%": {
+            transform: "translate(0, 0) rotate(0deg) scale(1)",
+          },
+          "33%": {
+            transform: "translate(-20px, -25px) rotate(-8deg) scale(1.08)",
+          },
+          "66%": {
+            transform: "translate(15px, -40px) rotate(5deg) scale(0.92)",
+          },
+        },
+        "ice-float-2": {
+          "0%, 100%": {
+            transform: "translate(0, 0) rotate(0deg) scale(1)",
+          },
+          "20%": {
+            transform: "translate(25px, -15px) rotate(10deg) scale(1.03)",
+          },
+          "40%": {
+            transform: "translate(-15px, -30px) rotate(-5deg) scale(0.97)",
+          },
+          "60%": {
+            transform: "translate(10px, -45px) rotate(3deg) scale(1.05)",
+          },
+          "80%": {
+            transform: "translate(-20px, -20px) rotate(-8deg) scale(0.98)",
+          },
+        },
+        "ice-float-3": {
+          "0%, 100%": {
+            transform: "translate(0, 0) rotate(0deg) scale(1)",
+          },
+          "50%": {
+            transform: "translate(-25px, -35px) rotate(-12deg) scale(1.1)",
+          },
+        },
+        "sparkle": {
+          "0%, 100%": {
+            opacity: "0.3",
+            transform: "scale(1)",
+          },
+          "50%": {
+            opacity: "1",
+            transform: "scale(1.5)",
+          },
+        },
+        "shimmer": {
+          "0%": {
+            backgroundPosition: "-200% 0",
+          },
+          "100%": {
+            backgroundPosition: "200% 0",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -227,6 +296,12 @@ export default {
         "mesh-drift-1": "mesh-drift-1 25s ease-in-out infinite",
         "mesh-drift-2": "mesh-drift-2 30s ease-in-out infinite",
         "mesh-drift-3": "mesh-drift-3 35s ease-in-out infinite",
+        "ice-float-0": "ice-float-0 20s ease-in-out infinite",
+        "ice-float-1": "ice-float-1 25s ease-in-out infinite",
+        "ice-float-2": "ice-float-2 30s ease-in-out infinite",
+        "ice-float-3": "ice-float-3 22s ease-in-out infinite",
+        "sparkle": "sparkle 2s ease-in-out infinite",
+        "shimmer": "shimmer 3s linear infinite",
       },
     },
   },
