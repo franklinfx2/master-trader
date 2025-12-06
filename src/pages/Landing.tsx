@@ -28,7 +28,16 @@ export default function Landing() {
       {/* Hero Section */}
       <section className="py-20 px-4 gradient-card">
         <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-8 text-gradient leading-tight">
+          <h2 
+            className="text-4xl sm:text-5xl md:text-6xl font-bold mb-8 leading-tight"
+            style={{
+              background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)/0.8) 50%, hsl(var(--primary)) 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              WebkitTextStroke: '1px hsl(var(--primary)/0.3)',
+              textShadow: '0 2px 20px hsl(var(--primary)/0.2)',
+            }}
+          >
             AI-Powered Trading Journal
           </h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
