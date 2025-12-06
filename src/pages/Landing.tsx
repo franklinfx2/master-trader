@@ -3,11 +3,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart3, Brain, Shield, Zap, CheckCircle, TrendingUp } from 'lucide-react';
 import { FullFooter } from '@/components/ui/footer';
+import { FloatingIceShapes } from '@/components/ui/floating-ice-shapes';
 
 
 export default function Landing() {
   return (
-    <div className="flex flex-col min-h-screen bg-background w-full">{/* Added w-full for proper width */}
+    <div className="relative flex flex-col min-h-screen bg-background w-full">
+      {/* Background shapes that scroll with page */}
+      <FloatingIceShapes />
       {/* Header */}
       <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
