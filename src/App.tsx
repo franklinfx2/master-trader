@@ -7,7 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { GradientMeshBackground } from "@/components/ui/gradient-mesh-background";
-import { FloatingIceShapes } from "@/components/ui/floating-ice-shapes";
+
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
@@ -37,7 +37,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <GradientMeshBackground />
-        <FloatingIceShapes />
+        
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
