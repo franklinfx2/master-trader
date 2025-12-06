@@ -28,7 +28,7 @@ export default function Landing() {
       {/* Hero Section */}
       <section className="py-20 px-4 gradient-card">
         <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-6xl font-bold mb-8 text-gradient">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-8 text-gradient leading-tight">
             AI-Powered Trading Journal
           </h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
