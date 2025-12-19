@@ -31,8 +31,16 @@ serve(async (req) => {
       throw new Error('Paystack live secret key not configured')
     }
 
-    // Single Pro plan pricing - ₵120/month
-    const amount = 12000; // ₵120.00 in pesewas
+    // Plan-based pricing in pesewas
+    const planPricing: Record<string, { amount: number; name: string }> = {
+      go: { amount: 599, name: 'Go Plan' },      // $5.99
+      pro: { amount: 900, name: 'Pro Plan' }     // $9.00
+    };
+
+    const selectedPlan = planPricing[plan] || planPricing.pro;
+    const amount = selectedPlan.amount;
+
+    console.log(`Creating checkout for plan: ${plan}, amount: ${amount} cents`);
 
     // Create Paystack checkout session
     const paystackResponse = await fetch('https://api.paystack.co/transaction/initialize', {
@@ -44,12 +52,13 @@ serve(async (req) => {
       body: JSON.stringify({
         email: email,
         amount: amount,
-        currency: 'GHS',
+        currency: 'USD',
         reference: `${plan}_upgrade_${userId}_${Date.now()}`,
         callback_url: 'https://strat-guru.lovable.app/callback',
         metadata: {
           userId: userId,
           plan: plan,
+          planName: selectedPlan.name,
           upgrade: true
         },
         channels: ['card', 'mobile_money']
