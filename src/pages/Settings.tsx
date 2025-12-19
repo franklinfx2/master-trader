@@ -473,7 +473,7 @@ export default function Settings() {
                   </Card>
 
                   {/* Go Plan */}
-                  <Card className="border-2 border-primary shadow-lg">
+                  <Card className="relative border-2 border-primary shadow-lg isolate z-10">
                     <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary">Recommended</Badge>
                     <CardHeader>
                       <CardTitle>Go</CardTitle>
