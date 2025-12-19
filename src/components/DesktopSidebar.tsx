@@ -26,7 +26,7 @@ export const DesktopSidebar = ({ onNavigate }: DesktopSidebarProps) => {
   ];
 
   return (
-    <div className="w-72 glass-card border-r border-border flex flex-col h-full rounded-none">
+    <div className="w-72 glass-card border-r border-border flex flex-col h-screen sticky top-0 rounded-none overflow-hidden">
       {/* Logo Header */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-primary to-[hsl(262,83%,58%)]" />
@@ -42,7 +42,7 @@ export const DesktopSidebar = ({ onNavigate }: DesktopSidebarProps) => {
       </div>
       
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-6 space-y-2">
+      <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
         {navigation.map((item) => {
           const isActive = location.pathname === item.href;
           return (
