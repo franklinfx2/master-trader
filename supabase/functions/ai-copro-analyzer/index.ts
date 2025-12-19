@@ -46,6 +46,7 @@ serve(async (req) => {
       });
 
     if (creditError || !creditDeducted) {
+      console.error('Credit deduction error:', creditError);
       return new Response(
         JSON.stringify({ 
           error: 'Insufficient credits', 
@@ -58,13 +59,13 @@ serve(async (req) => {
       );
     }
 
-    // Construct AI prompt
-    const prompt = `You are an expert trading analyst. Analyze the following market data and provide a detailed trade analysis.
+    // Build the message content with image if provided
+    const messageContent: Array<{ type: string; text?: string; image_url?: { url: string } }> = [];
+    
+    // Add text prompt
+    const textPrompt = `You are an expert trading analyst. Analyze the following market data and provide a detailed trade analysis.
 
-${screenshotUrl ? `Chart Screenshot: ${screenshotUrl}` : ''}
-
-Market Context:
-${marketContext}
+${marketContext ? `Market Context: ${marketContext}` : 'Please analyze the chart screenshot provided.'}
 
 Please provide:
 1. Price direction prediction (Bullish/Bearish/Neutral) with confidence percentage
@@ -92,7 +93,19 @@ Respond ONLY with valid JSON in this exact format:
   "reasoning": "detailed explanation"
 }`;
 
-    // Call Lovable AI
+    messageContent.push({ type: 'text', text: textPrompt });
+
+    // Add image if URL is provided
+    if (screenshotUrl) {
+      messageContent.push({
+        type: 'image_url',
+        image_url: { url: screenshotUrl }
+      });
+    }
+
+    console.log('Sending request to Lovable AI with image:', !!screenshotUrl);
+
+    // Call Lovable AI with vision-capable model
     const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -104,11 +117,11 @@ Respond ONLY with valid JSON in this exact format:
         messages: [
           {
             role: 'system',
-            content: 'You are an expert trading analyst providing structured market analysis.'
+            content: 'You are an expert trading analyst providing structured market analysis. Always respond with valid JSON only.'
           },
           {
             role: 'user',
-            content: prompt
+            content: messageContent
           }
         ],
         temperature: 0.7,
@@ -126,34 +139,45 @@ Respond ONLY with valid JSON in this exact format:
         );
       }
       
+      if (aiResponse.status === 402) {
+        return new Response(
+          JSON.stringify({ error: 'Payment required - please add credits to your Lovable AI workspace' }),
+          { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
       throw new Error(`Lovable AI API error: ${aiResponse.status}`);
     }
 
     const aiData = await aiResponse.json();
+    console.log('AI Response received');
+    
     const analysisText = aiData.choices[0]?.message?.content || '';
 
     // Parse JSON response
     let analysis;
     try {
       // Try to extract JSON from markdown code blocks if present
-      const jsonMatch = analysisText.match(/```json\s*([\s\S]*?)\s*```/);
+      const jsonMatch = analysisText.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
       const jsonText = jsonMatch ? jsonMatch[1] : analysisText;
-      analysis = JSON.parse(jsonText);
+      // Clean up any leading/trailing whitespace or newlines
+      const cleanedJson = jsonText.trim();
+      analysis = JSON.parse(cleanedJson);
     } catch (e) {
-      console.error('Failed to parse AI response:', e);
+      console.error('Failed to parse AI response:', e, 'Raw response:', analysisText);
       // Provide fallback response
       analysis = {
         priceDirection: "Neutral",
         probability: 50,
         volatility: "Medium",
-        newsThreats: ["Unable to analyze - please provide more context"],
+        newsThreats: ["Unable to fully parse analysis - please provide more context"],
         tradeSetup: {
           entry: "N/A",
           tp: "N/A",
           sl: "N/A",
           riskReward: "N/A"
         },
-        reasoning: "Failed to parse AI response. Please try again with more detailed context."
+        reasoning: analysisText || "Failed to parse AI response. Please try again with more detailed context or a clearer chart image."
       };
     }
 
