@@ -21,7 +21,7 @@ export const ResponsiveLayout = ({ children }: ResponsiveLayoutProps) => {
   const isMobile = useIsMobileOrTablet();
 
   return (
-    <div className="flex min-h-screen bg-background ambient-glow">
+    <div className="flex h-screen bg-background ambient-glow overflow-hidden">
       {/* Mobile/Tablet sidebar backdrop */}
       {sidebarOpen && isMobile && (
         <div 
@@ -44,7 +44,7 @@ export const ResponsiveLayout = ({ children }: ResponsiveLayoutProps) => {
       )}
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col relative z-10">
+      <div className="flex-1 flex flex-col relative z-10 h-screen overflow-hidden">
         {/* Header */}
         <div className={cn(
           "glass-card border-b border-border backdrop-blur-md rounded-none",
@@ -101,11 +101,11 @@ export const ResponsiveLayout = ({ children }: ResponsiveLayoutProps) => {
         </div>
 
         {/* Page content */}
-        <div className="flex-1 flex flex-col">
-          <main className="flex-1 overflow-auto bg-transparent relative">
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <main className="flex-1 overflow-y-auto bg-transparent relative">
             <div className={cn(
               "w-full min-h-full",
-              isMobile ? "p-4 space-y-4 pb-20" : "p-6 lg:p-8"
+              isMobile ? "p-4 space-y-4 pb-24" : "p-6 lg:p-8"
             )}>
               {children}
             </div>
