@@ -67,8 +67,8 @@ export default function Settings() {
     }
   };
 
-  // ✅ Paystack upgrade handler with metadata
-  const handleUpgrade = async () => {
+  // ✅ Paystack upgrade handler with plan selection
+  const handleUpgrade = async (plan: 'go' | 'pro' = 'pro') => {
     setLoading(true);
     
     try {
@@ -76,6 +76,7 @@ export default function Settings() {
         body: {
           email: profile?.email,
           userId: profile?.id,
+          plan: plan,
         }
       });
 
@@ -86,7 +87,7 @@ export default function Settings() {
         window.open(data.payUrl, '_blank');
         toast({
           title: "Redirecting to Paystack",
-          description: "Opening secure payment page...",
+          description: `Opening secure payment page for ${plan === 'go' ? 'Go' : 'Pro'} plan...`,
         });
       }
     } catch (error) {
@@ -342,7 +343,7 @@ export default function Settings() {
                   <div>
                     <h4 className="text-sm font-medium mb-2">Local Payments (Paystack)</h4>
                     <Button 
-                      onClick={handleUpgrade}
+                      onClick={() => handleUpgrade('pro')}
                       disabled={loading}
                       variant="premium"
                       size="lg"
@@ -487,7 +488,7 @@ export default function Settings() {
                         <li>• Advanced analytics</li>
                         <li>• CSV/PDF export</li>
                       </ul>
-                      <Button onClick={handleUpgrade} disabled={loading} className="w-full">
+                      <Button onClick={() => handleUpgrade('go')} disabled={loading} className="w-full">
                         Upgrade to Go
                       </Button>
                     </CardContent>
@@ -507,7 +508,7 @@ export default function Settings() {
                         <li>• Deep analytics</li>
                         <li>• Weekly AI reports</li>
                       </ul>
-                      <Button onClick={handleUpgrade} disabled={loading} variant="premium" className="w-full">
+                      <Button onClick={() => handleUpgrade('pro')} disabled={loading} variant="premium" className="w-full">
                         Upgrade to Pro
                       </Button>
                     </CardContent>
