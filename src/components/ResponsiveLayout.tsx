@@ -1,6 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { LogOut, Menu } from 'lucide-react';
+import { LogOut, Menu, PanelLeft } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { AIStatusIndicator } from '@/components/ai/AIStatusIndicator';
@@ -22,26 +22,22 @@ export const ResponsiveLayout = ({ children }: ResponsiveLayoutProps) => {
 
   return (
     <div className="flex h-screen bg-background ambient-glow overflow-hidden">
-      {/* Mobile/Tablet sidebar backdrop */}
-      {sidebarOpen && isMobile && (
+      {/* Sidebar backdrop */}
+      {sidebarOpen && (
         <div 
           className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {/* Desktop Sidebar */}
-      {!isMobile && <DesktopSidebar />}
-
-      {/* Mobile/Tablet Sidebar */}
-      {isMobile && (
-        <div className={cn(
-          "fixed inset-y-0 left-0 z-50 w-72 glass-card border-r border-border transform transition-transform duration-300 ease-out rounded-none rounded-r-3xl",
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        )}>
-          <DesktopSidebar onNavigate={() => setSidebarOpen(false)} />
-        </div>
-      )}
+      {/* Collapsible Sidebar (both mobile and desktop) */}
+      <div className={cn(
+        "fixed inset-y-0 left-0 z-50 w-72 glass-card border-r border-border transform transition-transform duration-300 ease-out rounded-none",
+        isMobile ? "rounded-r-3xl" : "",
+        sidebarOpen ? "translate-x-0" : "-translate-x-full"
+      )}>
+        <DesktopSidebar onNavigate={() => setSidebarOpen(false)} />
+      </div>
 
       {/* Main content */}
       <div className="flex-1 flex flex-col relative z-10 h-screen overflow-hidden">
@@ -78,6 +74,15 @@ export const ResponsiveLayout = ({ children }: ResponsiveLayoutProps) => {
               // Desktop header
               <>
                 <div className="flex items-center space-x-4">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSidebarOpen(true)}
+                    className="text-foreground hover:bg-primary/10"
+                    aria-label="Open navigation menu"
+                  >
+                    <PanelLeft className="w-5 h-5" />
+                  </Button>
                   <h1 className="text-xl font-semibold text-foreground tracking-tight">
                     Master Trader <span className="text-primary font-light">AI</span>
                   </h1>
