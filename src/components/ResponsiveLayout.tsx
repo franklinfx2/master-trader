@@ -68,7 +68,8 @@ export const ResponsiveLayout = ({ children }: ResponsiveLayoutProps) => {
                     Master Trader <span className="text-primary font-light">AI</span>
                   </h1>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
+                  <FeedbackButton asText />
                   <ThemeToggle />
                   <AIStatusIndicator />
                 </div>
@@ -81,7 +82,8 @@ export const ResponsiveLayout = ({ children }: ResponsiveLayoutProps) => {
                     Master Trader <span className="text-primary font-light">AI</span>
                   </h1>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-4">
+                  <FeedbackButton asText />
                   <AIStatusIndicator />
                   <ThemeToggle />
                   <Button
@@ -114,9 +116,6 @@ export const ResponsiveLayout = ({ children }: ResponsiveLayoutProps) => {
 
       {/* Mobile Bottom Navigation */}
       {isMobile && <MobileBottomNav />}
-      
-      {/* Floating Feedback Button */}
-      <FeedbackButton />
     </div>
   );
 };

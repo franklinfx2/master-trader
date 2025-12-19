@@ -20,7 +20,11 @@ import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
-export const FeedbackButton = () => {
+interface FeedbackButtonProps {
+  asText?: boolean;
+}
+
+export const FeedbackButton = ({ asText = false }: FeedbackButtonProps) => {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [feedbackType, setFeedbackType] = useState<string>("");
@@ -113,14 +117,23 @@ export const FeedbackButton = () => {
 
   return (
     <>
-      <Button
-        onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 rounded-full h-14 w-14 shadow-lg hover:scale-110 transition-transform duration-200 z-50"
-        size="icon"
-        aria-label="Send Feedback"
-      >
-        <MessageCircle className="h-6 w-6" />
-      </Button>
+      {asText ? (
+        <button
+          onClick={() => setOpen(true)}
+          className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+        >
+          Feedback
+        </button>
+      ) : (
+        <Button
+          onClick={() => setOpen(true)}
+          className="fixed bottom-6 right-6 rounded-full h-14 w-14 shadow-lg hover:scale-110 transition-transform duration-200 z-50"
+          size="icon"
+          aria-label="Send Feedback"
+        >
+          <MessageCircle className="h-6 w-6" />
+        </Button>
+      )}
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-[500px]">
