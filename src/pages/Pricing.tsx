@@ -97,10 +97,10 @@ export default function Pricing() {
             return (
               <Card
                 key={plan.name}
-                className={`relative ${
+                className={`relative isolate ${
                   plan.highlight
-                    ? 'border-2 border-primary shadow-2xl md:scale-105'
-                    : 'border'
+                    ? 'border-2 border-primary shadow-2xl z-10'
+                    : 'border z-0'
                 } ${plan.current ? 'ring-2 ring-primary' : ''}`}
               >
                 {plan.badge && (
