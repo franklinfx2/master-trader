@@ -214,42 +214,42 @@ export default function Analyze() {
 
         {/* Enhanced Analysis Dashboard - Responsive */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 lg:space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 gap-0.5 lg:gap-2 h-auto p-1">
-            <TabsTrigger value="overview" className="text-[10px] lg:text-sm py-1.5 px-1 lg:px-3 data-[state=active]:text-xs lg:data-[state=active]:text-sm">Overview</TabsTrigger>
-            <TabsTrigger value="sessions" className="text-[10px] lg:text-sm py-1.5 px-1 lg:px-3 data-[state=active]:text-xs lg:data-[state=active]:text-sm">Sessions</TabsTrigger>
-            <TabsTrigger value="timing" className="text-[10px] lg:text-sm py-1.5 px-1 lg:px-3 data-[state=active]:text-xs lg:data-[state=active]:text-sm">Timing</TabsTrigger>
-            <TabsTrigger value="setups" className="text-[10px] lg:text-sm py-1.5 px-1 lg:px-3 data-[state=active]:text-xs lg:data-[state=active]:text-sm">Setups</TabsTrigger>
-            <TabsTrigger value="ai-insights" className="text-[10px] lg:text-sm py-1.5 px-1 lg:px-3 col-span-2 lg:col-span-1 data-[state=active]:text-xs lg:data-[state=active]:text-sm">AI Mentor</TabsTrigger>
+          <TabsList className="w-full">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="sessions" className="hidden sm:inline-flex">Sessions</TabsTrigger>
+            <TabsTrigger value="timing" className="hidden sm:inline-flex">Timing</TabsTrigger>
+            <TabsTrigger value="setups" className="hidden sm:inline-flex">Setups</TabsTrigger>
+            <TabsTrigger value="ai-insights">AI</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4 lg:space-y-6">
             <TradeFilters trades={trades} onFilterChange={setFilteredTrades} />
             
-            {/* AI Coaching Insights Grid - Responsive */}
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 lg:gap-6">
+            {/* AI Coaching Insights Grid - Mobile: 2 cols, Desktop: 4 cols */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-6">
               <AIInsightCard trades={filteredTrades} type="session" />
               <AIInsightCard trades={filteredTrades} type="time" />
               <AIInsightCard trades={filteredTrades} type="setup" />
               <AIInsightCard trades={filteredTrades} type="risk" />
             </div>
 
-            {/* Key Performance Metrics - Responsive */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-6">
+            {/* Key Performance Metrics - Mobile: stacked, Desktop: 3 cols */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 lg:gap-6">
               <Card className="p-3 lg:p-6">
-                <CardHeader className="p-0 pb-3 lg:pb-4">
-                  <CardTitle className="text-sm lg:text-lg">Recent Performance</CardTitle>
+                <CardHeader className="p-0 pb-2 lg:pb-4">
+                  <CardTitle className="text-xs sm:text-sm lg:text-lg">Performance</CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
-                  <div className="space-y-1.5 lg:space-y-2">
-                    <div className="flex justify-between items-start gap-2">
-                      <span className="text-muted-foreground text-xs lg:text-sm flex-shrink-0">Last 10 trades:</span>
-                      <span className="font-medium text-xs lg:text-sm text-right">
+                  <div className="flex sm:flex-col justify-between sm:space-y-1.5 lg:space-y-2">
+                    <div className="flex sm:justify-between items-center gap-2">
+                      <span className="text-muted-foreground text-[10px] sm:text-xs lg:text-sm">Last 10:</span>
+                      <span className="font-medium text-[10px] sm:text-xs lg:text-sm">
                         {filteredTrades.slice(0, 10).filter(t => t.result === 'win').length}/10 wins
                       </span>
                     </div>
-                    <div className="flex justify-between items-start gap-2">
-                      <span className="text-muted-foreground text-xs lg:text-sm flex-shrink-0">Win rate:</span>
-                      <span className="font-medium text-xs lg:text-sm text-right">
+                    <div className="flex sm:justify-between items-center gap-2">
+                      <span className="text-muted-foreground text-[10px] sm:text-xs lg:text-sm">Win rate:</span>
+                      <span className="font-medium text-[10px] sm:text-xs lg:text-sm">
                         {filteredTrades.slice(0, 10).length > 0 
                           ? `${((filteredTrades.slice(0, 10).filter(t => t.result === 'win').length / filteredTrades.slice(0, 10).filter(t => t.result !== 'open').length) * 100).toFixed(1)}%`
                           : '0%'
@@ -261,20 +261,20 @@ export default function Analyze() {
               </Card>
 
               <Card className="p-3 lg:p-6">
-                <CardHeader className="p-0 pb-3 lg:pb-4">
-                  <CardTitle className="text-sm lg:text-lg">Trade Distribution</CardTitle>
+                <CardHeader className="p-0 pb-2 lg:pb-4">
+                  <CardTitle className="text-xs sm:text-sm lg:text-lg">Distribution</CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
-                  <div className="space-y-1.5 lg:space-y-2">
-                    <div className="flex justify-between items-start gap-2">
-                      <span className="text-muted-foreground text-xs lg:text-sm flex-shrink-0">Long trades:</span>
-                      <span className="font-medium text-xs lg:text-sm text-right">
+                  <div className="flex sm:flex-col justify-between sm:space-y-1.5 lg:space-y-2">
+                    <div className="flex sm:justify-between items-center gap-2">
+                      <span className="text-muted-foreground text-[10px] sm:text-xs lg:text-sm">Long:</span>
+                      <span className="font-medium text-[10px] sm:text-xs lg:text-sm">
                         {filteredTrades.filter(t => t.direction === 'long').length}
                       </span>
                     </div>
-                    <div className="flex justify-between items-start gap-2">
-                      <span className="text-muted-foreground text-xs lg:text-sm flex-shrink-0">Short trades:</span>
-                      <span className="font-medium text-xs lg:text-sm text-right">
+                    <div className="flex sm:justify-between items-center gap-2">
+                      <span className="text-muted-foreground text-[10px] sm:text-xs lg:text-sm">Short:</span>
+                      <span className="font-medium text-[10px] sm:text-xs lg:text-sm">
                         {filteredTrades.filter(t => t.direction === 'short').length}
                       </span>
                     </div>
@@ -283,23 +283,23 @@ export default function Analyze() {
               </Card>
 
               <Card className="p-3 lg:p-6">
-                <CardHeader className="p-0 pb-3 lg:pb-4">
-                  <CardTitle className="text-sm lg:text-lg">Risk Management</CardTitle>
+                <CardHeader className="p-0 pb-2 lg:pb-4">
+                  <CardTitle className="text-xs sm:text-sm lg:text-lg">Risk</CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
-                  <div className="space-y-1.5 lg:space-y-2">
-                    <div className="flex justify-between items-start gap-2">
-                      <span className="text-muted-foreground text-xs lg:text-sm flex-shrink-0">Avg risk:</span>
-                      <span className="font-medium text-xs lg:text-sm text-right">
+                  <div className="flex sm:flex-col justify-between sm:space-y-1.5 lg:space-y-2">
+                    <div className="flex sm:justify-between items-center gap-2">
+                      <span className="text-muted-foreground text-[10px] sm:text-xs lg:text-sm">Avg risk:</span>
+                      <span className="font-medium text-[10px] sm:text-xs lg:text-sm">
                         {filteredTrades.filter(t => t.risk_pct).length > 0 
                           ? `${(filteredTrades.filter(t => t.risk_pct).reduce((sum, t) => sum + (t.risk_pct || 0), 0) / filteredTrades.filter(t => t.risk_pct).length).toFixed(1)}%`
                           : 'N/A'
                         }
                       </span>
                     </div>
-                    <div className="flex justify-between items-start gap-2">
-                      <span className="text-muted-foreground text-xs lg:text-sm flex-shrink-0">Avg R:R:</span>
-                      <span className="font-medium text-xs lg:text-sm text-right">
+                    <div className="flex sm:justify-between items-center gap-2">
+                      <span className="text-muted-foreground text-[10px] sm:text-xs lg:text-sm">R:R:</span>
+                      <span className="font-medium text-[10px] sm:text-xs lg:text-sm">
                         {filteredTrades.filter(t => t.rr).length > 0 
                           ? `1:${(filteredTrades.filter(t => t.rr).reduce((sum, t) => sum + (t.rr || 0), 0) / filteredTrades.filter(t => t.rr).length).toFixed(2)}`
                           : 'N/A'
