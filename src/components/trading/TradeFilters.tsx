@@ -87,108 +87,110 @@ export function TradeFilters({ trades, onFilterChange }: TradeFiltersProps) {
   const hasActiveFilters = Object.values(filters).some(v => v !== 'all' && v !== '');
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Filter className="w-5 h-5" />
-            <CardTitle>Filter Trades</CardTitle>
+    <Card className="overflow-hidden">
+      <CardHeader className="p-3 sm:p-4">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+            <Filter className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+            <CardTitle className="text-sm sm:text-base truncate">Filter Trades</CardTitle>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
             {hasActiveFilters && (
-              <Button variant="outline" size="sm" onClick={clearFilters}>
-                <X className="w-4 h-4 mr-1" />
-                Clear
+              <Button variant="outline" size="sm" onClick={clearFilters} className="h-7 px-2 text-xs sm:h-8 sm:px-3 sm:text-sm">
+                <X className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
+                <span className="hidden sm:inline">Clear</span>
               </Button>
             )}
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsExpanded(!isExpanded)}
+              className="h-7 px-2 text-xs sm:h-8 sm:px-3 sm:text-sm"
             >
-              {isExpanded ? 'Collapse' : 'Expand'}
+              {isExpanded ? 'Hide' : 'Show'}
             </Button>
           </div>
         </div>
       </CardHeader>
       {isExpanded && (
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            <div className="space-y-2">
-              <Label>Date From</Label>
+        <CardContent className="p-3 pt-0 sm:p-4 sm:pt-0">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-4">
+            <div className="space-y-1 sm:space-y-2">
+              <Label className="text-xs sm:text-sm">From</Label>
               <Input
                 type="date"
                 value={filters.dateFrom}
                 onChange={(e) => handleFilterChange('dateFrom', e.target.value)}
+                className="h-8 text-xs sm:h-9 sm:text-sm"
               />
             </div>
             
-            <div className="space-y-2">
-              <Label>Date To</Label>
+            <div className="space-y-1 sm:space-y-2">
+              <Label className="text-xs sm:text-sm">To</Label>
               <Input
                 type="date"
                 value={filters.dateTo}
                 onChange={(e) => handleFilterChange('dateTo', e.target.value)}
+                className="h-8 text-xs sm:h-9 sm:text-sm"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label>Trading Session</Label>
+            <div className="space-y-1 sm:space-y-2">
+              <Label className="text-xs sm:text-sm">Session</Label>
               <Select value={filters.session} onValueChange={(value) => handleFilterChange('session', value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="All sessions" />
+                <SelectTrigger className="h-8 text-xs sm:h-9 sm:text-sm">
+                  <SelectValue placeholder="All" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Sessions</SelectItem>
+                  <SelectItem value="all">All</SelectItem>
                   <SelectItem value="asian">Asian</SelectItem>
                   <SelectItem value="london">London</SelectItem>
-                  <SelectItem value="newyork">New York</SelectItem>
+                  <SelectItem value="newyork">NY</SelectItem>
                   <SelectItem value="sydney">Sydney</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label>Currency Pair</Label>
+            <div className="space-y-1 sm:space-y-2">
+              <Label className="text-xs sm:text-sm">Pair</Label>
               <Select value={filters.pair} onValueChange={(value) => handleFilterChange('pair', value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="All pairs" />
+                <SelectTrigger className="h-8 text-xs sm:h-9 sm:text-sm">
+                  <SelectValue placeholder="All" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Pairs</SelectItem>
+                  <SelectItem value="all">All</SelectItem>
                   {uniquePairs.map(pair => (
                     <SelectItem key={pair} value={pair}>{pair}</SelectItem>
-                  ))
-                  }
+                  ))}
                 </SelectContent>
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label>Direction</Label>
+            <div className="space-y-1 sm:space-y-2">
+              <Label className="text-xs sm:text-sm">Direction</Label>
               <Select value={filters.direction} onValueChange={(value) => handleFilterChange('direction', value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="All directions" />
+                <SelectTrigger className="h-8 text-xs sm:h-9 sm:text-sm">
+                  <SelectValue placeholder="All" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Directions</SelectItem>
+                  <SelectItem value="all">All</SelectItem>
                   <SelectItem value="long">Long</SelectItem>
                   <SelectItem value="short">Short</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label>Result</Label>
+            <div className="space-y-1 sm:space-y-2">
+              <Label className="text-xs sm:text-sm">Result</Label>
               <Select value={filters.result} onValueChange={(value) => handleFilterChange('result', value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="All results" />
+                <SelectTrigger className="h-8 text-xs sm:h-9 sm:text-sm">
+                  <SelectValue placeholder="All" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Results</SelectItem>
+                  <SelectItem value="all">All</SelectItem>
                   <SelectItem value="win">Win</SelectItem>
                   <SelectItem value="loss">Loss</SelectItem>
-                  <SelectItem value="be">Break Even</SelectItem>
+                  <SelectItem value="be">BE</SelectItem>
                   <SelectItem value="open">Open</SelectItem>
                 </SelectContent>
               </Select>
