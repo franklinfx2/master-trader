@@ -28,6 +28,7 @@ import Contact from "./pages/Contact";
 import Affiliate from "./pages/Affiliate";
 import Pricing from "./pages/Pricing";
 import EliteJournalDebug from "./pages/EliteJournalDebug";
+import EliteTradeEntry from "./pages/EliteTradeEntry";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,7 @@ const App = () => (
             <Route path="/admin/test-mode" element={<ProtectedRoute><AdminTestMode /></ProtectedRoute>} />
             <Route path="/admin/feedback" element={<ProtectedRoute><AdminFeedback /></ProtectedRoute>} />
             <Route path="/elite-journal-debug" element={<ProtectedRoute><EliteJournalDebug /></ProtectedRoute>} />
+            <Route path="/elite-trade-entry" element={<ProtectedRoute><EliteTradeEntry /></ProtectedRoute>} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/disclaimer" element={<Disclaimer />} />
