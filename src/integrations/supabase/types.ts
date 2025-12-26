@@ -599,6 +599,196 @@ export type Database = {
           },
         ]
       }
+      trades_v2_elite: {
+        Row: {
+          account_type: Database["public"]["Enums"]["account_type_enum"]
+          annotations_present: Database["public"]["Enums"]["yes_no_enum"] | null
+          classification_status: Database["public"]["Enums"]["classification_status_enum"]
+          confidence_level: number
+          confirmation_present: Database["public"]["Enums"]["yes_no_enum"]
+          created_at: string
+          day_of_week: Database["public"]["Enums"]["day_of_week_enum"]
+          drawdown_during_trade_pct: number | null
+          entry_candle: Database["public"]["Enums"]["entry_candle_enum"]
+          entry_model: Database["public"]["Enums"]["entry_model_enum"]
+          entry_precision: Database["public"]["Enums"]["entry_precision_enum"]
+          entry_price: number
+          execution_tf: Database["public"]["Enums"]["execution_tf_enum"]
+          exit_price: number | null
+          fatigue_present: Database["public"]["Enums"]["yes_no_enum"]
+          first_move_was_fake: Database["public"]["Enums"]["yes_no_enum"]
+          gold_behavior_tags: Database["public"]["Enums"]["gold_behavior_tag_enum"][]
+          htf_bias: Database["public"]["Enums"]["htf_bias_enum"]
+          htf_screenshot: string | null
+          htf_timeframe: Database["public"]["Enums"]["htf_timeframe_enum"]
+          id: string
+          instrument: string
+          killzone: Database["public"]["Enums"]["killzone_enum"]
+          legacy_trade_id: string | null
+          liquidity_taken_against_bias: Database["public"]["Enums"]["yes_no_enum"]
+          liquidity_taken_before_entry: Database["public"]["Enums"]["yes_no_enum"]
+          liquidity_targeted: Database["public"]["Enums"]["liquidity_target_enum"][]
+          ltf_entry_screenshot: string | null
+          mae: number | null
+          market_phase: Database["public"]["Enums"]["market_phase_enum"]
+          mfe: number | null
+          news_day: Database["public"]["Enums"]["yes_no_enum"]
+          notes: string | null
+          partial_taken: Database["public"]["Enums"]["yes_no_enum"]
+          post_trade_screenshot: string | null
+          pre_trade_state: Database["public"]["Enums"]["pre_trade_state_enum"]
+          r_multiple: number | null
+          real_move_after_liquidity: Database["public"]["Enums"]["yes_no_enum"]
+          result: Database["public"]["Enums"]["trade_result_enum"] | null
+          revenge_trade: Database["public"]["Enums"]["yes_no_enum"]
+          risk_per_trade_pct: number
+          rr_planned: number
+          rr_realized: number | null
+          rules_followed: Database["public"]["Enums"]["yes_no_enum"]
+          screenshots_valid: boolean
+          session: Database["public"]["Enums"]["session_enum"]
+          setup_grade: Database["public"]["Enums"]["setup_grade_enum"]
+          setup_type: Database["public"]["Enums"]["setup_type_enum"]
+          stop_loss: number
+          stop_placement_quality: Database["public"]["Enums"]["stop_placement_quality_enum"]
+          structure_state: Database["public"]["Enums"]["structure_state_enum"]
+          take_profit: number
+          trade_aligned_with_real_move: Database["public"]["Enums"]["yes_no_enum"]
+          trade_date: string
+          updated_at: string
+          user_id: string
+          would_i_take_this_trade_again:
+            | Database["public"]["Enums"]["yes_no_enum"]
+            | null
+        }
+        Insert: {
+          account_type: Database["public"]["Enums"]["account_type_enum"]
+          annotations_present?:
+            | Database["public"]["Enums"]["yes_no_enum"]
+            | null
+          classification_status?: Database["public"]["Enums"]["classification_status_enum"]
+          confidence_level: number
+          confirmation_present: Database["public"]["Enums"]["yes_no_enum"]
+          created_at?: string
+          day_of_week: Database["public"]["Enums"]["day_of_week_enum"]
+          drawdown_during_trade_pct?: number | null
+          entry_candle: Database["public"]["Enums"]["entry_candle_enum"]
+          entry_model: Database["public"]["Enums"]["entry_model_enum"]
+          entry_precision: Database["public"]["Enums"]["entry_precision_enum"]
+          entry_price: number
+          execution_tf: Database["public"]["Enums"]["execution_tf_enum"]
+          exit_price?: number | null
+          fatigue_present: Database["public"]["Enums"]["yes_no_enum"]
+          first_move_was_fake: Database["public"]["Enums"]["yes_no_enum"]
+          gold_behavior_tags?: Database["public"]["Enums"]["gold_behavior_tag_enum"][]
+          htf_bias: Database["public"]["Enums"]["htf_bias_enum"]
+          htf_screenshot?: string | null
+          htf_timeframe: Database["public"]["Enums"]["htf_timeframe_enum"]
+          id?: string
+          instrument?: string
+          killzone: Database["public"]["Enums"]["killzone_enum"]
+          legacy_trade_id?: string | null
+          liquidity_taken_against_bias: Database["public"]["Enums"]["yes_no_enum"]
+          liquidity_taken_before_entry: Database["public"]["Enums"]["yes_no_enum"]
+          liquidity_targeted?: Database["public"]["Enums"]["liquidity_target_enum"][]
+          ltf_entry_screenshot?: string | null
+          mae?: number | null
+          market_phase: Database["public"]["Enums"]["market_phase_enum"]
+          mfe?: number | null
+          news_day: Database["public"]["Enums"]["yes_no_enum"]
+          notes?: string | null
+          partial_taken: Database["public"]["Enums"]["yes_no_enum"]
+          post_trade_screenshot?: string | null
+          pre_trade_state: Database["public"]["Enums"]["pre_trade_state_enum"]
+          r_multiple?: number | null
+          real_move_after_liquidity: Database["public"]["Enums"]["yes_no_enum"]
+          result?: Database["public"]["Enums"]["trade_result_enum"] | null
+          revenge_trade: Database["public"]["Enums"]["yes_no_enum"]
+          risk_per_trade_pct: number
+          rr_planned: number
+          rr_realized?: number | null
+          rules_followed: Database["public"]["Enums"]["yes_no_enum"]
+          screenshots_valid?: boolean
+          session: Database["public"]["Enums"]["session_enum"]
+          setup_grade: Database["public"]["Enums"]["setup_grade_enum"]
+          setup_type: Database["public"]["Enums"]["setup_type_enum"]
+          stop_loss: number
+          stop_placement_quality: Database["public"]["Enums"]["stop_placement_quality_enum"]
+          structure_state: Database["public"]["Enums"]["structure_state_enum"]
+          take_profit: number
+          trade_aligned_with_real_move: Database["public"]["Enums"]["yes_no_enum"]
+          trade_date: string
+          updated_at?: string
+          user_id: string
+          would_i_take_this_trade_again?:
+            | Database["public"]["Enums"]["yes_no_enum"]
+            | null
+        }
+        Update: {
+          account_type?: Database["public"]["Enums"]["account_type_enum"]
+          annotations_present?:
+            | Database["public"]["Enums"]["yes_no_enum"]
+            | null
+          classification_status?: Database["public"]["Enums"]["classification_status_enum"]
+          confidence_level?: number
+          confirmation_present?: Database["public"]["Enums"]["yes_no_enum"]
+          created_at?: string
+          day_of_week?: Database["public"]["Enums"]["day_of_week_enum"]
+          drawdown_during_trade_pct?: number | null
+          entry_candle?: Database["public"]["Enums"]["entry_candle_enum"]
+          entry_model?: Database["public"]["Enums"]["entry_model_enum"]
+          entry_precision?: Database["public"]["Enums"]["entry_precision_enum"]
+          entry_price?: number
+          execution_tf?: Database["public"]["Enums"]["execution_tf_enum"]
+          exit_price?: number | null
+          fatigue_present?: Database["public"]["Enums"]["yes_no_enum"]
+          first_move_was_fake?: Database["public"]["Enums"]["yes_no_enum"]
+          gold_behavior_tags?: Database["public"]["Enums"]["gold_behavior_tag_enum"][]
+          htf_bias?: Database["public"]["Enums"]["htf_bias_enum"]
+          htf_screenshot?: string | null
+          htf_timeframe?: Database["public"]["Enums"]["htf_timeframe_enum"]
+          id?: string
+          instrument?: string
+          killzone?: Database["public"]["Enums"]["killzone_enum"]
+          legacy_trade_id?: string | null
+          liquidity_taken_against_bias?: Database["public"]["Enums"]["yes_no_enum"]
+          liquidity_taken_before_entry?: Database["public"]["Enums"]["yes_no_enum"]
+          liquidity_targeted?: Database["public"]["Enums"]["liquidity_target_enum"][]
+          ltf_entry_screenshot?: string | null
+          mae?: number | null
+          market_phase?: Database["public"]["Enums"]["market_phase_enum"]
+          mfe?: number | null
+          news_day?: Database["public"]["Enums"]["yes_no_enum"]
+          notes?: string | null
+          partial_taken?: Database["public"]["Enums"]["yes_no_enum"]
+          post_trade_screenshot?: string | null
+          pre_trade_state?: Database["public"]["Enums"]["pre_trade_state_enum"]
+          r_multiple?: number | null
+          real_move_after_liquidity?: Database["public"]["Enums"]["yes_no_enum"]
+          result?: Database["public"]["Enums"]["trade_result_enum"] | null
+          revenge_trade?: Database["public"]["Enums"]["yes_no_enum"]
+          risk_per_trade_pct?: number
+          rr_planned?: number
+          rr_realized?: number | null
+          rules_followed?: Database["public"]["Enums"]["yes_no_enum"]
+          screenshots_valid?: boolean
+          session?: Database["public"]["Enums"]["session_enum"]
+          setup_grade?: Database["public"]["Enums"]["setup_grade_enum"]
+          setup_type?: Database["public"]["Enums"]["setup_type_enum"]
+          stop_loss?: number
+          stop_placement_quality?: Database["public"]["Enums"]["stop_placement_quality_enum"]
+          structure_state?: Database["public"]["Enums"]["structure_state_enum"]
+          take_profit?: number
+          trade_aligned_with_real_move?: Database["public"]["Enums"]["yes_no_enum"]
+          trade_date?: string
+          updated_at?: string
+          user_id?: string
+          would_i_take_this_trade_again?:
+            | Database["public"]["Enums"]["yes_no_enum"]
+            | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       trades_stats: {
@@ -608,6 +798,39 @@ export type Database = {
           trade_count: number | null
           user_id: string | null
           win_rate: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trades_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trades_v2_elite_stats: {
+        Row: {
+          asia_win_rate: number | null
+          avg_r_multiple: number | null
+          bb_win_rate: number | null
+          breakeven: number | null
+          liquidity_taken_win_rate: number | null
+          london_win_rate: number | null
+          losses: number | null
+          news_day_win_rate: number | null
+          no_liquidity_win_rate: number | null
+          non_news_day_win_rate: number | null
+          ny_win_rate: number | null
+          obc_win_rate: number | null
+          obr_win_rate: number | null
+          rules_broken_win_rate: number | null
+          rules_followed_win_rate: number | null
+          total_r: number | null
+          trade_count: number | null
+          user_id: string | null
+          win_rate: number | null
+          wins: number | null
         }
         Relationships: []
       }
@@ -628,10 +851,62 @@ export type Database = {
         }[]
       }
       is_admin: { Args: { user_id: string }; Returns: boolean }
+      migrate_legacy_trade: {
+        Args: { p_legacy_trade_id: string; p_user_id: string }
+        Returns: string
+      }
       reset_monthly_ai_credits: { Args: never; Returns: undefined }
     }
     Enums: {
-      [_ in never]: never
+      account_type_enum: "Demo" | "Live" | "Funded"
+      classification_status_enum:
+        | "legacy_unclassified"
+        | "partially_classified"
+        | "fully_classified"
+      day_of_week_enum:
+        | "Monday"
+        | "Tuesday"
+        | "Wednesday"
+        | "Thursday"
+        | "Friday"
+      entry_candle_enum:
+        | "Engulfing"
+        | "Displacement"
+        | "Rejection"
+        | "Break & Retest"
+      entry_model_enum:
+        | "OB retest"
+        | "Sweep → Displacement → OB"
+        | "BOS pullback"
+      entry_precision_enum: "Early" | "Optimal" | "Late"
+      execution_tf_enum: "M1" | "M3" | "M5"
+      gold_behavior_tag_enum:
+        | "Trap move before real move"
+        | "Fake breakout"
+        | "News exaggeration"
+        | "Range expansion NY"
+        | "London manipulation"
+        | "Clean continuation"
+        | "Violent rejection"
+      htf_bias_enum: "Bullish" | "Bearish" | "Range"
+      htf_timeframe_enum: "H4" | "H1"
+      killzone_enum: "LO" | "NYO" | "NYPM" | "None"
+      liquidity_target_enum:
+        | "Asian High"
+        | "Asian Low"
+        | "Previous Day High (PDH)"
+        | "Previous Day Low (PDL)"
+        | "Equal Highs"
+        | "Equal Lows"
+      market_phase_enum: "Expansion" | "Retracement" | "Consolidation"
+      pre_trade_state_enum: "Calm" | "FOMO" | "Hesitant" | "Overconfident"
+      session_enum: "Asia" | "London" | "NY"
+      setup_grade_enum: "A+" | "A" | "B" | "Trash"
+      setup_type_enum: "OBC" | "OBR" | "BB"
+      stop_placement_quality_enum: "Clean" | "Wide" | "Tight"
+      structure_state_enum: "HH-HL" | "LH-LL" | "CHoCH" | "BOS"
+      trade_result_enum: "Win" | "Loss" | "BE"
+      yes_no_enum: "Yes" | "No"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -758,6 +1033,62 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      account_type_enum: ["Demo", "Live", "Funded"],
+      classification_status_enum: [
+        "legacy_unclassified",
+        "partially_classified",
+        "fully_classified",
+      ],
+      day_of_week_enum: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+      ],
+      entry_candle_enum: [
+        "Engulfing",
+        "Displacement",
+        "Rejection",
+        "Break & Retest",
+      ],
+      entry_model_enum: [
+        "OB retest",
+        "Sweep → Displacement → OB",
+        "BOS pullback",
+      ],
+      entry_precision_enum: ["Early", "Optimal", "Late"],
+      execution_tf_enum: ["M1", "M3", "M5"],
+      gold_behavior_tag_enum: [
+        "Trap move before real move",
+        "Fake breakout",
+        "News exaggeration",
+        "Range expansion NY",
+        "London manipulation",
+        "Clean continuation",
+        "Violent rejection",
+      ],
+      htf_bias_enum: ["Bullish", "Bearish", "Range"],
+      htf_timeframe_enum: ["H4", "H1"],
+      killzone_enum: ["LO", "NYO", "NYPM", "None"],
+      liquidity_target_enum: [
+        "Asian High",
+        "Asian Low",
+        "Previous Day High (PDH)",
+        "Previous Day Low (PDL)",
+        "Equal Highs",
+        "Equal Lows",
+      ],
+      market_phase_enum: ["Expansion", "Retracement", "Consolidation"],
+      pre_trade_state_enum: ["Calm", "FOMO", "Hesitant", "Overconfident"],
+      session_enum: ["Asia", "London", "NY"],
+      setup_grade_enum: ["A+", "A", "B", "Trash"],
+      setup_type_enum: ["OBC", "OBR", "BB"],
+      stop_placement_quality_enum: ["Clean", "Wide", "Tight"],
+      structure_state_enum: ["HH-HL", "LH-LL", "CHoCH", "BOS"],
+      trade_result_enum: ["Win", "Loss", "BE"],
+      yes_no_enum: ["Yes", "No"],
+    },
   },
 } as const
