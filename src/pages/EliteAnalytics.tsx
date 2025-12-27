@@ -15,16 +15,20 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { SETUP_TYPES, SESSIONS } from '@/types/eliteTrade';
+import { SETUP_TYPES } from '@/types/eliteTrade';
+import { useEliteTrades } from '@/hooks/useEliteTrades';
+import { SetupEdgeScoreSection } from '@/components/analytics/SetupEdgeScoreSection';
 
 type DateRange = '30' | '90' | 'all';
 type SessionFilter = 'LN' | 'NY' | 'all';
 
 export default function EliteAnalytics() {
   const navigate = useNavigate();
+  const { trades, loading } = useEliteTrades();
   const [dateRange, setDateRange] = useState<DateRange>('30');
   const [selectedSetups, setSelectedSetups] = useState<string[]>([]);
   const [sessionFilter, setSessionFilter] = useState<SessionFilter>('all');
+  const [activeSetup, setActiveSetup] = useState<string | null>(null);
 
   const toggleSetup = (setup: string) => {
     setSelectedSetups(prev =>
@@ -32,6 +36,10 @@ export default function EliteAnalytics() {
         ? prev.filter(s => s !== setup)
         : [...prev, setup]
     );
+  };
+
+  const handleSetupClick = (setup: string) => {
+    setActiveSetup(prev => prev === setup ? null : setup);
   };
 
   return (
@@ -112,10 +120,20 @@ export default function EliteAnalytics() {
 
       {/* Main Content Area */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Content sections will be added here in subsequent steps */}
-        <div className="text-center py-20 text-muted-foreground">
-          <p className="text-sm">Analytics sections loading...</p>
-        </div>
+        {loading ? (
+          <div className="text-center py-20 text-muted-foreground">
+            <p className="text-sm">Loading analytics...</p>
+          </div>
+        ) : (
+          <SetupEdgeScoreSection
+            trades={trades}
+            dateRange={dateRange}
+            selectedSetups={selectedSetups}
+            sessionFilter={sessionFilter}
+            activeSetup={activeSetup}
+            onSetupClick={handleSetupClick}
+          />
+        )}
       </main>
     </div>
   );
