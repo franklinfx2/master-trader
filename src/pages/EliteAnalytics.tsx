@@ -19,6 +19,7 @@ import { SETUP_TYPES } from '@/types/eliteTrade';
 import { useEliteTrades } from '@/hooks/useEliteTrades';
 import { SetupEdgeScoreSection } from '@/components/analytics/SetupEdgeScoreSection';
 import { SessionDominanceSection } from '@/components/analytics/SessionDominanceSection';
+import { SampleSizeConfidenceSection } from '@/components/analytics/SampleSizeConfidenceSection';
 
 type DateRange = '30' | '90' | 'all';
 type SessionFilter = 'LN' | 'NY' | 'all';
@@ -140,6 +141,11 @@ export default function EliteAnalytics() {
               dateRange={dateRange}
               selectedSetups={selectedSetups}
               sessionFilter={sessionFilter}
+              activeSetup={activeSetup}
+            />
+            <SampleSizeConfidenceSection
+              trades={trades}
+              dateRange={dateRange}
               activeSetup={activeSetup}
             />
           </>
