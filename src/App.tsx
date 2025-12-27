@@ -31,6 +31,7 @@ import EliteJournalDebug from "./pages/EliteJournalDebug";
 import EliteTradeEntry from "./pages/EliteTradeEntry";
 import EliteTrades from "./pages/EliteTrades";
 import LegacyUpgrade from "./pages/LegacyUpgrade";
+import EliteAnalytics from "./pages/EliteAnalytics";
 
 const queryClient = new QueryClient();
 
@@ -60,6 +61,7 @@ const App = () => (
             <Route path="/elite-trade-entry" element={<ProtectedRoute><EliteTradeEntry /></ProtectedRoute>} />
             <Route path="/elite-trades" element={<ProtectedRoute><EliteTrades /></ProtectedRoute>} />
             <Route path="/legacy-upgrade" element={<ProtectedRoute><LegacyUpgrade /></ProtectedRoute>} />
+            <Route path="/elite-analytics" element={<ProtectedRoute><EliteAnalytics /></ProtectedRoute>} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/disclaimer" element={<Disclaimer />} />
