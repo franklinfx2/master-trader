@@ -18,6 +18,7 @@ import {
 import { SETUP_TYPES } from '@/types/eliteTrade';
 import { useEliteTrades } from '@/hooks/useEliteTrades';
 import { SetupEdgeScoreSection } from '@/components/analytics/SetupEdgeScoreSection';
+import { SessionDominanceSection } from '@/components/analytics/SessionDominanceSection';
 
 type DateRange = '30' | '90' | 'all';
 type SessionFilter = 'LN' | 'NY' | 'all';
@@ -125,14 +126,23 @@ export default function EliteAnalytics() {
             <p className="text-sm">Loading analytics...</p>
           </div>
         ) : (
-          <SetupEdgeScoreSection
-            trades={trades}
-            dateRange={dateRange}
-            selectedSetups={selectedSetups}
-            sessionFilter={sessionFilter}
-            activeSetup={activeSetup}
-            onSetupClick={handleSetupClick}
-          />
+          <>
+            <SetupEdgeScoreSection
+              trades={trades}
+              dateRange={dateRange}
+              selectedSetups={selectedSetups}
+              sessionFilter={sessionFilter}
+              activeSetup={activeSetup}
+              onSetupClick={handleSetupClick}
+            />
+            <SessionDominanceSection
+              trades={trades}
+              dateRange={dateRange}
+              selectedSetups={selectedSetups}
+              sessionFilter={sessionFilter}
+              activeSetup={activeSetup}
+            />
+          </>
         )}
       </main>
     </div>
