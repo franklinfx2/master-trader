@@ -21,6 +21,7 @@ import { SetupEdgeScoreSection } from '@/components/analytics/SetupEdgeScoreSect
 import { SessionDominanceSection } from '@/components/analytics/SessionDominanceSection';
 import { SampleSizeConfidenceSection } from '@/components/analytics/SampleSizeConfidenceSection';
 import { MistakePatternSection } from '@/components/analytics/MistakePatternSection';
+import { EntryPrecisionSection } from '@/components/analytics/EntryPrecisionSection';
 
 type DateRange = '30' | '90' | 'all';
 type SessionFilter = 'LN' | 'NY' | 'all';
@@ -150,6 +151,11 @@ export default function EliteAnalytics() {
               activeSetup={activeSetup}
             />
             <MistakePatternSection
+              trades={trades}
+              dateRange={dateRange}
+              activeSetup={activeSetup}
+            />
+            <EntryPrecisionSection
               trades={trades}
               dateRange={dateRange}
               activeSetup={activeSetup}
