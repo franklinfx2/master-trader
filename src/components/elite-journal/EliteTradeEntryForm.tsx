@@ -112,9 +112,9 @@ const eliteTradeSchema = z.object({
   fatigue_present: z.enum(['Yes', 'No'], { required_error: 'Required' }),
   
   // Visual Evidence (validated separately)
-  htf_screenshot: z.string(),
-  ltf_entry_screenshot: z.string(),
-  post_trade_screenshot: z.string(),
+  htf_screenshot: z.string().min(1, 'HTF screenshot is required'),
+  ltf_entry_screenshot: z.string().min(1, 'LTF entry screenshot is required'),
+  post_trade_screenshot: z.string().optional(), // Added after trade closes
   annotations_present: z.enum(['Yes', 'No'], { required_error: 'Required' }),
   
   // Optional metrics for closed trades
@@ -163,11 +163,10 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
 
   const watchedValues = form.watch();
   
-  // Screenshot validation
+  // Screenshot validation - only HTF and LTF Entry required at entry time
   const screenshotsValid = Boolean(
     watchedValues.htf_screenshot && 
-    watchedValues.ltf_entry_screenshot && 
-    watchedValues.post_trade_screenshot
+    watchedValues.ltf_entry_screenshot
   );
 
   // Calculate auto fields
@@ -207,7 +206,7 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
     const errors = form.formState.errors;
     const totalFields = Object.keys(eliteTradeSchema.shape).length;
     const errorCount = Object.keys(errors).length;
-    const screenshotsMissing = !screenshotsValid ? 3 : 0;
+    const screenshotsMissing = !screenshotsValid ? 2 : 0;
     return {
       complete: errorCount === 0 && screenshotsValid,
       percentage: Math.round(((totalFields - errorCount - screenshotsMissing) / totalFields) * 100),
@@ -218,7 +217,7 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
     if (!screenshotsValid) {
       toast({
         title: "Screenshots Required",
-        description: "All three screenshots (HTF, LTF Entry, Post-Trade) are mandatory.",
+        description: "HTF and LTF Entry screenshots are required to save.",
         variant: "destructive",
       });
       return;
@@ -264,8 +263,8 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
       confidence_level: data.confidence_level,
       revenge_trade: data.revenge_trade,
       fatigue_present: data.fatigue_present,
-      htf_screenshot: data.htf_screenshot,
-      ltf_entry_screenshot: data.ltf_entry_screenshot,
+      htf_screenshot: data.htf_screenshot || '',
+      ltf_entry_screenshot: data.ltf_entry_screenshot || '',
       post_trade_screenshot: data.post_trade_screenshot,
       annotations_present: data.annotations_present,
       would_i_take_this_trade_again: data.would_i_take_this_trade_again,
@@ -311,8 +310,8 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
               )}
               <span className="font-medium">
                 {screenshotsValid 
-                  ? "All mandatory screenshots uploaded" 
-                  : "3 mandatory screenshots required before saving"
+                  ? "Entry screenshots uploaded" 
+                  : "2 screenshots required before saving (HTF + LTF Entry)"
                 }
               </span>
             </div>
@@ -1168,17 +1167,18 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
           </CardContent>
         </Card>
 
-        {/* SECTION 10: Visual Evidence (MANDATORY) */}
+        {/* SECTION 10: Visual Evidence */}
         <Card className="glass-card border-2 border-primary/20">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
               Visual Evidence 
-              <Badge variant="destructive">MANDATORY</Badge>
+              <Badge variant="destructive">REQUIRED</Badge>
             </CardTitle>
-            <CardDescription>All 3 screenshots required — trades without screenshots are invalid</CardDescription>
+            <CardDescription>2 screenshots required at entry — post-trade screenshot added after trade closes</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <CardContent className="space-y-6">
+            {/* Required screenshots at entry */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="htf_screenshot"
@@ -1210,22 +1210,30 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
                   </FormItem>
                 )}
               />
+            </div>
 
-              <FormField
-                control={form.control}
-                name="post_trade_screenshot"
-                render={({ field }) => (
-                  <FormItem>
-                    <EliteScreenshotUpload
-                      label="Post-Trade Screenshot"
-                      value={field.value}
-                      onChange={field.onChange}
-                      required
-                      error={!field.value ? "Required" : undefined}
-                    />
-                  </FormItem>
-                )}
-              />
+            {/* Optional post-trade screenshot */}
+            <div className="pt-2 border-t border-border/50">
+              <p className="text-sm text-muted-foreground mb-3 flex items-center gap-2">
+                <Info className="w-4 h-4" />
+                Add after trade closes
+              </p>
+              <div className="max-w-md">
+                <FormField
+                  control={form.control}
+                  name="post_trade_screenshot"
+                  render={({ field }) => (
+                    <FormItem>
+                      <EliteScreenshotUpload
+                        label="Post-Trade Screenshot"
+                        value={field.value || ''}
+                        onChange={field.onChange}
+                        required={false}
+                      />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
 
             <FormField
