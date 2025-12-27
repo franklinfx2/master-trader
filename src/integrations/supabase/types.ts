@@ -898,6 +898,8 @@ export type Database = {
         | "Previous Day Low (PDL)"
         | "Equal Highs"
         | "Equal Lows"
+        | "Structural Liquidity"
+        | "Displacement"
       market_phase_enum: "Expansion" | "Retracement" | "Consolidation"
       pre_trade_state_enum: "Calm" | "FOMO" | "Hesitant" | "Overconfident"
       session_enum: "Asia" | "London" | "NY"
@@ -1079,6 +1081,8 @@ export const Constants = {
         "Previous Day Low (PDL)",
         "Equal Highs",
         "Equal Lows",
+        "Structural Liquidity",
+        "Displacement",
       ],
       market_phase_enum: ["Expansion", "Retracement", "Consolidation"],
       pre_trade_state_enum: ["Calm", "FOMO", "Hesitant", "Overconfident"],

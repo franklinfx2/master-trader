@@ -25,7 +25,9 @@ export type LiquidityTarget =
   | 'Previous Day High (PDH)'
   | 'Previous Day Low (PDL)'
   | 'Equal Highs'
-  | 'Equal Lows';
+  | 'Equal Lows'
+  | 'Structural Liquidity'
+  | 'Displacement';
 
 // Setup Classification
 export type SetupType = 'OBC' | 'OBR' | 'BB';
@@ -264,7 +266,9 @@ export const LIQUIDITY_TARGETS: LiquidityTarget[] = [
   'Previous Day High (PDH)',
   'Previous Day Low (PDL)',
   'Equal Highs',
-  'Equal Lows'
+  'Equal Lows',
+  'Structural Liquidity',
+  'Displacement'
 ];
 export const SETUP_TYPES: SetupType[] = ['OBC', 'OBR', 'BB'];
 export const SETUP_GRADES: SetupGrade[] = ['A+', 'A', 'B', 'Trash'];
