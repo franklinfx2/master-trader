@@ -70,8 +70,23 @@ export const EliteTradeCard = ({ trade }: EliteTradeCardProps) => {
         isExpanded && "ring-2 ring-primary/30"
       )}>
         <CardHeader className="pb-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              {/* Primary: Setup Classification */}
+              <div className={cn(
+                "flex items-center gap-1.5 px-2.5 py-1 rounded-md border font-semibold text-sm",
+                trade.setup_grade === 'A+' 
+                  ? "bg-profit/10 border-profit/30 text-profit" 
+                  : trade.setup_grade === 'A' 
+                    ? "bg-primary/10 border-primary/30 text-primary"
+                    : "bg-muted/50 border-muted text-muted-foreground"
+              )}>
+                <span>{trade.setup_type}</span>
+                <span className="text-xs opacity-70">—</span>
+                <span>{trade.setup_grade}</span>
+              </div>
+
+              {/* Secondary: Result */}
               <div className={cn(
                 "flex items-center gap-1.5 px-2.5 py-1 rounded-md border font-medium text-sm",
                 trade.result ? resultColor[trade.result] : resultColor.BE
@@ -85,11 +100,7 @@ export const EliteTradeCard = ({ trade }: EliteTradeCardProps) => {
                 <span>{formatDate(trade.trade_date)}</span>
               </div>
 
-              <Badge variant="outline">{trade.session}</Badge>
-              <Badge variant="secondary">{trade.setup_type}</Badge>
-              <Badge variant={trade.setup_grade === 'A+' ? 'default' : 'outline'}>
-                {trade.setup_grade}
-              </Badge>
+              <Badge variant="outline" className="text-xs">{trade.session}</Badge>
             </div>
 
             <div className="flex items-center gap-2">
