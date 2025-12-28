@@ -2,7 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { EliteTrade } from "@/types/eliteTrade";
 import { CheckCircle, XCircle, AlertTriangle, TrendingUp, TrendingDown, Minus } from "lucide-react";
-
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
+import { useMemo } from "react";
 interface StrategyValidationSectionProps {
   trades: EliteTrade[];
   dateRange: { from: Date; to: Date };
@@ -159,6 +160,22 @@ const StrategyValidationSection = ({ trades, dateRange }: StrategyValidationSect
   const validation = validateStrategy(metrics);
   const passedChecks = Object.values(validation.checks).filter(Boolean).length;
 
+  // Build equity curve data for chart
+  const equityCurveData = useMemo(() => {
+    const completedTrades = trades
+      .filter(t => t.result && t.r_multiple !== null)
+      .sort((a, b) => new Date(a.trade_date).getTime() - new Date(b.trade_date).getTime());
+    
+    let cumulative = 0;
+    return completedTrades.map((trade, index) => {
+      cumulative += trade.r_multiple || 0;
+      return {
+        trade: index + 1,
+        date: trade.trade_date,
+        cumulativeR: parseFloat(cumulative.toFixed(2))
+      };
+    });
+  }, [trades]);
   const getEquityCurveIcon = () => {
     switch (metrics.equityCurveDirection) {
       case 'rising':
@@ -298,6 +315,51 @@ const StrategyValidationSection = ({ trades, dateRange }: StrategyValidationSect
             </p>
           </div>
         </div>
+
+        {/* Equity Curve Chart */}
+        {equityCurveData.length >= 2 && (
+          <div className="border-t border-border/50 pt-4">
+            <p className="text-sm font-medium text-muted-foreground mb-3">Cumulative R Equity Curve</p>
+            <div className="h-48 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={equityCurveData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                  <XAxis 
+                    dataKey="trade" 
+                    tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+                    axisLine={{ stroke: 'hsl(var(--border))' }}
+                    tickLine={{ stroke: 'hsl(var(--border))' }}
+                    label={{ value: 'Trade #', position: 'insideBottom', offset: -2, fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+                    axisLine={{ stroke: 'hsl(var(--border))' }}
+                    tickLine={{ stroke: 'hsl(var(--border))' }}
+                    tickFormatter={(value) => `${value}R`}
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--card))', 
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '8px',
+                      fontSize: '12px'
+                    }}
+                    formatter={(value: number) => [`${value.toFixed(2)}R`, 'Cumulative R']}
+                    labelFormatter={(label) => `Trade #${label}`}
+                  />
+                  <ReferenceLine y={0} stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3" />
+                  <Line 
+                    type="monotone" 
+                    dataKey="cumulativeR" 
+                    stroke={metrics.equityCurveDirection === 'rising' ? 'hsl(142, 71%, 45%)' : metrics.equityCurveDirection === 'declining' ? 'hsl(0, 84%, 60%)' : 'hsl(45, 93%, 47%)'}
+                    strokeWidth={2}
+                    dot={false}
+                    activeDot={{ r: 4, strokeWidth: 0 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
 
         {/* Validation Criteria Checklist */}
         <div className="border-t border-border/50 pt-4">
