@@ -58,6 +58,7 @@ import {
 const eliteTradeSchemaBase = z.object({
   // Trade Identity
   trade_date: z.date({ required_error: 'Trade date is required' }),
+  trade_time: z.string().min(1, 'Trade time is required').regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Invalid time format'),
   account_type: z.enum(['Demo', 'Live', 'Funded'], { required_error: 'Account type is required' }),
   
   // Session & Time
@@ -165,6 +166,7 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
     resolver: zodResolver(eliteTradeSchema),
     defaultValues: {
       trade_date: new Date(),
+      trade_time: '',
       liquidity_targeted: [],
       gold_behavior_tags: [],
       confidence_level: 3,
@@ -249,6 +251,7 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
 
     const formData = {
       trade_date: format(data.trade_date, 'yyyy-MM-dd'),
+      trade_time: data.trade_time,
       account_type: data.account_type,
       session: data.session,
       killzone: data.killzone,
@@ -358,21 +361,40 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
               control={form.control}
               name="trade_date"
               render={({ field }) => (
-                <FormItem className="col-span-2 md:col-span-1">
+                <FormItem>
                   <FormLabel>Trade Date *</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button variant="outline" className={cn("w-full justify-start text-left font-normal truncate", !field.value && "text-muted-foreground")}>
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {field.value ? format(field.value, 'PPP') : 'Select date'}
+                          <CalendarIcon className="mr-2 h-4 w-4 shrink-0" />
+                          {field.value ? format(field.value, 'PP') : 'Select'}
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
+                      <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus className="pointer-events-auto" />
                     </PopoverContent>
                   </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Trade Time */}
+            <FormField
+              control={form.control}
+              name="trade_time"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Time *</FormLabel>
+                  <FormControl>
+                    <Input 
+                      type="time" 
+                      {...field} 
+                      className="w-full"
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
