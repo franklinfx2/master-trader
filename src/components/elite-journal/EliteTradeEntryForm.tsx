@@ -720,63 +720,88 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
             <CardTitle className="text-lg">Setup Classification</CardTitle>
             <CardDescription>Standardize setups for pattern recognition</CardDescription>
           </CardHeader>
-          <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <FormField
-              control={form.control}
-              name="setup_type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Setup Type *</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {SETUP_TYPES.map(st => <SelectItem key={st} value={st}>{st}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <FormField
+                control={form.control}
+                name="setup_type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Setup Type *</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {SETUP_TYPES.map(st => <SelectItem key={st} value={st}>{st}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="setup_grade"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Setup Grade *</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {SETUP_GRADES.map(sg => <SelectItem key={sg} value={sg}>{sg}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="setup_grade"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Setup Grade *</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {SETUP_GRADES.map(sg => <SelectItem key={sg} value={sg}>{sg}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="execution_tf"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Execution TF *</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {EXECUTION_TFS.map(etf => <SelectItem key={etf} value={etf}>{etf}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="execution_tf"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Execution TF *</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {EXECUTION_TFS.map(etf => <SelectItem key={etf} value={etf}>{etf}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Live Classification Preview */}
+            {watchedValues.setup_type && watchedValues.setup_grade && (
+              <div className={cn(
+                "p-3 rounded-md border text-center",
+                watchedValues.setup_grade === 'A+' 
+                  ? "bg-profit/10 border-profit/30" 
+                  : watchedValues.setup_grade === 'A' 
+                    ? "bg-primary/10 border-primary/30"
+                    : "bg-muted/50 border-muted"
+              )}>
+                <span className="text-lg font-semibold">
+                  {watchedValues.setup_type} — {watchedValues.setup_grade} Setup
+                </span>
+              </div>
+            )}
+
+            {/* Discipline Signal for Weak Grades */}
+            {(watchedValues.setup_grade === 'B' || watchedValues.setup_grade === 'Trash') && (
+              <p className="text-xs text-muted-foreground text-center">
+                Low-quality setup — execute only if rules allow.
+              </p>
+            )}
           </CardContent>
         </Card>
 
