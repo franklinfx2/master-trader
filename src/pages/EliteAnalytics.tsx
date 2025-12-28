@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { SETUP_TYPES } from '@/types/eliteTrade';
 import { useEliteTrades } from '@/hooks/useEliteTrades';
+import StrategyValidationSection from '@/components/analytics/StrategyValidationSection';
 import { SetupEdgeScoreSection } from '@/components/analytics/SetupEdgeScoreSection';
 import { SessionDominanceSection } from '@/components/analytics/SessionDominanceSection';
 import { TimeDominanceSection } from '@/components/analytics/TimeDominanceSection';
@@ -133,14 +134,20 @@ export default function EliteAnalytics() {
           </div>
         ) : (
           <>
-            <SetupEdgeScoreSection
+            <StrategyValidationSection
               trades={trades}
-              dateRange={dateRange}
-              selectedSetups={selectedSetups}
-              sessionFilter={sessionFilter}
-              activeSetup={activeSetup}
-              onSetupClick={handleSetupClick}
+              dateRange={{ from: new Date(Date.now() - (dateRange === '30' ? 30 : dateRange === '90' ? 90 : 3650) * 24 * 60 * 60 * 1000), to: new Date() }}
             />
+            <div className="mt-6">
+              <SetupEdgeScoreSection
+                trades={trades}
+                dateRange={dateRange}
+                selectedSetups={selectedSetups}
+                sessionFilter={sessionFilter}
+                activeSetup={activeSetup}
+                onSetupClick={handleSetupClick}
+              />
+            </div>
             <SessionDominanceSection
               trades={trades}
               dateRange={dateRange}
