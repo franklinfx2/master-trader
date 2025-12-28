@@ -633,6 +633,9 @@ export type Database = {
           market_phase: Database["public"]["Enums"]["market_phase_enum"]
           mfe: number | null
           news_day: Database["public"]["Enums"]["yes_no_enum"]
+          news_impact: Database["public"]["Enums"]["news_impact_enum"] | null
+          news_timing: Database["public"]["Enums"]["news_timing_enum"] | null
+          news_type: Database["public"]["Enums"]["news_type_enum"] | null
           notes: string | null
           partial_taken: Database["public"]["Enums"]["yes_no_enum"]
           post_trade_screenshot: string | null
@@ -696,6 +699,9 @@ export type Database = {
           market_phase: Database["public"]["Enums"]["market_phase_enum"]
           mfe?: number | null
           news_day: Database["public"]["Enums"]["yes_no_enum"]
+          news_impact?: Database["public"]["Enums"]["news_impact_enum"] | null
+          news_timing?: Database["public"]["Enums"]["news_timing_enum"] | null
+          news_type?: Database["public"]["Enums"]["news_type_enum"] | null
           notes?: string | null
           partial_taken: Database["public"]["Enums"]["yes_no_enum"]
           post_trade_screenshot?: string | null
@@ -759,6 +765,9 @@ export type Database = {
           market_phase?: Database["public"]["Enums"]["market_phase_enum"]
           mfe?: number | null
           news_day?: Database["public"]["Enums"]["yes_no_enum"]
+          news_impact?: Database["public"]["Enums"]["news_impact_enum"] | null
+          news_timing?: Database["public"]["Enums"]["news_timing_enum"] | null
+          news_type?: Database["public"]["Enums"]["news_type_enum"] | null
           notes?: string | null
           partial_taken?: Database["public"]["Enums"]["yes_no_enum"]
           post_trade_screenshot?: string | null
@@ -901,6 +910,14 @@ export type Database = {
         | "Structural Liquidity"
         | "Displacement"
       market_phase_enum: "Expansion" | "Retracement" | "Consolidation"
+      news_impact_enum: "LOW" | "MEDIUM" | "HIGH"
+      news_timing_enum: "PRE_NEWS" | "AT_RELEASE" | "POST_NEWS"
+      news_type_enum:
+        | "INFLATION"
+        | "RATES"
+        | "EMPLOYMENT"
+        | "RISK_SENTIMENT"
+        | "NONE"
       pre_trade_state_enum: "Calm" | "FOMO" | "Hesitant" | "Overconfident"
       session_enum: "Asia" | "London" | "NY"
       setup_grade_enum: "A+" | "A" | "B" | "Trash"
@@ -1085,6 +1102,15 @@ export const Constants = {
         "Displacement",
       ],
       market_phase_enum: ["Expansion", "Retracement", "Consolidation"],
+      news_impact_enum: ["LOW", "MEDIUM", "HIGH"],
+      news_timing_enum: ["PRE_NEWS", "AT_RELEASE", "POST_NEWS"],
+      news_type_enum: [
+        "INFLATION",
+        "RATES",
+        "EMPLOYMENT",
+        "RISK_SENTIMENT",
+        "NONE",
+      ],
       pre_trade_state_enum: ["Calm", "FOMO", "Hesitant", "Overconfident"],
       session_enum: ["Asia", "London", "NY"],
       setup_grade_enum: ["A+", "A", "B", "Trash"],
