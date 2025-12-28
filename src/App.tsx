@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { OwnerRoute } from "@/components/OwnerRoute";
 import { GradientMeshBackground } from "@/components/ui/gradient-mesh-background";
 
 import Index from "./pages/Index";
@@ -57,11 +58,11 @@ const App = () => (
             <Route path="/webhook" element={<Webhook />} />
             <Route path="/admin/test-mode" element={<ProtectedRoute><AdminTestMode /></ProtectedRoute>} />
             <Route path="/admin/feedback" element={<ProtectedRoute><AdminFeedback /></ProtectedRoute>} />
-            <Route path="/elite-journal-debug" element={<ProtectedRoute><EliteJournalDebug /></ProtectedRoute>} />
-            <Route path="/elite-trade-entry" element={<ProtectedRoute><EliteTradeEntry /></ProtectedRoute>} />
-            <Route path="/elite-trades" element={<ProtectedRoute><EliteTrades /></ProtectedRoute>} />
-            <Route path="/legacy-upgrade" element={<ProtectedRoute><LegacyUpgrade /></ProtectedRoute>} />
-            <Route path="/elite-analytics" element={<ProtectedRoute><EliteAnalytics /></ProtectedRoute>} />
+            <Route path="/elite-journal-debug" element={<OwnerRoute><EliteJournalDebug /></OwnerRoute>} />
+            <Route path="/elite-trade-entry" element={<OwnerRoute><EliteTradeEntry /></OwnerRoute>} />
+            <Route path="/elite-trades" element={<OwnerRoute><EliteTrades /></OwnerRoute>} />
+            <Route path="/legacy-upgrade" element={<OwnerRoute><LegacyUpgrade /></OwnerRoute>} />
+            <Route path="/elite-analytics" element={<OwnerRoute><EliteAnalytics /></OwnerRoute>} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/disclaimer" element={<Disclaimer />} />
