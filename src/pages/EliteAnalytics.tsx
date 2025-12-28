@@ -19,6 +19,7 @@ import { SETUP_TYPES } from '@/types/eliteTrade';
 import { useEliteTrades } from '@/hooks/useEliteTrades';
 import { SetupEdgeScoreSection } from '@/components/analytics/SetupEdgeScoreSection';
 import { SessionDominanceSection } from '@/components/analytics/SessionDominanceSection';
+import { TimeDominanceSection } from '@/components/analytics/TimeDominanceSection';
 import { SampleSizeConfidenceSection } from '@/components/analytics/SampleSizeConfidenceSection';
 import { MistakePatternSection } from '@/components/analytics/MistakePatternSection';
 import { EntryPrecisionSection } from '@/components/analytics/EntryPrecisionSection';
@@ -144,6 +145,11 @@ export default function EliteAnalytics() {
               dateRange={dateRange}
               selectedSetups={selectedSetups}
               sessionFilter={sessionFilter}
+              activeSetup={activeSetup}
+            />
+            <TimeDominanceSection
+              trades={trades}
+              dateRange={dateRange}
               activeSetup={activeSetup}
             />
             <SampleSizeConfidenceSection
