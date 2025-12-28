@@ -44,12 +44,18 @@ import {
   GOLD_BEHAVIOR_TAGS,
   PRE_TRADE_STATES,
   YES_NO,
+  NEWS_IMPACTS,
+  NEWS_TIMINGS,
+  NEWS_TYPES,
   type LiquidityTarget,
   type GoldBehaviorTag,
+  type NewsImpact,
+  type NewsTiming,
+  type NewsType,
 } from '@/types/eliteTrade';
 
-// Strict Zod validation schema - all fields required
-const eliteTradeSchema = z.object({
+// Base schema for field count calculation
+const eliteTradeSchemaBase = z.object({
   // Trade Identity
   trade_date: z.date({ required_error: 'Trade date is required' }),
   account_type: z.enum(['Demo', 'Live', 'Funded'], { required_error: 'Account type is required' }),
@@ -59,6 +65,9 @@ const eliteTradeSchema = z.object({
   killzone: z.enum(['LO', 'NYO', 'NYPM', 'None'], { required_error: 'Killzone is required' }),
   day_of_week: z.enum(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], { required_error: 'Day of week is required' }),
   news_day: z.enum(['Yes', 'No'], { required_error: 'News day is required' }),
+  news_impact: z.enum(['LOW', 'MEDIUM', 'HIGH']).optional(),
+  news_timing: z.enum(['PRE_NEWS', 'AT_RELEASE', 'POST_NEWS']).optional(),
+  news_type: z.enum(['INFLATION', 'RATES', 'EMPLOYMENT', 'RISK_SENTIMENT', 'NONE']).optional(),
   
   // HTF Context
   htf_bias: z.enum(['Bullish', 'Bearish', 'Range'], { required_error: 'HTF bias is required' }),
@@ -126,6 +135,19 @@ const eliteTradeSchema = z.object({
   
   // Notes
   notes: z.string().optional(),
+});
+
+// Final schema with conditional news validation
+const eliteTradeSchema = eliteTradeSchemaBase.refine((data) => {
+  // When news_day is Yes, news_impact and news_timing are required
+  if (data.news_day === 'Yes') {
+    if (!data.news_impact) return false;
+    if (!data.news_timing) return false;
+  }
+  return true;
+}, {
+  message: 'News Impact and News Timing are required when News Day is Yes',
+  path: ['news_impact'],
 });
 
 type EliteTradeFormValues = z.infer<typeof eliteTradeSchema>;
@@ -204,7 +226,7 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
   // Check form completeness
   const formCompleteness = useMemo(() => {
     const errors = form.formState.errors;
-    const totalFields = Object.keys(eliteTradeSchema.shape).length;
+    const totalFields = Object.keys(eliteTradeSchemaBase.shape).length;
     const errorCount = Object.keys(errors).length;
     const screenshotsMissing = !screenshotsValid ? 2 : 0;
     return {
@@ -232,6 +254,9 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
       killzone: data.killzone,
       day_of_week: data.day_of_week,
       news_day: data.news_day,
+      news_impact: data.news_day === 'Yes' ? data.news_impact : undefined,
+      news_timing: data.news_day === 'Yes' ? data.news_timing : undefined,
+      news_type: data.news_day === 'Yes' ? data.news_type : undefined,
       htf_bias: data.htf_bias,
       htf_timeframe: data.htf_timeframe,
       market_phase: data.market_phase,
@@ -453,6 +478,79 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
               )}
             />
           </CardContent>
+
+          {/* High Impact News Context - Only visible when News Day = Yes */}
+          {watchedValues.news_day === 'Yes' && (
+            <>
+              <Separator />
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <Badge variant="outline" className="text-xs">High Impact News Context</Badge>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* News Impact */}
+                  <FormField
+                    control={form.control}
+                    name="news_impact"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>News Impact *</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {NEWS_IMPACTS.map(v => <SelectItem key={v} value={v}>{v}</SelectItem>)}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* News Timing */}
+                  <FormField
+                    control={form.control}
+                    name="news_timing"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>News Timing *</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {NEWS_TIMINGS.map(v => <SelectItem key={v} value={v}>{v}</SelectItem>)}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* News Type */}
+                  <FormField
+                    control={form.control}
+                    name="news_type"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>News Type</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger><SelectValue placeholder="Select (optional)" /></SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {NEWS_TYPES.map(v => <SelectItem key={v} value={v}>{v}</SelectItem>)}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </CardContent>
+            </>
+          )}
         </Card>
 
         {/* SECTION 2: Higher-Timeframe Context */}

@@ -60,6 +60,11 @@ export type GoldBehaviorTag =
   | 'Clean continuation'
   | 'Violent rejection';
 
+// News Classification
+export type NewsImpact = 'LOW' | 'MEDIUM' | 'HIGH';
+export type NewsTiming = 'PRE_NEWS' | 'AT_RELEASE' | 'POST_NEWS';
+export type NewsType = 'INFLATION' | 'RATES' | 'EMPLOYMENT' | 'RISK_SENTIMENT' | 'NONE';
+
 // Psychology
 export type PreTradeState = 'Calm' | 'FOMO' | 'Hesitant' | 'Overconfident';
 
@@ -86,6 +91,9 @@ export interface EliteTrade {
   killzone: Killzone;
   day_of_week: DayOfWeek;
   news_day: YesNo;
+  news_impact?: NewsImpact;
+  news_timing?: NewsTiming;
+  news_type?: NewsType;
   
   // Higher-Timeframe Context
   htf_bias: HTFBias;
@@ -210,6 +218,9 @@ export interface EliteTradeFormData {
   killzone: Killzone;
   day_of_week: DayOfWeek;
   news_day: YesNo;
+  news_impact?: NewsImpact;
+  news_timing?: NewsTiming;
+  news_type?: NewsType;
   htf_bias: HTFBias;
   htf_timeframe: HTFTimeframe;
   market_phase: MarketPhase;
@@ -288,3 +299,8 @@ export const GOLD_BEHAVIOR_TAGS: GoldBehaviorTag[] = [
 ];
 export const PRE_TRADE_STATES: PreTradeState[] = ['Calm', 'FOMO', 'Hesitant', 'Overconfident'];
 export const YES_NO: YesNo[] = ['Yes', 'No'];
+
+// News Classification Options
+export const NEWS_IMPACTS: NewsImpact[] = ['LOW', 'MEDIUM', 'HIGH'];
+export const NEWS_TIMINGS: NewsTiming[] = ['PRE_NEWS', 'AT_RELEASE', 'POST_NEWS'];
+export const NEWS_TYPES: NewsType[] = ['INFLATION', 'RATES', 'EMPLOYMENT', 'RISK_SENTIMENT', 'NONE'];
