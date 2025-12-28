@@ -83,6 +83,7 @@ export interface EliteTrade {
   id: string;
   user_id: string;
   trade_date: string;
+  trade_time?: string; // HH:MM format
   instrument: string; // Fixed: XAUUSD
   account_type: AccountType;
   
@@ -213,6 +214,7 @@ export interface EliteTradeStats {
 // Form data for creating/updating elite trades
 export interface EliteTradeFormData {
   trade_date: string;
+  trade_time?: string;
   account_type: AccountType;
   session: Session;
   killzone: Killzone;

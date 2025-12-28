@@ -658,6 +658,7 @@ export type Database = {
           take_profit: number
           trade_aligned_with_real_move: Database["public"]["Enums"]["yes_no_enum"]
           trade_date: string
+          trade_time: string | null
           updated_at: string
           user_id: string
           would_i_take_this_trade_again:
@@ -724,6 +725,7 @@ export type Database = {
           take_profit: number
           trade_aligned_with_real_move: Database["public"]["Enums"]["yes_no_enum"]
           trade_date: string
+          trade_time?: string | null
           updated_at?: string
           user_id: string
           would_i_take_this_trade_again?:
@@ -790,6 +792,7 @@ export type Database = {
           take_profit?: number
           trade_aligned_with_real_move?: Database["public"]["Enums"]["yes_no_enum"]
           trade_date?: string
+          trade_time?: string | null
           updated_at?: string
           user_id?: string
           would_i_take_this_trade_again?:
