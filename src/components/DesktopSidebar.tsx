@@ -8,7 +8,8 @@ import {
   BarChart3, 
   Settings, 
   LogOut,
-  Crown
+  Crown,
+  LineChart
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -32,6 +33,7 @@ export const DesktopSidebar = ({ onNavigate }: DesktopSidebarProps) => {
 
   const eliteNavigation = isOwner ? [
     { name: 'Elite Journal', href: '/elite-trades', icon: Crown },
+    { name: 'Elite Analytics', href: '/elite-analytics', icon: LineChart },
   ] : [];
 
   return (
@@ -84,7 +86,7 @@ export const DesktopSidebar = ({ onNavigate }: DesktopSidebarProps) => {
           <>
             <div className="my-4 border-t border-border/50" />
             {eliteNavigation.map((item) => {
-              const isActive = location.pathname.startsWith('/elite');
+              const isActive = location.pathname === item.href;
               return (
                 <Link
                   key={item.name}
