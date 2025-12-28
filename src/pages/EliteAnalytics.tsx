@@ -20,6 +20,7 @@ import { useEliteTrades } from '@/hooks/useEliteTrades';
 import { SetupEdgeScoreSection } from '@/components/analytics/SetupEdgeScoreSection';
 import { SessionDominanceSection } from '@/components/analytics/SessionDominanceSection';
 import { TimeDominanceSection } from '@/components/analytics/TimeDominanceSection';
+import { DayOfWeekDominanceSection } from '@/components/analytics/DayOfWeekDominanceSection';
 import { SampleSizeConfidenceSection } from '@/components/analytics/SampleSizeConfidenceSection';
 import { MistakePatternSection } from '@/components/analytics/MistakePatternSection';
 import { EntryPrecisionSection } from '@/components/analytics/EntryPrecisionSection';
@@ -148,6 +149,11 @@ export default function EliteAnalytics() {
               activeSetup={activeSetup}
             />
             <TimeDominanceSection
+              trades={trades}
+              dateRange={dateRange}
+              activeSetup={activeSetup}
+            />
+            <DayOfWeekDominanceSection
               trades={trades}
               dateRange={dateRange}
               activeSetup={activeSetup}
