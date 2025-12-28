@@ -1,12 +1,14 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useProfile } from '@/hooks/useProfile';
 import { Button } from '@/components/ui/button';
 import { 
   LayoutDashboard, 
   TrendingUp, 
   BarChart3, 
   Settings, 
-  LogOut
+  LogOut,
+  Crown
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -16,7 +18,10 @@ interface DesktopSidebarProps {
 
 export const DesktopSidebar = ({ onNavigate }: DesktopSidebarProps) => {
   const { signOut } = useAuth();
+  const { profile } = useProfile();
   const location = useLocation();
+
+  const isOwner = profile?.role === 'owner';
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -24,6 +29,10 @@ export const DesktopSidebar = ({ onNavigate }: DesktopSidebarProps) => {
     { name: 'Analyze', href: '/analyze', icon: BarChart3 },
     { name: 'Settings', href: '/settings', icon: Settings },
   ];
+
+  const eliteNavigation = isOwner ? [
+    { name: 'Elite Journal', href: '/elite-trades', icon: Crown },
+  ] : [];
 
   return (
     <div className="w-72 glass-card border-r border-border flex flex-col h-screen sticky top-0 rounded-none overflow-hidden">
@@ -69,6 +78,39 @@ export const DesktopSidebar = ({ onNavigate }: DesktopSidebarProps) => {
             </Link>
           );
         })}
+
+        {/* Elite Navigation - Owner Only */}
+        {eliteNavigation.length > 0 && (
+          <>
+            <div className="my-4 border-t border-border/50" />
+            {eliteNavigation.map((item) => {
+              const isActive = location.pathname.startsWith('/elite');
+              return (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={cn(
+                    "group flex items-center px-4 py-3 text-sm font-medium rounded-[16px] transition-all duration-200",
+                    isActive
+                      ? "bg-amber-500 text-white shadow-[0_4px_15px_rgba(245,158,11,0.3)]"
+                      : "text-muted-foreground hover:text-amber-500 hover:bg-amber-500/10"
+                  )}
+                  onClick={onNavigate}
+                >
+                  <div className={cn(
+                    "p-2 rounded-[12px] mr-3 transition-colors",
+                    isActive 
+                      ? "bg-white/20" 
+                      : "bg-transparent group-hover:bg-amber-500/10"
+                  )}>
+                    <item.icon className="w-5 h-5" />
+                  </div>
+                  <span className="font-medium">{item.name}</span>
+                </Link>
+              );
+            })}
+          </>
+        )}
       </nav>
 
       {/* Sign Out */}

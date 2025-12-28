@@ -442,6 +442,7 @@ export type Database = {
           pending_balance: number | null
           plan: string
           referral_code: string | null
+          role: string | null
           streak_shields: number | null
           total_earnings: number | null
           updated_at: string | null
@@ -464,6 +465,7 @@ export type Database = {
           pending_balance?: number | null
           plan?: string
           referral_code?: string | null
+          role?: string | null
           streak_shields?: number | null
           total_earnings?: number | null
           updated_at?: string | null
@@ -486,6 +488,7 @@ export type Database = {
           pending_balance?: number | null
           plan?: string
           referral_code?: string | null
+          role?: string | null
           streak_shields?: number | null
           total_earnings?: number | null
           updated_at?: string | null

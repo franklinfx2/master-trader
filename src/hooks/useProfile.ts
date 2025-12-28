@@ -6,6 +6,7 @@ interface Profile {
   id: string;
   email: string | null;
   plan: string;
+  role: string | null;
   paystack_customer_code: string | null;
   paystack_subscription_code: string | null;
   ai_last_analysis_at: string | null;
