@@ -317,9 +317,8 @@ export const EliteTradeEditModal = ({ trade, open, onOpenChange, onSuccess }: El
     } else {
       toast({
         title: "Trade Updated",
-        description: "Elite trade updated successfully.",
+        description: "Elite trade updated successfully. Close the modal when done.",
       });
-      onOpenChange(false);
       onSuccess?.();
     }
   };
