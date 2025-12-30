@@ -199,6 +199,7 @@ export const EliteScreenshotUpload = ({
                   </DialogContent>
                 </Dialog>
                 <Button
+                  type="button"
                   size="sm"
                   variant="destructive"
                   className="bg-red-500/80 hover:bg-red-500 text-white border-0"
