@@ -107,6 +107,7 @@ const editTradeSchema = z.object({
   fatigue_present: z.enum(['Yes', 'No']),
   htf_screenshot: z.string().optional(),
   ltf_entry_screenshot: z.string().optional(),
+  ltf_trade_screenshot: z.string().optional(),
   post_trade_screenshot: z.string().optional(),
   annotations_present: z.enum(['Yes', 'No']),
   mae: z.string().optional(),
@@ -192,6 +193,7 @@ export const EliteTradeEditModal = ({ trade, open, onOpenChange, onSuccess }: El
     fatigue_present: t.fatigue_present,
     htf_screenshot: t.htf_screenshot || '',
     ltf_entry_screenshot: t.ltf_entry_screenshot || '',
+    ltf_trade_screenshot: (t as any).ltf_trade_screenshot || '',
     post_trade_screenshot: t.post_trade_screenshot || '',
     annotations_present: t.annotations_present || 'No',
     mae: t.mae ? String(t.mae) : '',
@@ -296,6 +298,7 @@ export const EliteTradeEditModal = ({ trade, open, onOpenChange, onSuccess }: El
       fatigue_present: data.fatigue_present,
       htf_screenshot: data.htf_screenshot || '',
       ltf_entry_screenshot: data.ltf_entry_screenshot || '',
+      ltf_trade_screenshot: data.ltf_trade_screenshot || '',
       post_trade_screenshot: data.post_trade_screenshot || '',
       annotations_present: data.annotations_present,
       mae: data.mae || '',
@@ -1235,7 +1238,7 @@ export const EliteTradeEditModal = ({ trade, open, onOpenChange, onSuccess }: El
               {/* Section 10: Visual Evidence */}
               <Section title="Visual Evidence">
                 <div className="space-y-4 pt-2">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
                       name="htf_screenshot"
@@ -1258,6 +1261,23 @@ export const EliteTradeEditModal = ({ trade, open, onOpenChange, onSuccess }: El
                         <FormItem>
                           <EliteScreenshotUpload
                             label="LTF Entry Screenshot"
+                            value={field.value || ''}
+                            onChange={field.onChange}
+                            required={false}
+                          />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="ltf_trade_screenshot"
+                      render={({ field }) => (
+                        <FormItem>
+                          <EliteScreenshotUpload
+                            label="LTF Trade Screenshot (Optional)"
                             value={field.value || ''}
                             onChange={field.onChange}
                             required={false}
