@@ -120,7 +120,7 @@ export default function Trades() {
         risk_pct: formData.risk_pct ? parseFloat(formData.risk_pct) : undefined,
         result: formData.result,
         notes: `${formData.notes || ''}${formData.tradingSession ? ` [${formData.tradingSession.toUpperCase()} SESSION]` : ''}`.trim(),
-        screenshot_url: screenshots.length > 0 ? screenshots[0] : undefined,
+        screenshot_url: screenshots.length > 0 ? JSON.stringify(screenshots) : undefined,
         executed_at: executedAt,
       };
 
@@ -195,8 +195,17 @@ export default function Trades() {
       time: timeString,
       tradingSession: detectedSession,
     });
-    // Load existing screenshot if available
-    setScreenshots(trade.screenshot_url ? [trade.screenshot_url] : []);
+    // Load existing screenshots if available (parse JSON array or single URL)
+    if (trade.screenshot_url) {
+      try {
+        const parsed = JSON.parse(trade.screenshot_url);
+        setScreenshots(Array.isArray(parsed) ? parsed : [trade.screenshot_url]);
+      } catch {
+        setScreenshots([trade.screenshot_url]);
+      }
+    } else {
+      setScreenshots([]);
+    }
     setIsDialogOpen(true);
   };
 
@@ -563,19 +572,31 @@ export default function Trades() {
                           <DialogTrigger asChild>
                             <Button variant="outline" size="sm">
                               <Eye className="w-4 h-4 mr-2" />
-                              View Screenshot
+                              View Screenshots
                             </Button>
                           </DialogTrigger>
                           <DialogContent className="max-w-4xl">
                             <DialogHeader>
-                              <DialogTitle>Trade Screenshot - {trade.pair}</DialogTitle>
+                              <DialogTitle>Trade Screenshots - {trade.pair}</DialogTitle>
                             </DialogHeader>
-                            <div className="max-h-[70vh] overflow-auto">
-                              <img
-                                src={trade.screenshot_url}
-                                alt={`Screenshot for ${trade.pair} trade`}
-                                className="w-full h-auto rounded-md"
-                              />
+                            <div className="max-h-[70vh] overflow-auto space-y-4">
+                              {(() => {
+                                let urls: string[] = [];
+                                try {
+                                  const parsed = JSON.parse(trade.screenshot_url!);
+                                  urls = Array.isArray(parsed) ? parsed : [trade.screenshot_url!];
+                                } catch {
+                                  urls = [trade.screenshot_url!];
+                                }
+                                return urls.map((url, index) => (
+                                  <img
+                                    key={index}
+                                    src={url}
+                                    alt={`Screenshot ${index + 1} for ${trade.pair} trade`}
+                                    className="w-full h-auto rounded-md"
+                                  />
+                                ));
+                              })()}
                             </div>
                           </DialogContent>
                         </Dialog>
