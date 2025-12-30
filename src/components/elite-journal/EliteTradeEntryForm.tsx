@@ -136,6 +136,7 @@ const eliteTradeSchemaBase = z.object({
   // Visual Evidence (validated separately)
   htf_screenshot: z.string().min(1, 'HTF screenshot is required'),
   ltf_entry_screenshot: z.string().min(1, 'LTF entry screenshot is required'),
+  ltf_trade_screenshot: z.string().optional(), // Optional second LTF screenshot
   post_trade_screenshot: z.string().optional(), // Added after trade closes
   annotations_present: z.enum(['Yes', 'No'], { required_error: 'Required' }),
   
@@ -185,6 +186,7 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
       confidence_level: 3,
       htf_screenshot: '',
       ltf_entry_screenshot: '',
+      ltf_trade_screenshot: '',
       post_trade_screenshot: '',
       entry_price: '',
       stop_loss: '',
@@ -311,6 +313,7 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
       fatigue_present: data.fatigue_present,
       htf_screenshot: data.htf_screenshot || '',
       ltf_entry_screenshot: data.ltf_entry_screenshot || '',
+      ltf_trade_screenshot: data.ltf_trade_screenshot,
       post_trade_screenshot: data.post_trade_screenshot,
       annotations_present: data.annotations_present,
       would_i_take_this_trade_again: data.would_i_take_this_trade_again,
@@ -1441,6 +1444,30 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
                   </FormItem>
                 )}
               />
+            </div>
+
+            {/* Optional LTF trade screenshot */}
+            <div className="pt-2 border-t border-border/50">
+              <p className="text-sm text-muted-foreground mb-3 flex items-center gap-2">
+                <Info className="w-4 h-4" />
+                Optional: Additional LTF trade context
+              </p>
+              <div className="max-w-md">
+                <FormField
+                  control={form.control}
+                  name="ltf_trade_screenshot"
+                  render={({ field }) => (
+                    <FormItem>
+                      <EliteScreenshotUpload
+                        label="LTF Trade Screenshot (Optional)"
+                        value={field.value || ''}
+                        onChange={field.onChange}
+                        required={false}
+                      />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
 
             {/* Optional post-trade screenshot */}

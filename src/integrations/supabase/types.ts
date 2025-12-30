@@ -635,6 +635,7 @@ export type Database = {
           liquidity_taken_before_entry: Database["public"]["Enums"]["yes_no_enum"]
           liquidity_targeted: Database["public"]["Enums"]["liquidity_target_enum"][]
           ltf_entry_screenshot: string | null
+          ltf_trade_screenshot: string | null
           mae: number | null
           market_phase: Database["public"]["Enums"]["market_phase_enum"]
           mfe: number | null
@@ -709,6 +710,7 @@ export type Database = {
           liquidity_taken_before_entry: Database["public"]["Enums"]["yes_no_enum"]
           liquidity_targeted?: Database["public"]["Enums"]["liquidity_target_enum"][]
           ltf_entry_screenshot?: string | null
+          ltf_trade_screenshot?: string | null
           mae?: number | null
           market_phase: Database["public"]["Enums"]["market_phase_enum"]
           mfe?: number | null
@@ -783,6 +785,7 @@ export type Database = {
           liquidity_taken_before_entry?: Database["public"]["Enums"]["yes_no_enum"]
           liquidity_targeted?: Database["public"]["Enums"]["liquidity_target_enum"][]
           ltf_entry_screenshot?: string | null
+          ltf_trade_screenshot?: string | null
           mae?: number | null
           market_phase?: Database["public"]["Enums"]["market_phase_enum"]
           mfe?: number | null

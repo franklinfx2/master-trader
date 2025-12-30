@@ -168,6 +168,7 @@ export const useEliteTrades = () => {
       fatigue_present: formData.fatigue_present,
       htf_screenshot: formData.htf_screenshot || null,
       ltf_entry_screenshot: formData.ltf_entry_screenshot || null,
+      ltf_trade_screenshot: formData.ltf_trade_screenshot || null,
       post_trade_screenshot: formData.post_trade_screenshot || null,
       annotations_present: formData.annotations_present,
       mae: formData.mae ? parseFloat(formData.mae) : null,
@@ -209,7 +210,7 @@ export const useEliteTrades = () => {
         }
       } else if (value !== '') {
         updates[key] = value;
-      } else if (['notes', 'trade_time', 'htf_screenshot', 'ltf_entry_screenshot', 'post_trade_screenshot'].includes(key)) {
+      } else if (['notes', 'trade_time', 'htf_screenshot', 'ltf_entry_screenshot', 'ltf_trade_screenshot', 'post_trade_screenshot'].includes(key)) {
         // These string fields can be null
         updates[key] = null;
       }
