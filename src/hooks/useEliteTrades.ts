@@ -184,22 +184,62 @@ export const useEliteTrades = () => {
   };
 
   const updateTrade = async (id: string, formData: Partial<EliteTradeFormData>) => {
-    const updates: any = { ...formData };
+    if (!user) return { error: 'Not authenticated' };
+
+    const updates: any = {};
     
-    // Convert string numbers to actual numbers
-    if (updates.entry_price) updates.entry_price = parseFloat(updates.entry_price);
-    if (updates.stop_loss) updates.stop_loss = parseFloat(updates.stop_loss);
-    if (updates.take_profit) updates.take_profit = parseFloat(updates.take_profit);
-    if (updates.exit_price) updates.exit_price = parseFloat(updates.exit_price);
-    if (updates.risk_per_trade_pct) updates.risk_per_trade_pct = parseFloat(updates.risk_per_trade_pct);
-    if (updates.rr_planned) updates.rr_planned = parseFloat(updates.rr_planned);
-    if (updates.mae) updates.mae = parseFloat(updates.mae);
-    if (updates.mfe) updates.mfe = parseFloat(updates.mfe);
+    // Only include fields that are actually provided and properly convert them
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value === undefined) return;
+      
+      // Convert string numbers to actual numbers for numeric fields
+      if (['entry_price', 'stop_loss', 'take_profit', 'exit_price', 'risk_per_trade_pct', 'rr_planned', 'mae', 'mfe'].includes(key)) {
+        if (value !== null && value !== '') {
+          updates[key] = parseFloat(String(value));
+        } else if (key === 'exit_price' || key === 'mae' || key === 'mfe') {
+          // These can be null
+          updates[key] = null;
+        }
+      } else if (value !== '') {
+        updates[key] = value;
+      } else if (['notes', 'trade_time', 'htf_screenshot', 'ltf_entry_screenshot', 'post_trade_screenshot'].includes(key)) {
+        // These string fields can be null
+        updates[key] = null;
+      }
+    });
+
+    // Calculate result and r_multiple if exit_price is provided
+    if (updates.exit_price !== undefined && updates.exit_price !== null) {
+      const entry = updates.entry_price || formData.entry_price;
+      const sl = updates.stop_loss || formData.stop_loss;
+      
+      if (entry && sl) {
+        const entryNum = parseFloat(String(entry));
+        const slNum = parseFloat(String(sl));
+        const exitNum = updates.exit_price;
+        
+        const isLong = slNum < entryNum;
+        const riskDistance = Math.abs(entryNum - slNum);
+        
+        if (riskDistance > 0) {
+          const profitDistance = isLong ? exitNum - entryNum : entryNum - exitNum;
+          const rMultiple = profitDistance / riskDistance;
+          
+          updates.r_multiple = parseFloat(rMultiple.toFixed(4));
+          updates.rr_realized = parseFloat(rMultiple.toFixed(4));
+          
+          if (rMultiple > 0.1) updates.result = 'Win';
+          else if (rMultiple < -0.1) updates.result = 'Loss';
+          else updates.result = 'BE';
+        }
+      }
+    }
 
     const { error } = await supabase
       .from('trades_v2_elite')
       .update(updates)
-      .eq('id', id);
+      .eq('id', id)
+      .eq('user_id', user.id);
 
     if (error) {
       console.error('Error updating elite trade:', error);
