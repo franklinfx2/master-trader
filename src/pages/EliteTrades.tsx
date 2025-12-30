@@ -1,6 +1,5 @@
 // XAUUSD ELITE TRADING JOURNAL — Elite Trades Page
-// Displays ONLY fully_classified trades by default
-import { useEffect } from 'react';
+// Shows your elite trades (you can filter by classification status if desired)
 import { Link } from 'react-router-dom';
 import { Plus, Filter, RefreshCw, BarChart2 } from 'lucide-react';
 
@@ -10,33 +9,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Separator } from '@/components/ui/separator';
 
 import { EliteTradeCard } from '@/components/elite-journal/EliteTradeCard';
 import { useEliteTrades, EliteTradeFilters } from '@/hooks/useEliteTrades';
-import {
-  SESSIONS,
-  SETUP_TYPES,
-  SETUP_GRADES,
-  YES_NO,
-} from '@/types/eliteTrade';
+import { SESSIONS, SETUP_TYPES, SETUP_GRADES, YES_NO } from '@/types/eliteTrade';
 
 const EliteTrades = () => {
   const { trades, stats, loading, filters, setFilters, fetchTrades } = useEliteTrades();
-
-  // Default to fully_classified only
-  useEffect(() => {
-    if (!filters.classification_status) {
-      setFilters({ ...filters, classification_status: 'fully_classified' });
-    }
-  }, []);
 
   const handleFilterChange = (key: keyof EliteTradeFilters, value: string | undefined) => {
     setFilters({ ...filters, [key]: value === 'all' ? undefined : value });
   };
 
   const clearFilters = () => {
-    setFilters({ classification_status: 'fully_classified' });
+    setFilters({});
   };
 
   const activeFilterCount = Object.entries(filters).filter(
