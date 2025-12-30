@@ -269,6 +269,7 @@ export interface EliteTradeFormData {
   fatigue_present: YesNo;
   htf_screenshot: string;
   ltf_entry_screenshot: string;
+  ltf_trade_screenshot?: string;
   post_trade_screenshot: string;
   annotations_present: YesNo;
   would_i_take_this_trade_again?: YesNo;
