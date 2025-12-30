@@ -44,7 +44,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { cn } from '@/lib/utils';
-import { EliteTrade } from '@/types/eliteTrade';
+import { EliteTrade, MISSED_REASONS } from '@/types/eliteTrade';
 import { EliteTradeEditModal } from './EliteTradeEditModal';
 import { useEliteTrades } from '@/hooks/useEliteTrades';
 import { useToast } from '@/components/ui/use-toast';
@@ -61,6 +61,8 @@ export const EliteTradeCard = ({ trade, onUpdate }: EliteTradeCardProps) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const { deleteTrade, fetchTrades } = useEliteTrades();
   const { toast } = useToast();
+  
+  const isMissedTrade = trade.trade_status === 'Missed';
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -113,11 +115,18 @@ export const EliteTradeCard = ({ trade, onUpdate }: EliteTradeCardProps) => {
     <>
       <Card className={cn(
         "glass-card transition-all duration-200",
-        isExpanded && "ring-2 ring-primary/30"
+        isExpanded && "ring-2 ring-primary/30",
+        isMissedTrade && "border-amber-500/30 bg-amber-500/5"
       )}>
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-2 flex-wrap">
+              {/* Missed Trade Badge */}
+              {isMissedTrade && (
+                <Badge variant="outline" className="bg-amber-500/20 text-amber-600 border-amber-500/30 font-semibold">
+                  MISSED
+                </Badge>
+              )}
               {/* Primary: Setup Classification */}
               <div className={cn(
                 "flex items-center gap-1.5 px-2.5 py-1 rounded-md border font-semibold text-sm",
@@ -133,13 +142,19 @@ export const EliteTradeCard = ({ trade, onUpdate }: EliteTradeCardProps) => {
               </div>
 
               {/* Secondary: Result */}
-              <div className={cn(
-                "flex items-center gap-1.5 px-2.5 py-1 rounded-md border font-medium text-sm",
-                trade.result ? resultColor[trade.result] : resultColor.BE
-              )}>
-                {getResultIcon()}
-                <span>{trade.result || 'Pending'}</span>
-              </div>
+              {!isMissedTrade ? (
+                <div className={cn(
+                  "flex items-center gap-1.5 px-2.5 py-1 rounded-md border font-medium text-sm",
+                  trade.result ? resultColor[trade.result] : resultColor.BE
+                )}>
+                  {getResultIcon()}
+                  <span>{trade.result || 'Pending'}</span>
+                </div>
+              ) : trade.hypothetical_result && (
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border font-medium text-sm bg-muted/50 border-muted text-muted-foreground">
+                  <span>Hypothetical: {trade.hypothetical_result}</span>
+                </div>
+              )}
               
               <div className="flex items-center gap-1.5 text-muted-foreground text-sm">
                 <Calendar className="w-3.5 h-3.5" />
@@ -147,10 +162,17 @@ export const EliteTradeCard = ({ trade, onUpdate }: EliteTradeCardProps) => {
               </div>
 
               <Badge variant="outline" className="text-xs">{trade.session}</Badge>
+              
+              {/* Missed Reason */}
+              {isMissedTrade && trade.missed_reason && (
+                <Badge variant="secondary" className="text-xs bg-amber-500/10 text-amber-600">
+                  {trade.missed_reason}
+                </Badge>
+              )}
             </div>
 
             <div className="flex items-center gap-2">
-              {trade.r_multiple && (
+              {trade.r_multiple && !isMissedTrade && (
                 <span className={cn(
                   "font-mono font-semibold text-sm px-2 py-0.5 rounded",
                   Number(trade.r_multiple) > 0 ? "text-profit bg-profit/10" : "text-loss bg-loss/10"

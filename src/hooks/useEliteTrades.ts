@@ -21,6 +21,7 @@ export interface EliteTradeFilters {
   setup_grade?: string;
   liquidity_taken?: string;
   result?: string;
+  trade_status?: string;
 }
 
 export const useEliteTrades = () => {
@@ -74,6 +75,9 @@ export const useEliteTrades = () => {
     if (filters.result) {
       query = query.eq('result', filters.result as any);
     }
+    if (filters.trade_status) {
+      query = query.eq('trade_status', filters.trade_status as any);
+    }
 
     const { data, error } = await query;
 
@@ -121,6 +125,9 @@ export const useEliteTrades = () => {
       trade_time: formData.trade_time || null,
       instrument: 'XAUUSD',
       account_type: formData.account_type,
+      trade_status: formData.trade_status || 'Executed',
+      missed_reason: formData.missed_reason || null,
+      hypothetical_result: formData.hypothetical_result || null,
       session: formData.session,
       killzone: formData.killzone,
       day_of_week: formData.day_of_week,

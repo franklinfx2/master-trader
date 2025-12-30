@@ -47,11 +47,17 @@ import {
   NEWS_IMPACTS,
   NEWS_TIMINGS,
   NEWS_TYPES,
+  TRADE_STATUSES,
+  MISSED_REASONS,
+  HYPOTHETICAL_RESULTS,
   type LiquidityTarget,
   type GoldBehaviorTag,
   type NewsImpact,
   type NewsTiming,
   type NewsType,
+  type TradeStatus,
+  type MissedReason,
+  type HypotheticalResult,
 } from '@/types/eliteTrade';
 
 // Base schema for field count calculation
@@ -60,6 +66,11 @@ const eliteTradeSchemaBase = z.object({
   trade_date: z.date({ required_error: 'Trade date is required' }),
   trade_time: z.string().min(1, 'Trade time is required').regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Invalid time format'),
   account_type: z.enum(['Demo', 'Live', 'Funded'], { required_error: 'Account type is required' }),
+  
+  // Trade Status (Executed vs Missed)
+  trade_status: z.enum(['Executed', 'Missed']).default('Executed'),
+  missed_reason: z.enum(['Hesitation', 'Away', 'Technical', 'Fear', 'Other']).optional(),
+  hypothetical_result: z.enum(['Win', 'Loss', 'BE', 'Unknown']).optional(),
   
   // Session & Time
   session: z.enum(['Asia', 'London', 'NY'], { required_error: 'Session is required' }),
@@ -167,6 +178,7 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
     defaultValues: {
       trade_date: new Date(),
       trade_time: '',
+      trade_status: 'Executed',
       liquidity_targeted: [],
       gold_behavior_tags: [],
       confidence_level: 3,
@@ -186,9 +198,11 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
   });
 
   const watchedValues = form.watch();
+  const isMissedTrade = watchedValues.trade_status === 'Missed';
   
-  // Screenshot validation - only HTF and LTF Entry required at entry time
-  const screenshotsValid = Boolean(
+  // Screenshot validation - only HTF and LTF Entry required at entry time (for executed trades)
+  // For missed trades, screenshots are optional
+  const screenshotsValid = isMissedTrade || Boolean(
     watchedValues.htf_screenshot && 
     watchedValues.ltf_entry_screenshot
   );
@@ -253,6 +267,9 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
       trade_date: format(data.trade_date, 'yyyy-MM-dd'),
       trade_time: data.trade_time,
       account_type: data.account_type,
+      trade_status: data.trade_status as TradeStatus,
+      missed_reason: data.trade_status === 'Missed' ? data.missed_reason as MissedReason : undefined,
+      hypothetical_result: data.trade_status === 'Missed' ? data.hypothetical_result as HypotheticalResult : undefined,
       session: data.session,
       killzone: data.killzone,
       day_of_week: data.day_of_week,
@@ -337,17 +354,95 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
                 <AlertTriangle className="w-5 h-5 text-destructive" />
               )}
               <span className="font-medium">
-                {screenshotsValid 
-                  ? "Entry screenshots uploaded" 
-                  : "2 screenshots required before saving (HTF + LTF Entry)"
+                {isMissedTrade 
+                  ? "Missed trade — screenshots optional"
+                  : screenshotsValid 
+                    ? "Entry screenshots uploaded" 
+                    : "2 screenshots required before saving (HTF + LTF Entry)"
                 }
               </span>
             </div>
             <Badge variant={screenshotsValid ? "default" : "destructive"}>
-              {screenshotsValid ? "Ready to Save" : "Incomplete"}
+              {isMissedTrade ? "Missed Trade" : screenshotsValid ? "Ready to Save" : "Incomplete"}
             </Badge>
           </AlertDescription>
         </Alert>
+
+        {/* SECTION 0: Trade Status */}
+        <Card className={cn("glass-card", isMissedTrade && "border-amber-500/50 bg-amber-500/5")}>
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              Trade Status
+              {isMissedTrade && <Badge variant="outline" className="bg-amber-500/20 text-amber-500 border-amber-500/30">Missed Trade</Badge>}
+            </CardTitle>
+            <CardDescription>Did you execute this trade or was it a missed opportunity?</CardDescription>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Trade Status */}
+            <FormField
+              control={form.control}
+              name="trade_status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Did you execute this trade? *</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Executed">Yes — Executed</SelectItem>
+                      <SelectItem value="Missed">No — Missed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Missed Reason - only show when missed */}
+            {isMissedTrade && (
+              <>
+                <FormField
+                  control={form.control}
+                  name="missed_reason"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Why did you miss it? *</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger><SelectValue placeholder="Select reason" /></SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {MISSED_REASONS.map(r => <SelectItem key={r} value={r}>{r}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="hypothetical_result"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Hypothetical Result (hindsight)</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger><SelectValue placeholder="What would have happened?" /></SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {HYPOTHETICAL_RESULTS.map(r => <SelectItem key={r} value={r}>{r}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </>
+            )}
+          </CardContent>
+        </Card>
 
         {/* SECTION 1: Trade Identity & Time */}
         <Card className="glass-card">

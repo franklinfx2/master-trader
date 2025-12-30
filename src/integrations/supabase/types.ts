@@ -624,6 +624,9 @@ export type Database = {
           htf_bias: Database["public"]["Enums"]["htf_bias_enum"]
           htf_screenshot: string | null
           htf_timeframe: Database["public"]["Enums"]["htf_timeframe_enum"]
+          hypothetical_result:
+            | Database["public"]["Enums"]["hypothetical_result_enum"]
+            | null
           id: string
           instrument: string
           killzone: Database["public"]["Enums"]["killzone_enum"]
@@ -635,6 +638,9 @@ export type Database = {
           mae: number | null
           market_phase: Database["public"]["Enums"]["market_phase_enum"]
           mfe: number | null
+          missed_reason:
+            | Database["public"]["Enums"]["missed_reason_enum"]
+            | null
           news_day: Database["public"]["Enums"]["yes_no_enum"]
           news_impact: Database["public"]["Enums"]["news_impact_enum"] | null
           news_timing: Database["public"]["Enums"]["news_timing_enum"] | null
@@ -661,6 +667,7 @@ export type Database = {
           take_profit: number
           trade_aligned_with_real_move: Database["public"]["Enums"]["yes_no_enum"]
           trade_date: string
+          trade_status: Database["public"]["Enums"]["trade_status_enum"]
           trade_time: string | null
           updated_at: string
           user_id: string
@@ -691,6 +698,9 @@ export type Database = {
           htf_bias: Database["public"]["Enums"]["htf_bias_enum"]
           htf_screenshot?: string | null
           htf_timeframe: Database["public"]["Enums"]["htf_timeframe_enum"]
+          hypothetical_result?:
+            | Database["public"]["Enums"]["hypothetical_result_enum"]
+            | null
           id?: string
           instrument?: string
           killzone: Database["public"]["Enums"]["killzone_enum"]
@@ -702,6 +712,9 @@ export type Database = {
           mae?: number | null
           market_phase: Database["public"]["Enums"]["market_phase_enum"]
           mfe?: number | null
+          missed_reason?:
+            | Database["public"]["Enums"]["missed_reason_enum"]
+            | null
           news_day: Database["public"]["Enums"]["yes_no_enum"]
           news_impact?: Database["public"]["Enums"]["news_impact_enum"] | null
           news_timing?: Database["public"]["Enums"]["news_timing_enum"] | null
@@ -728,6 +741,7 @@ export type Database = {
           take_profit: number
           trade_aligned_with_real_move: Database["public"]["Enums"]["yes_no_enum"]
           trade_date: string
+          trade_status?: Database["public"]["Enums"]["trade_status_enum"]
           trade_time?: string | null
           updated_at?: string
           user_id: string
@@ -758,6 +772,9 @@ export type Database = {
           htf_bias?: Database["public"]["Enums"]["htf_bias_enum"]
           htf_screenshot?: string | null
           htf_timeframe?: Database["public"]["Enums"]["htf_timeframe_enum"]
+          hypothetical_result?:
+            | Database["public"]["Enums"]["hypothetical_result_enum"]
+            | null
           id?: string
           instrument?: string
           killzone?: Database["public"]["Enums"]["killzone_enum"]
@@ -769,6 +786,9 @@ export type Database = {
           mae?: number | null
           market_phase?: Database["public"]["Enums"]["market_phase_enum"]
           mfe?: number | null
+          missed_reason?:
+            | Database["public"]["Enums"]["missed_reason_enum"]
+            | null
           news_day?: Database["public"]["Enums"]["yes_no_enum"]
           news_impact?: Database["public"]["Enums"]["news_impact_enum"] | null
           news_timing?: Database["public"]["Enums"]["news_timing_enum"] | null
@@ -795,6 +815,7 @@ export type Database = {
           take_profit?: number
           trade_aligned_with_real_move?: Database["public"]["Enums"]["yes_no_enum"]
           trade_date?: string
+          trade_status?: Database["public"]["Enums"]["trade_status_enum"]
           trade_time?: string | null
           updated_at?: string
           user_id?: string
@@ -905,6 +926,7 @@ export type Database = {
         | "Violent rejection"
       htf_bias_enum: "Bullish" | "Bearish" | "Range"
       htf_timeframe_enum: "H4" | "H1"
+      hypothetical_result_enum: "Win" | "Loss" | "BE" | "Unknown"
       killzone_enum: "LO" | "NYO" | "NYPM" | "None"
       liquidity_target_enum:
         | "Asian High"
@@ -916,6 +938,7 @@ export type Database = {
         | "Structural Liquidity"
         | "Displacement"
       market_phase_enum: "Expansion" | "Retracement" | "Consolidation"
+      missed_reason_enum: "Hesitation" | "Away" | "Technical" | "Fear" | "Other"
       news_impact_enum: "LOW" | "MEDIUM" | "HIGH"
       news_timing_enum: "PRE_NEWS" | "AT_RELEASE" | "POST_NEWS"
       news_type_enum:
@@ -931,6 +954,7 @@ export type Database = {
       stop_placement_quality_enum: "Clean" | "Wide" | "Tight"
       structure_state_enum: "HH-HL" | "LH-LL" | "CHoCH" | "BOS"
       trade_result_enum: "Win" | "Loss" | "BE"
+      trade_status_enum: "Executed" | "Missed"
       yes_no_enum: "Yes" | "No"
     }
     CompositeTypes: {
@@ -1096,6 +1120,7 @@ export const Constants = {
       ],
       htf_bias_enum: ["Bullish", "Bearish", "Range"],
       htf_timeframe_enum: ["H4", "H1"],
+      hypothetical_result_enum: ["Win", "Loss", "BE", "Unknown"],
       killzone_enum: ["LO", "NYO", "NYPM", "None"],
       liquidity_target_enum: [
         "Asian High",
@@ -1108,6 +1133,7 @@ export const Constants = {
         "Displacement",
       ],
       market_phase_enum: ["Expansion", "Retracement", "Consolidation"],
+      missed_reason_enum: ["Hesitation", "Away", "Technical", "Fear", "Other"],
       news_impact_enum: ["LOW", "MEDIUM", "HIGH"],
       news_timing_enum: ["PRE_NEWS", "AT_RELEASE", "POST_NEWS"],
       news_type_enum: [
@@ -1124,6 +1150,7 @@ export const Constants = {
       stop_placement_quality_enum: ["Clean", "Wide", "Tight"],
       structure_state_enum: ["HH-HL", "LH-LL", "CHoCH", "BOS"],
       trade_result_enum: ["Win", "Loss", "BE"],
+      trade_status_enum: ["Executed", "Missed"],
       yes_no_enum: ["Yes", "No"],
     },
   },
