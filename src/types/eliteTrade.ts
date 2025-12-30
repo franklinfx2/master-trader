@@ -77,6 +77,11 @@ export type ClassificationStatus =
   | 'partially_classified'
   | 'fully_classified';
 
+// Trade Status (Executed vs Missed)
+export type TradeStatus = 'Executed' | 'Missed';
+export type MissedReason = 'Hesitation' | 'Away' | 'Technical' | 'Fear' | 'Other';
+export type HypotheticalResult = 'Win' | 'Loss' | 'BE' | 'Unknown';
+
 // Main Elite Trade interface
 export interface EliteTrade {
   // Trade Identity
@@ -86,6 +91,11 @@ export interface EliteTrade {
   trade_time?: string; // HH:MM format
   instrument: string; // Fixed: XAUUSD
   account_type: AccountType;
+  
+  // Trade Status (Executed vs Missed)
+  trade_status: TradeStatus;
+  missed_reason?: MissedReason;
+  hypothetical_result?: HypotheticalResult;
   
   // Session & Time
   session: Session;
@@ -216,6 +226,9 @@ export interface EliteTradeFormData {
   trade_date: string;
   trade_time?: string;
   account_type: AccountType;
+  trade_status?: TradeStatus;
+  missed_reason?: MissedReason;
+  hypothetical_result?: HypotheticalResult;
   session: Session;
   killzone: Killzone;
   day_of_week: DayOfWeek;
@@ -306,3 +319,8 @@ export const YES_NO: YesNo[] = ['Yes', 'No'];
 export const NEWS_IMPACTS: NewsImpact[] = ['LOW', 'MEDIUM', 'HIGH'];
 export const NEWS_TIMINGS: NewsTiming[] = ['PRE_NEWS', 'AT_RELEASE', 'POST_NEWS'];
 export const NEWS_TYPES: NewsType[] = ['INFLATION', 'RATES', 'EMPLOYMENT', 'RISK_SENTIMENT', 'NONE'];
+
+// Trade Status Options
+export const TRADE_STATUSES: TradeStatus[] = ['Executed', 'Missed'];
+export const MISSED_REASONS: MissedReason[] = ['Hesitation', 'Away', 'Technical', 'Fear', 'Other'];
+export const HYPOTHETICAL_RESULTS: HypotheticalResult[] = ['Win', 'Loss', 'BE', 'Unknown'];
