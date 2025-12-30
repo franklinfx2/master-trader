@@ -193,7 +193,7 @@ const EliteTrades = () => {
                 Showing {trades.length} trade{trades.length !== 1 ? 's' : ''}
               </div>
               {trades.map((trade) => (
-                <EliteTradeCard key={trade.id} trade={trade} />
+                <EliteTradeCard key={trade.id} trade={trade} onUpdate={fetchTrades} />
               ))}
             </>
           )}
