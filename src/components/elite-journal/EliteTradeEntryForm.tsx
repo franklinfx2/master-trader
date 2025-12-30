@@ -22,6 +22,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
 
+import { TradeDatePickerField } from './TradeDatePickerField';
 import { EliteScreenshotUpload } from './EliteScreenshotUpload';
 import { useEliteTrades } from '@/hooks/useEliteTrades';
 import {
@@ -458,47 +459,9 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Trade Date *</FormLabel>
-                  <Popover>
-                    <div className="relative">
-                      <FormControl>
-                        <Input
-                          type="text"
-                          placeholder="DD/MM/YYYY"
-                          value={field.value ? format(field.value, 'dd/MM/yyyy') : ''}
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            // Try parsing dd/MM/yyyy format
-                            const parts = val.split('/');
-                            if (parts.length === 3) {
-                              const day = parseInt(parts[0], 10);
-                              const month = parseInt(parts[1], 10) - 1;
-                              const year = parseInt(parts[2], 10);
-                              if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 1900) {
-                                const date = new Date(year, month, day);
-                                if (!isNaN(date.getTime())) {
-                                  field.onChange(date);
-                                }
-                              }
-                            }
-                          }}
-                          className="pr-10"
-                        />
-                      </FormControl>
-                      <PopoverTrigger asChild>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                        >
-                          <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-                        </Button>
-                      </PopoverTrigger>
-                    </div>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus className="pointer-events-auto" />
-                    </PopoverContent>
-                  </Popover>
+                  <FormControl>
+                    <TradeDatePickerField value={field.value} onChange={field.onChange} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
