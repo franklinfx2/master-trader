@@ -3,7 +3,8 @@ import { Trade } from '@/hooks/useTrades';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ChevronDown, ChevronUp, Edit, Trash2, Eye } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { ChevronDown, ChevronUp, Edit, Trash2, Eye, Image } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface MobileTradeCardProps {
@@ -40,6 +41,18 @@ export const MobileTradeCard = ({ trade, onEdit, onDelete, onView }: MobileTrade
 
   const profitLoss = getProfitLoss();
 
+  // Parse screenshots from trade
+  const getScreenshots = (): string[] => {
+    if (!trade.screenshot_url) return [];
+    try {
+      const parsed = JSON.parse(trade.screenshot_url);
+      return Array.isArray(parsed) ? parsed : [trade.screenshot_url];
+    } catch {
+      return [trade.screenshot_url];
+    }
+  };
+
+  const screenshots = getScreenshots();
   return (
     <Card className="card-premium mb-4 overflow-hidden">
       <CardContent className="p-4">
@@ -163,6 +176,39 @@ export const MobileTradeCard = ({ trade, onEdit, onDelete, onView }: MobileTrade
                 <p className="text-foreground bg-muted/30 p-2 rounded text-xs">
                   {trade.notes}
                 </p>
+              </div>
+            )}
+
+            {/* Screenshots */}
+            {screenshots.length > 0 && (
+              <div className="pt-2">
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full text-xs h-8"
+                    >
+                      <Image className="w-3 h-3 mr-1" />
+                      View Screenshots ({screenshots.length})
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-4xl max-h-[90vh]">
+                    <DialogHeader>
+                      <DialogTitle>Trade Screenshots - {trade.pair}</DialogTitle>
+                    </DialogHeader>
+                    <div className="max-h-[70vh] overflow-auto space-y-4">
+                      {screenshots.map((url, index) => (
+                        <img
+                          key={index}
+                          src={url}
+                          alt={`Screenshot ${index + 1} for ${trade.pair} trade`}
+                          className="w-full h-auto rounded-md"
+                        />
+                      ))}
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             )}
 
