@@ -1,5 +1,5 @@
 // XAUUSD ELITE TRADING JOURNAL — Trade Card Component
-// Displays individual trade with all fields + screenshots, no editing of auto-calculated fields
+// Displays individual trade with all fields + screenshots, with edit/delete actions
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { 
@@ -16,7 +16,9 @@ import {
   AlertTriangle,
   CheckCircle2,
   XCircle,
-  Eye
+  Eye,
+  Pencil,
+  Trash2
 } from 'lucide-react';
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -30,16 +32,60 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { cn } from '@/lib/utils';
 import { EliteTrade } from '@/types/eliteTrade';
+import { EliteTradeEditModal } from './EliteTradeEditModal';
+import { useEliteTrades } from '@/hooks/useEliteTrades';
+import { useToast } from '@/components/ui/use-toast';
 
 interface EliteTradeCardProps {
   trade: EliteTrade;
+  onUpdate?: () => void;
 }
 
-export const EliteTradeCard = ({ trade }: EliteTradeCardProps) => {
+export const EliteTradeCard = ({ trade, onUpdate }: EliteTradeCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { deleteTrade, fetchTrades } = useEliteTrades();
+  const { toast } = useToast();
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    const { error } = await deleteTrade(trade.id);
+    setIsDeleting(false);
+    
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete trade.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Trade Deleted",
+        description: "Trade has been removed.",
+      });
+      onUpdate?.();
+    }
+  };
+
+  const handleEditSuccess = () => {
+    fetchTrades();
+    onUpdate?.();
+  };
 
   const resultColor = {
     Win: 'text-profit bg-profit/10 border-profit/30',
@@ -113,6 +159,47 @@ export const EliteTradeCard = ({ trade }: EliteTradeCardProps) => {
                 </span>
               )}
               
+              {/* Edit Button */}
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => setIsEditOpen(true)}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <Pencil className="w-4 h-4" />
+              </Button>
+
+              {/* Delete Button */}
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    className="text-muted-foreground hover:text-destructive"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete Trade?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete this trade from your journal.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction 
+                      onClick={handleDelete}
+                      disabled={isDeleting}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    >
+                      {isDeleting ? 'Deleting...' : 'Delete'}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
               <Button 
                 variant="ghost" 
                 size="sm" 
@@ -350,6 +437,14 @@ export const EliteTradeCard = ({ trade }: EliteTradeCardProps) => {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Edit Modal */}
+      <EliteTradeEditModal
+        trade={trade}
+        open={isEditOpen}
+        onOpenChange={setIsEditOpen}
+        onSuccess={handleEditSuccess}
+      />
     </>
   );
 };
