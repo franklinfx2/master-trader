@@ -41,9 +41,9 @@ export function SetupEdgeScoreSection({
   onSetupClick,
 }: SetupEdgeScoreSectionProps) {
   const setupMetrics = useMemo(() => {
-    // Filter trades by date range
+    // Filter trades by date range - include all trades with setup_type
     const now = new Date();
-    let filteredTrades = trades.filter(t => t.classification_status === 'fully_classified');
+    let filteredTrades = trades.filter(t => t.setup_type);
     
     if (dateRange !== 'all') {
       const days = parseInt(dateRange);
