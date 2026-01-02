@@ -7,22 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-
-type EliteTrade = {
-  trade_date: string;
-  setup_type: string;
-  result?: string | null;
-  r_multiple?: number | null;
-  rules_followed: string;
-  revenge_trade: string;
-  pre_trade_state: string;
-  entry_precision: string;
-  stop_placement_quality: string;
-  confirmation_present: string;
-  fatigue_present: string;
-  liquidity_taken_against_bias: string;
-  setup_grade: string;
-};
+import { EliteTrade } from '@/types/eliteTrade';
 
 // Define mistake tags based on trade attributes that indicate mistakes
 const MISTAKE_INDICATORS = [

@@ -1,17 +1,5 @@
 import { useMemo } from 'react';
-
-type EliteTrade = {
-  trade_date: string;
-  setup_type: string;
-  result?: string | null;
-  r_multiple?: number | null;
-  entry_price: number;
-  stop_loss: number;
-  take_profit: number;
-  entry_precision: string;
-  partial_taken: string;
-  rr_planned: number;
-};
+import { EliteTrade } from '@/types/eliteTrade';
 
 interface EntryPrecisionSectionProps {
   trades: EliteTrade[];
