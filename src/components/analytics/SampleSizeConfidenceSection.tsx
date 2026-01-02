@@ -56,23 +56,16 @@ export const SampleSizeConfidenceSection = ({
       return daysAgo <= parseInt(dateRange);
     });
 
-    // Group by setup type
-    const setupGroups: Record<string, number> = {};
-    const setupTypes = ['OBC', 'OBR', 'BB'];
+    // Dynamically derive unique setup types from trades
+    const setupGroups = new Map<string, number>();
     
-    setupTypes.forEach(setup => {
-      setupGroups[setup] = 0;
-    });
-
     filteredTrades.forEach(trade => {
-      if (setupGroups[trade.setup_type] !== undefined) {
-        setupGroups[trade.setup_type]++;
-      }
+      const key = trade.setup_type;
+      setupGroups.set(key, (setupGroups.get(key) || 0) + 1);
     });
 
     // Calculate confidence for each setup
-    const confidences: SetupConfidence[] = setupTypes.map(setup => {
-      const tradeCount = setupGroups[setup];
+    const confidences: SetupConfidence[] = Array.from(setupGroups.entries()).map(([setup, tradeCount]) => {
       const { confidence, label, icon } = getConfidenceInfo(tradeCount);
       
       // Max scale at 400 trades for visual purposes
@@ -88,7 +81,8 @@ export const SampleSizeConfidenceSection = ({
       };
     });
 
-    return confidences;
+    // Sort by trade count descending
+    return confidences.sort((a, b) => b.tradeCount - a.tradeCount);
   }, [trades, dateRange]);
 
   return (

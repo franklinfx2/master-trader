@@ -142,6 +142,7 @@ export const useEliteTrades = () => {
       structure_state: formData.structure_state,
       liquidity_targeted: formData.liquidity_targeted,
       liquidity_taken_before_entry: formData.liquidity_taken_before_entry,
+      setup_type_id: formData.setup_type_id || null, // New canonical FK
       setup_type: formData.setup_type,
       setup_grade: formData.setup_grade,
       execution_tf: formData.execution_tf,

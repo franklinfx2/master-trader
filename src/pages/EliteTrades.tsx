@@ -12,10 +12,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 import { EliteTradeCard } from '@/components/elite-journal/EliteTradeCard';
 import { useEliteTrades, EliteTradeFilters } from '@/hooks/useEliteTrades';
-import { SESSIONS, SETUP_TYPES, SETUP_GRADES, YES_NO } from '@/types/eliteTrade';
+import { SESSIONS, SETUP_GRADES, YES_NO } from '@/types/eliteTrade';
+import { useSetupTypes } from '@/hooks/useSetupTypes';
 
 const EliteTrades = () => {
   const { trades, stats, loading, filters, setFilters, fetchTrades } = useEliteTrades();
+  const { activeSetupTypes } = useSetupTypes();
 
   const handleFilterChange = (key: keyof EliteTradeFilters, value: string | undefined) => {
     setFilters({ ...filters, [key]: value === 'all' ? undefined : value });
@@ -105,7 +107,7 @@ const EliteTrades = () => {
               <FilterSelect
                 label="Setup Type"
                 value={filters.setup_type || 'all'}
-                options={['all', ...SETUP_TYPES]}
+                options={['all', ...activeSetupTypes.map(s => s.code)]}
                 onChange={(v) => handleFilterChange('setup_type', v)}
               />
               <FilterSelect

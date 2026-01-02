@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { EliteTrade, SETUP_TYPES, SetupType } from '@/types/eliteTrade';
+import { EliteTrade } from '@/types/eliteTrade';
 import { cn } from '@/lib/utils';
 
 interface SetupEdgeScoreSectionProps {
@@ -12,7 +12,8 @@ interface SetupEdgeScoreSectionProps {
 }
 
 interface SetupMetrics {
-  setup: SetupType;
+  setup: string; // setup_type code
+  setupId?: string; // setup_type_id if available
   edgeScore: number;
   winRate: number;
   avgR: number;
@@ -61,9 +62,26 @@ export function SetupEdgeScoreSection({
       filteredTrades = filteredTrades.filter(t => selectedSetups.includes(t.setup_type));
     }
 
+    // Dynamically derive unique setup types from trades
+    // Group by setup_type_id if available, otherwise by setup_type string
+    const setupGroups = new Map<string, { id?: string; code: string; trades: EliteTrade[] }>();
+    
+    for (const trade of filteredTrades) {
+      // Use setup_type_id as primary key if available, otherwise use setup_type string
+      const key = trade.setup_type_id || trade.setup_type;
+      
+      if (!setupGroups.has(key)) {
+        setupGroups.set(key, {
+          id: trade.setup_type_id,
+          code: trade.setup_type,
+          trades: [],
+        });
+      }
+      setupGroups.get(key)!.trades.push(trade);
+    }
+
     // Calculate metrics per setup
-    const metrics: SetupMetrics[] = SETUP_TYPES.map(setup => {
-      const setupTrades = filteredTrades.filter(t => t.setup_type === setup);
+    const metrics: SetupMetrics[] = Array.from(setupGroups.values()).map(({ id, code, trades: setupTrades }) => {
       const wins = setupTrades.filter(t => t.result === 'Win').length;
       const losses = setupTrades.filter(t => t.result === 'Loss').length;
       const totalDecided = wins + losses;
@@ -104,14 +122,14 @@ export function SetupEdgeScoreSection({
       }
       
       // Edge Score = Expectancy × sqrt(sample size) / 10
-      // Normalized to give meaningful values
       const sampleSize = setupTrades.length;
       const edgeScore = sampleSize > 0 
         ? (expectancy * Math.sqrt(sampleSize)) / 10
         : 0;
 
       return {
-        setup,
+        setup: code,
+        setupId: id,
         edgeScore: parseFloat(edgeScore.toFixed(2)),
         winRate: parseFloat(winRate.toFixed(1)),
         avgR: parseFloat(avgR.toFixed(2)),
@@ -121,8 +139,27 @@ export function SetupEdgeScoreSection({
       };
     });
 
-    return metrics;
+    // Sort by edge score descending
+    return metrics.sort((a, b) => b.edgeScore - a.edgeScore);
   }, [trades, dateRange, selectedSetups, sessionFilter]);
+
+  if (setupMetrics.length === 0) {
+    return (
+      <section className="space-y-4">
+        <div className="space-y-1">
+          <h2 className="text-lg font-semibold text-foreground tracking-tight">
+            Setup Edge Score
+          </h2>
+          <p className="text-xs text-muted-foreground">
+            Which setups deserve capital
+          </p>
+        </div>
+        <div className="text-center py-8 text-muted-foreground">
+          No classified trades with setup data found.
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="space-y-4">
@@ -144,7 +181,7 @@ export function SetupEdgeScoreSection({
           
           return (
             <button
-              key={metric.setup}
+              key={metric.setupId || metric.setup}
               onClick={() => onSetupClick(metric.setup)}
               className={cn(
                 'relative p-5 text-left transition-all duration-150',
@@ -183,7 +220,7 @@ export function SetupEdgeScoreSection({
                   <span className="font-medium text-foreground">{metric.maxDrawdown}R</span>
                 </div>
                 <div className="col-span-2 flex justify-between pt-1 border-t border-border/50">
-                  <span className="text-muted-foreground">Sample Size</span>
+                  <span className="text-muted-foreground">Sample (N)</span>
                   <span className="font-medium text-foreground">{metric.sampleSize}</span>
                 </div>
               </div>
