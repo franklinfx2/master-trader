@@ -58,7 +58,7 @@ export const SampleSizeConfidenceSection = ({
 
     // Dynamically derive unique setup types from trades
     const setupGroups = new Map<string, number>();
-    
+
     filteredTrades.forEach(trade => {
       const key = trade.setup_type;
       setupGroups.set(key, (setupGroups.get(key) || 0) + 1);
@@ -67,7 +67,7 @@ export const SampleSizeConfidenceSection = ({
     // Calculate confidence for each setup
     const confidences: SetupConfidence[] = Array.from(setupGroups.entries()).map(([setup, tradeCount]) => {
       const { confidence, label, icon } = getConfidenceInfo(tradeCount);
-      
+
       // Max scale at 400 trades for visual purposes
       const percentage = Math.min((tradeCount / 400) * 100, 100);
 
