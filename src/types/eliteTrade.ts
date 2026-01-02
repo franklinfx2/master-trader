@@ -85,6 +85,18 @@ export type NewsTiming = 'PRE_NEWS' | 'AT_RELEASE' | 'POST_NEWS';
 export type NewsType = 'INFLATION' | 'RATES' | 'EMPLOYMENT' | 'RISK_SENTIMENT' | 'NONE';
 export type PreTradeState = 'Calm' | 'FOMO' | 'Hesitant' | 'Overconfident';
 
+// Setup Type Registry (for canonical setup management)
+export interface SetupTypeRecord {
+  id: string;
+  user_id: string;
+  code: string;
+  name: string;
+  description?: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 // Main Elite Trade interface
 export interface EliteTrade {
   // Trade Identity
@@ -115,8 +127,9 @@ export interface EliteTrade {
   liquidity_targeted: LiquidityTarget[];
   liquidity_taken_before_entry: YesNo;
   
-  // Setup Definition (User-defined setup type)
-  setup_type: SetupType;
+  // Setup Definition (User-defined setup type via registry)
+  setup_type_id?: string; // Foreign key to setup_types table (preferred)
+  setup_type: SetupType; // String code for backward compat and display
   setup_grade: SetupGrade;
   execution_tf: ExecutionTF;
   entry_model: EntryModel;
@@ -239,8 +252,9 @@ export interface EliteTradeFormData {
   liquidity_targeted: LiquidityTarget[];
   liquidity_taken_before_entry: YesNo;
   
-  // Setup Definition
-  setup_type: string; // User-defined
+  // Setup Definition (via registry)
+  setup_type_id?: string; // Foreign key to setup_types table (preferred)
+  setup_type: string; // String code for backward compat
   setup_grade: SetupGrade;
   execution_tf: ExecutionTF;
   entry_model: EntryModel;

@@ -534,6 +534,39 @@ export type Database = {
           },
         ]
       }
+      setup_types: {
+        Row: {
+          code: string
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       trades: {
         Row: {
           created_at: string | null
@@ -662,6 +695,7 @@ export type Database = {
           session: Database["public"]["Enums"]["session_enum"]
           setup_grade: Database["public"]["Enums"]["setup_grade_enum"]
           setup_type: Database["public"]["Enums"]["setup_type_enum"]
+          setup_type_id: string | null
           stop_loss: number
           stop_placement_quality: Database["public"]["Enums"]["stop_placement_quality_enum"]
           structure_state: Database["public"]["Enums"]["structure_state_enum"]
@@ -737,6 +771,7 @@ export type Database = {
           session: Database["public"]["Enums"]["session_enum"]
           setup_grade: Database["public"]["Enums"]["setup_grade_enum"]
           setup_type: Database["public"]["Enums"]["setup_type_enum"]
+          setup_type_id?: string | null
           stop_loss: number
           stop_placement_quality: Database["public"]["Enums"]["stop_placement_quality_enum"]
           structure_state: Database["public"]["Enums"]["structure_state_enum"]
@@ -812,6 +847,7 @@ export type Database = {
           session?: Database["public"]["Enums"]["session_enum"]
           setup_grade?: Database["public"]["Enums"]["setup_grade_enum"]
           setup_type?: Database["public"]["Enums"]["setup_type_enum"]
+          setup_type_id?: string | null
           stop_loss?: number
           stop_placement_quality?: Database["public"]["Enums"]["stop_placement_quality_enum"]
           structure_state?: Database["public"]["Enums"]["structure_state_enum"]
@@ -826,7 +862,15 @@ export type Database = {
             | Database["public"]["Enums"]["yes_no_enum"]
             | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "trades_v2_elite_setup_type_id_fkey"
+            columns: ["setup_type_id"]
+            isOneToOne: false
+            referencedRelation: "setup_types"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

@@ -27,6 +27,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 
 import { EliteScreenshotUpload } from './EliteScreenshotUpload';
 import { TradeDatePickerField } from './TradeDatePickerField';
+import { SetupTypeSelector } from './SetupTypeSelector';
 import { useEliteTrades } from '@/hooks/useEliteTrades';
 import { EliteTrade } from '@/types/eliteTrade';
 import {
@@ -75,8 +76,9 @@ const editTradeSchema = z.object({
   liquidity_targeted: z.array(z.string()).min(1, 'Select at least one'),
   liquidity_taken_before_entry: z.enum(['Yes', 'No']),
   
-  // Setup Definition
-  setup_type: z.string().min(1, 'Required'),
+  // Setup Definition (via registry)
+  setup_type_id: z.string().optional(), // FK to setup_types
+  setup_type: z.string().min(1, 'Required'), // Code for display
   setup_grade: z.enum(['A+', 'A', 'B', 'Trash']),
   execution_tf: z.string().min(1, 'Required'),
   entry_model: z.string().min(1, 'Required'),
@@ -609,38 +611,19 @@ export const EliteTradeEditModal = ({ trade, open, onOpenChange, onSuccess }: El
                       control={form.control}
                       name="setup_type"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="col-span-2">
                           <FormLabel>Setup Type</FormLabel>
-                          <Select onValueChange={(v) => {
-                            field.onChange(v);
-                            if (v !== 'Custom') setCustomSetupType('');
-                          }} value={COMMON_SETUP_TYPES.includes(field.value) ? field.value : 'Custom'}>
-                            <FormControl>
-                              <SelectTrigger><SelectValue /></SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {COMMON_SETUP_TYPES.map(st => <SelectItem key={st} value={st}>{st}</SelectItem>)}
-                            </SelectContent>
-                          </Select>
+                          <SetupTypeSelector
+                            value={form.getValues('setup_type_id') || null}
+                            onChange={(id, code) => {
+                              form.setValue('setup_type_id', id);
+                              field.onChange(code);
+                            }}
+                          />
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-
-                    {(!COMMON_SETUP_TYPES.includes(watchedValues.setup_type) || watchedValues.setup_type === 'Custom') && (
-                      <FormItem>
-                        <FormLabel>Custom Setup</FormLabel>
-                        <Input 
-                          placeholder="e.g. IFVG" 
-                          value={customSetupType || watchedValues.setup_type}
-                          onChange={(e) => {
-                            setCustomSetupType(e.target.value);
-                            form.setValue('setup_type', e.target.value || 'Custom');
-                          }}
-                          className="uppercase"
-                        />
-                      </FormItem>
-                    )}
 
                     <FormField
                       control={form.control}

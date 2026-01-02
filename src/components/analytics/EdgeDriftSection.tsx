@@ -12,15 +12,7 @@ import {
   YAxis,
   ResponsiveContainer,
 } from 'recharts';
-import { SETUP_TYPES } from '@/types/eliteTrade';
-
-type EliteTrade = {
-  id: string;
-  setup_type: string;
-  trade_date: string;
-  result?: 'Win' | 'Loss' | 'BE' | null;
-  r_multiple?: number | null;
-};
+import { EliteTrade } from '@/types/eliteTrade';
 
 interface EdgeDriftSectionProps {
   trades: EliteTrade[];
@@ -65,15 +57,13 @@ export function EdgeDriftSection({ trades, dateRange, activeSetup }: EdgeDriftSe
 
     const metrics: SetupMetrics[] = [];
 
-    SETUP_TYPES.forEach(setup => {
+    // Dynamically derive unique setup types from filtered trades
+    const uniqueSetups = [...new Set(filteredTrades.map(t => t.setup_type))];
+
+    uniqueSetups.forEach(setup => {
       const setupTrades = filteredTrades.filter(t => t.setup_type === setup);
       
       if (setupTrades.length === 0) {
-        metrics.push({
-          setup,
-          dataPoints: [],
-          hasEdgeDecay: false,
-        });
         return;
       }
 

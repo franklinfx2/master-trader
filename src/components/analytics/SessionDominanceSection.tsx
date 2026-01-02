@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { SETUP_TYPES, EliteTrade } from '@/types/eliteTrade';
+import { EliteTrade } from '@/types/eliteTrade';
 
 interface SessionDominanceSectionProps {
   trades: EliteTrade[];
@@ -39,8 +39,11 @@ export function SessionDominanceSection({
       return daysAgo <= parseInt(dateRange);
     });
 
-    // Calculate metrics per setup
-    const setupsToShow = selectedSetups.length > 0 ? selectedSetups : SETUP_TYPES;
+    // Dynamically derive unique setup types from trades
+    const uniqueSetups = [...new Set(filteredTrades.map(t => t.setup_type))];
+    const setupsToShow = selectedSetups.length > 0 
+      ? selectedSetups 
+      : uniqueSetups;
     
     return setupsToShow.map(setup => {
       const setupTrades = filteredTrades.filter(t => t.setup_type === setup);

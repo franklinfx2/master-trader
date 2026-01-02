@@ -15,8 +15,8 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { SETUP_TYPES } from '@/types/eliteTrade';
 import { useEliteTrades } from '@/hooks/useEliteTrades';
+import { useSetupTypes } from '@/hooks/useSetupTypes';
 import StrategyValidationSection from '@/components/analytics/StrategyValidationSection';
 import { SetupEdgeScoreSection } from '@/components/analytics/SetupEdgeScoreSection';
 import { SessionDominanceSection } from '@/components/analytics/SessionDominanceSection';
@@ -33,6 +33,7 @@ type SessionFilter = 'LN' | 'NY' | 'all';
 export default function EliteAnalytics() {
   const navigate = useNavigate();
   const { trades, loading } = useEliteTrades();
+  const { activeSetupTypes } = useSetupTypes();
   const [dateRange, setDateRange] = useState<DateRange>('30');
   const [selectedSetups, setSelectedSetups] = useState<string[]>([]);
   const [sessionFilter, setSessionFilter] = useState<SessionFilter>('all');
@@ -98,13 +99,13 @@ export default function EliteAnalytics() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-40">
-                  {SETUP_TYPES.map((setup) => (
+                  {activeSetupTypes.map((setup) => (
                     <DropdownMenuCheckboxItem
-                      key={setup}
-                      checked={selectedSetups.includes(setup)}
-                      onCheckedChange={() => toggleSetup(setup)}
+                      key={setup.id}
+                      checked={selectedSetups.includes(setup.code)}
+                      onCheckedChange={() => toggleSetup(setup.code)}
                     >
-                      {setup}
+                      {setup.code}
                     </DropdownMenuCheckboxItem>
                   ))}
                 </DropdownMenuContent>

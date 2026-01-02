@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { EliteTrade, SETUP_TYPES } from '@/types/eliteTrade';
+import { EliteTrade } from '@/types/eliteTrade';
 import { cn } from '@/lib/utils';
 
 interface TimeDominanceSectionProps {
@@ -72,8 +72,11 @@ export function TimeDominanceSection({ trades, dateRange, activeSetup }: TimeDom
       return daysAgo <= parseInt(dateRange);
     });
 
+    // Dynamically derive unique setup types from filtered trades
+    const uniqueSetups = [...new Set(filteredTrades.map(t => t.setup_type))];
+
     // Process each setup independently
-    return SETUP_TYPES.map(setupType => {
+    return uniqueSetups.map(setupType => {
       const setupTrades = filteredTrades.filter(t => t.setup_type === setupType);
       const buckets = generateTimeBuckets();
       
