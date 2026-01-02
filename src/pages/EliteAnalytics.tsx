@@ -34,7 +34,7 @@ export default function EliteAnalytics() {
   const navigate = useNavigate();
   const { trades, loading } = useEliteTrades();
   const { activeSetupTypes } = useSetupTypes();
-  const [dateRange, setDateRange] = useState<DateRange>('30');
+  const [dateRange, setDateRange] = useState<DateRange>('all');
   const [selectedSetups, setSelectedSetups] = useState<string[]>([]);
   const [sessionFilter, setSessionFilter] = useState<SessionFilter>('all');
   const [activeSetup, setActiveSetup] = useState<string | null>(null);
