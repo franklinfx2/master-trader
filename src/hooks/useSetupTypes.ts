@@ -82,8 +82,23 @@ export function useSetupTypes() {
 
       if (error) throw error;
 
+      // Auto-link legacy trades: update all trades where setup_type matches but setup_type_id is null
+      const { data: updatedTrades, error: updateError } = await supabase
+        .from('trades_v2_elite')
+        .update({ setup_type_id: newSetup.id })
+        .eq('setup_type', normalizedCode as any)
+        .is('setup_type_id', null)
+        .select('id');
+
+      if (updateError) {
+        console.error('Error linking legacy trades:', updateError);
+      } else if (updatedTrades && updatedTrades.length > 0) {
+        toast.success(`Setup type "${normalizedCode}" created and linked to ${updatedTrades.length} existing trade(s)`);
+      } else {
+        toast.success(`Setup type "${normalizedCode}" created`);
+      }
+
       setSetupTypes(prev => [...prev, newSetup].sort((a, b) => a.code.localeCompare(b.code)));
-      toast.success(`Setup type "${normalizedCode}" created`);
       return newSetup;
     } catch (error: any) {
       console.error('Error creating setup type:', error);
