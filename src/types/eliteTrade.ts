@@ -1,5 +1,6 @@
-// XAUUSD ELITE TRADING JOURNAL — TYPE DEFINITIONS
-// DO NOT MODIFY: Implements exact spec as provided
+// ELITE BACKTESTING ENGINE — TYPE DEFINITIONS
+// Universal backtesting for any instrument (Forex, Indices, Crypto, Metals)
+// Fast data capture, objective fields, no psychology
 
 // Yes/No enum
 export type YesNo = 'Yes' | 'No';
@@ -14,59 +15,43 @@ export type DayOfWeek = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Frida
 
 // HTF Context
 export type HTFBias = 'Bullish' | 'Bearish' | 'Range';
-export type HTFTimeframe = 'H4' | 'H1';
-export type MarketPhase = 'Expansion' | 'Retracement' | 'Consolidation';
-export type StructureState = 'HH-HL' | 'LH-LL' | 'CHoCH' | 'BOS';
+export type HTFTimeframe = 'H4' | 'H1' | 'D1' | 'W1';
+export type StructureState = 'Continuation' | 'Reversal' | 'Range' | 'HH-HL' | 'LH-LL' | 'CHoCH' | 'BOS';
 
-// Liquidity targets (multi-select)
+// Liquidity targets (generic, multi-select)
 export type LiquidityTarget = 
+  | 'Session High'
+  | 'Session Low'
+  | 'Previous Day High'
+  | 'Previous Day Low'
+  | 'Equal Highs'
+  | 'Equal Lows'
+  | 'Structural Liquidity'
+  | 'Imbalance'
+  // Legacy values for backwards compatibility
   | 'Asian High'
   | 'Asian Low'
   | 'Previous Day High (PDH)'
   | 'Previous Day Low (PDL)'
-  | 'Equal Highs'
-  | 'Equal Lows'
-  | 'Structural Liquidity'
   | 'Displacement';
 
-// Setup Classification
-export type SetupType = 'OBC' | 'OBR' | 'BB';
+// Setup Classification - Now supports user-defined values
+export type SetupType = string; // User-defined, normalized
 export type SetupGrade = 'A+' | 'A' | 'B' | 'Trash';
-export type ExecutionTF = 'M1' | 'M3' | 'M5';
+export type ExecutionTF = 'M1' | 'M3' | 'M5' | 'M15' | 'M30' | 'H1';
 
-// Entry Mechanics
+// Entry Model (generic)
 export type EntryModel = 
+  | 'Order Block'
+  | 'Breaker Block'
+  | 'Fair Value Gap'
+  | 'Liquidity Sweep'
+  | 'Break of Structure'
+  | 'Custom'
+  // Legacy values
   | 'OB retest'
   | 'Sweep → Displacement → OB'
   | 'BOS pullback';
-
-export type EntryCandle = 
-  | 'Engulfing'
-  | 'Displacement'
-  | 'Rejection'
-  | 'Break & Retest';
-
-// Execution Discipline
-export type EntryPrecision = 'Early' | 'Optimal' | 'Late';
-export type StopPlacementQuality = 'Clean' | 'Wide' | 'Tight';
-
-// Gold Behavior Tags (multi-select)
-export type GoldBehaviorTag = 
-  | 'Trap move before real move'
-  | 'Fake breakout'
-  | 'News exaggeration'
-  | 'Range expansion NY'
-  | 'London manipulation'
-  | 'Clean continuation'
-  | 'Violent rejection';
-
-// News Classification
-export type NewsImpact = 'LOW' | 'MEDIUM' | 'HIGH';
-export type NewsTiming = 'PRE_NEWS' | 'AT_RELEASE' | 'POST_NEWS';
-export type NewsType = 'INFLATION' | 'RATES' | 'EMPLOYMENT' | 'RISK_SENTIMENT' | 'NONE';
-
-// Psychology
-export type PreTradeState = 'Calm' | 'FOMO' | 'Hesitant' | 'Overconfident';
 
 // Trade Result (auto-calculated)
 export type TradeResult = 'Win' | 'Loss' | 'BE';
@@ -82,14 +67,32 @@ export type TradeStatus = 'Executed' | 'Missed';
 export type MissedReason = 'Hesitation' | 'Away' | 'Technical' | 'Fear' | 'Other';
 export type HypotheticalResult = 'Win' | 'Loss' | 'BE' | 'Unknown';
 
+// ===== DEPRECATED TYPES (kept for backwards compatibility) =====
+export type MarketPhase = 'Expansion' | 'Retracement' | 'Consolidation';
+export type EntryCandle = 'Engulfing' | 'Displacement' | 'Rejection' | 'Break & Retest';
+export type EntryPrecision = 'Early' | 'Optimal' | 'Late';
+export type StopPlacementQuality = 'Clean' | 'Wide' | 'Tight';
+export type GoldBehaviorTag = 
+  | 'Trap move before real move'
+  | 'Fake breakout'
+  | 'News exaggeration'
+  | 'Range expansion NY'
+  | 'London manipulation'
+  | 'Clean continuation'
+  | 'Violent rejection';
+export type NewsImpact = 'LOW' | 'MEDIUM' | 'HIGH';
+export type NewsTiming = 'PRE_NEWS' | 'AT_RELEASE' | 'POST_NEWS';
+export type NewsType = 'INFLATION' | 'RATES' | 'EMPLOYMENT' | 'RISK_SENTIMENT' | 'NONE';
+export type PreTradeState = 'Calm' | 'FOMO' | 'Hesitant' | 'Overconfident';
+
 // Main Elite Trade interface
 export interface EliteTrade {
   // Trade Identity
   id: string;
   user_id: string;
   trade_date: string;
-  trade_time?: string; // HH:MM format
-  instrument: string; // Fixed: XAUUSD
+  trade_time?: string;
+  instrument: string; // Flexible: any symbol
   account_type: AccountType;
   
   // Trade Status (Executed vs Missed)
@@ -99,92 +102,81 @@ export interface EliteTrade {
   
   // Session & Time
   session: Session;
-  killzone: Killzone;
+  killzone?: Killzone;
   day_of_week: DayOfWeek;
   news_day: YesNo;
-  news_impact?: NewsImpact;
-  news_timing?: NewsTiming;
-  news_type?: NewsType;
   
-  // Higher-Timeframe Context
+  // Higher-Timeframe Context (Objective)
   htf_bias: HTFBias;
   htf_timeframe: HTFTimeframe;
-  market_phase: MarketPhase;
   structure_state: StructureState;
   
-  // Liquidity (multi-select)
+  // Liquidity (Generic)
   liquidity_targeted: LiquidityTarget[];
   liquidity_taken_before_entry: YesNo;
-  liquidity_taken_against_bias: YesNo;
   
-  // Setup Classification
+  // Setup Definition (User-defined setup type)
   setup_type: SetupType;
   setup_grade: SetupGrade;
   execution_tf: ExecutionTF;
-  
-  // Entry Mechanics
   entry_model: EntryModel;
-  entry_candle: EntryCandle;
   confirmation_present: YesNo;
   
-  // Price Levels
+  // Price Levels & Risk
   entry_price: number;
   stop_loss: number;
   take_profit: number;
   exit_price?: number;
-  
-  // Risk & Execution
   risk_per_trade_pct: number;
   rr_planned: number;
   rr_realized?: number;
-  
-  // Execution Discipline
-  entry_precision: EntryPrecision;
-  stop_placement_quality: StopPlacementQuality;
-  partial_taken: YesNo;
-  rules_followed: YesNo;
   
   // Performance Metrics (AUTO-CALCULATED)
   result?: TradeResult;
   r_multiple?: number;
   mae?: number;
   mfe?: number;
-  drawdown_during_trade_pct?: number;
   
-  // Gold Behavior Tags (multi-select)
-  gold_behavior_tags: GoldBehaviorTag[];
+  // Rules Integrity
+  rules_followed: YesNo;
   
-  // Sequence Logic
-  first_move_was_fake: YesNo;
-  real_move_after_liquidity: YesNo;
-  trade_aligned_with_real_move: YesNo;
-  
-  // Psychology
-  pre_trade_state: PreTradeState;
-  confidence_level: number; // 1-5
-  revenge_trade: YesNo;
-  fatigue_present: YesNo;
-  
-  // Visual Evidence
+  // Visual Evidence (Optional, non-blocking)
   htf_screenshot?: string;
   ltf_entry_screenshot?: string;
+  ltf_trade_screenshot?: string;
   post_trade_screenshot?: string;
-  annotations_present?: YesNo;
   screenshots_valid: boolean;
   
   // Classification Status
   classification_status: ClassificationStatus;
   legacy_trade_id?: string;
   
-  // Final Intelligence Field
-  would_i_take_this_trade_again?: YesNo;
-  
-  // Notes
-  notes?: string;
-  
   // Timestamps
   created_at: string;
   updated_at: string;
+  
+  // ===== DEPRECATED FIELDS (kept for backwards compatibility, hidden in UI) =====
+  market_phase?: MarketPhase;
+  liquidity_taken_against_bias?: YesNo;
+  entry_candle?: EntryCandle;
+  entry_precision?: EntryPrecision;
+  stop_placement_quality?: StopPlacementQuality;
+  partial_taken?: YesNo;
+  drawdown_during_trade_pct?: number;
+  gold_behavior_tags?: GoldBehaviorTag[];
+  first_move_was_fake?: YesNo;
+  real_move_after_liquidity?: YesNo;
+  trade_aligned_with_real_move?: YesNo;
+  pre_trade_state?: PreTradeState;
+  confidence_level?: number;
+  revenge_trade?: YesNo;
+  fatigue_present?: YesNo;
+  annotations_present?: YesNo;
+  would_i_take_this_trade_again?: YesNo;
+  notes?: string;
+  news_impact?: NewsImpact;
+  news_timing?: NewsTiming;
+  news_type?: NewsType;
 }
 
 // Elite Trade Stats interface
@@ -203,7 +195,7 @@ export interface EliteTradeStats {
   london_win_rate: number;
   ny_win_rate: number;
   
-  // Setup breakdown
+  // Setup breakdown (kept for analytics)
   obc_win_rate: number;
   obr_win_rate: number;
   bb_win_rate: number;
@@ -221,86 +213,139 @@ export interface EliteTradeStats {
   no_liquidity_win_rate: number;
 }
 
-// Form data for creating/updating elite trades
+// Form data for creating/updating elite trades (Backtesting Engine)
 export interface EliteTradeFormData {
+  // Core Trade Context
   trade_date: string;
   trade_time?: string;
+  instrument: string;
   account_type: AccountType;
   trade_status?: TradeStatus;
   missed_reason?: MissedReason;
   hypothetical_result?: HypotheticalResult;
+  
+  // Session & Time
   session: Session;
-  killzone: Killzone;
+  killzone?: Killzone;
   day_of_week: DayOfWeek;
   news_day: YesNo;
-  news_impact?: NewsImpact;
-  news_timing?: NewsTiming;
-  news_type?: NewsType;
+  
+  // HTF Context (Objective)
   htf_bias: HTFBias;
   htf_timeframe: HTFTimeframe;
-  market_phase: MarketPhase;
   structure_state: StructureState;
+  
+  // Liquidity (Generic)
   liquidity_targeted: LiquidityTarget[];
   liquidity_taken_before_entry: YesNo;
-  liquidity_taken_against_bias: YesNo;
-  setup_type: SetupType;
+  
+  // Setup Definition
+  setup_type: string; // User-defined
   setup_grade: SetupGrade;
   execution_tf: ExecutionTF;
   entry_model: EntryModel;
-  entry_candle: EntryCandle;
   confirmation_present: YesNo;
+  
+  // Price Levels & Risk
   entry_price: string;
   stop_loss: string;
   take_profit: string;
-  exit_price: string;
+  exit_price?: string;
   risk_per_trade_pct: string;
   rr_planned: string;
-  entry_precision: EntryPrecision;
-  stop_placement_quality: StopPlacementQuality;
-  partial_taken: YesNo;
+  
+  // Metrics
+  mae?: string;
+  mfe?: string;
+  
+  // Rules Integrity
   rules_followed: YesNo;
-  gold_behavior_tags: GoldBehaviorTag[];
-  first_move_was_fake: YesNo;
-  real_move_after_liquidity: YesNo;
-  trade_aligned_with_real_move: YesNo;
-  pre_trade_state: PreTradeState;
-  confidence_level: number;
-  revenge_trade: YesNo;
-  fatigue_present: YesNo;
-  htf_screenshot: string;
-  ltf_entry_screenshot: string;
+  
+  // Visual Evidence (All optional, non-blocking)
+  htf_screenshot?: string;
+  ltf_entry_screenshot?: string;
   ltf_trade_screenshot?: string;
-  post_trade_screenshot: string;
-  annotations_present: YesNo;
+  post_trade_screenshot?: string;
+  
+  // ===== DEPRECATED FIELDS (optional, for backwards compatibility) =====
+  market_phase?: MarketPhase;
+  liquidity_taken_against_bias?: YesNo;
+  entry_candle?: EntryCandle;
+  entry_precision?: EntryPrecision;
+  stop_placement_quality?: StopPlacementQuality;
+  partial_taken?: YesNo;
+  gold_behavior_tags?: GoldBehaviorTag[];
+  first_move_was_fake?: YesNo;
+  real_move_after_liquidity?: YesNo;
+  trade_aligned_with_real_move?: YesNo;
+  pre_trade_state?: PreTradeState;
+  confidence_level?: number;
+  revenge_trade?: YesNo;
+  fatigue_present?: YesNo;
+  annotations_present?: YesNo;
   would_i_take_this_trade_again?: YesNo;
-  mae: string;
-  mfe: string;
-  notes: string;
+  notes?: string;
+  news_impact?: NewsImpact;
+  news_timing?: NewsTiming;
+  news_type?: NewsType;
 }
 
-// Options for dropdowns
+// ===== OPTIONS FOR DROPDOWNS =====
+
 export const ACCOUNT_TYPES: AccountType[] = ['Demo', 'Live', 'Funded'];
 export const SESSIONS: Session[] = ['Asia', 'London', 'NY'];
 export const KILLZONES: Killzone[] = ['LO', 'NYO', 'NYPM', 'None'];
 export const DAYS_OF_WEEK: DayOfWeek[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 export const HTF_BIASES: HTFBias[] = ['Bullish', 'Bearish', 'Range'];
-export const HTF_TIMEFRAMES: HTFTimeframe[] = ['H4', 'H1'];
-export const MARKET_PHASES: MarketPhase[] = ['Expansion', 'Retracement', 'Consolidation'];
-export const STRUCTURE_STATES: StructureState[] = ['HH-HL', 'LH-LL', 'CHoCH', 'BOS'];
+export const HTF_TIMEFRAMES: HTFTimeframe[] = ['H4', 'H1', 'D1', 'W1'];
+export const STRUCTURE_STATES: StructureState[] = ['Continuation', 'Reversal', 'Range', 'HH-HL', 'LH-LL', 'CHoCH', 'BOS'];
+
+// Generic liquidity targets (instrument-neutral)
 export const LIQUIDITY_TARGETS: LiquidityTarget[] = [
-  'Asian High',
-  'Asian Low',
-  'Previous Day High (PDH)',
-  'Previous Day Low (PDL)',
+  'Session High',
+  'Session Low',
+  'Previous Day High',
+  'Previous Day Low',
   'Equal Highs',
   'Equal Lows',
   'Structural Liquidity',
-  'Displacement'
+  'Imbalance'
 ];
-export const SETUP_TYPES: SetupType[] = ['OBC', 'OBR', 'BB'];
+
+// Common setup types (user can add custom)
+export const COMMON_SETUP_TYPES: string[] = [
+  'OB', // Order Block
+  'BB', // Breaker Block
+  'FVG', // Fair Value Gap
+  'BOS', // Break of Structure
+  'CHoCH', // Change of Character
+  'Sweep',
+  'Custom'
+];
+
 export const SETUP_GRADES: SetupGrade[] = ['A+', 'A', 'B', 'Trash'];
-export const EXECUTION_TFS: ExecutionTF[] = ['M1', 'M3', 'M5'];
-export const ENTRY_MODELS: EntryModel[] = ['OB retest', 'Sweep → Displacement → OB', 'BOS pullback'];
+export const EXECUTION_TFS: ExecutionTF[] = ['M1', 'M3', 'M5', 'M15', 'M30', 'H1'];
+
+// Generic entry models
+export const ENTRY_MODELS: EntryModel[] = [
+  'Order Block',
+  'Breaker Block',
+  'Fair Value Gap',
+  'Liquidity Sweep',
+  'Break of Structure',
+  'Custom'
+];
+
+export const YES_NO: YesNo[] = ['Yes', 'No'];
+
+// Trade Status Options
+export const TRADE_STATUSES: TradeStatus[] = ['Executed', 'Missed'];
+export const MISSED_REASONS: MissedReason[] = ['Hesitation', 'Away', 'Technical', 'Fear', 'Other'];
+export const HYPOTHETICAL_RESULTS: HypotheticalResult[] = ['Win', 'Loss', 'BE', 'Unknown'];
+
+// ===== DEPRECATED OPTIONS (kept for backwards compatibility) =====
+export const SETUP_TYPES: string[] = ['OBC', 'OBR', 'BB']; // Legacy
+export const MARKET_PHASES: MarketPhase[] = ['Expansion', 'Retracement', 'Consolidation'];
 export const ENTRY_CANDLES: EntryCandle[] = ['Engulfing', 'Displacement', 'Rejection', 'Break & Retest'];
 export const ENTRY_PRECISIONS: EntryPrecision[] = ['Early', 'Optimal', 'Late'];
 export const STOP_PLACEMENT_QUALITIES: StopPlacementQuality[] = ['Clean', 'Wide', 'Tight'];
@@ -314,14 +359,6 @@ export const GOLD_BEHAVIOR_TAGS: GoldBehaviorTag[] = [
   'Violent rejection'
 ];
 export const PRE_TRADE_STATES: PreTradeState[] = ['Calm', 'FOMO', 'Hesitant', 'Overconfident'];
-export const YES_NO: YesNo[] = ['Yes', 'No'];
-
-// News Classification Options
 export const NEWS_IMPACTS: NewsImpact[] = ['LOW', 'MEDIUM', 'HIGH'];
 export const NEWS_TIMINGS: NewsTiming[] = ['PRE_NEWS', 'AT_RELEASE', 'POST_NEWS'];
 export const NEWS_TYPES: NewsType[] = ['INFLATION', 'RATES', 'EMPLOYMENT', 'RISK_SENTIMENT', 'NONE'];
-
-// Trade Status Options
-export const TRADE_STATUSES: TradeStatus[] = ['Executed', 'Missed'];
-export const MISSED_REASONS: MissedReason[] = ['Hesitation', 'Away', 'Technical', 'Fear', 'Other'];
-export const HYPOTHETICAL_RESULTS: HypotheticalResult[] = ['Win', 'Loss', 'BE', 'Unknown'];
