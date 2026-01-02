@@ -1,4 +1,4 @@
-// XAUUSD ELITE TRADING JOURNAL — Hook for elite trades
+// ELITE BACKTESTING ENGINE — Hook for elite trades
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -22,6 +22,7 @@ export interface EliteTradeFilters {
   liquidity_taken?: string;
   result?: string;
   trade_status?: string;
+  instrument?: string;
 }
 
 export const useEliteTrades = () => {
@@ -41,7 +42,7 @@ export const useEliteTrades = () => {
       .eq('user_id', user.id)
       .order('trade_date', { ascending: false });
 
-    // Apply filters (cast to any to avoid strict enum type issues with Supabase)
+    // Apply filters
     if (filters.session) {
       query = query.eq('session', filters.session as any);
     }
@@ -77,6 +78,9 @@ export const useEliteTrades = () => {
     }
     if (filters.trade_status) {
       query = query.eq('trade_status', filters.trade_status as any);
+    }
+    if (filters.instrument) {
+      query = query.eq('instrument', filters.instrument);
     }
 
     const { data, error } = await query;
@@ -119,34 +123,29 @@ export const useEliteTrades = () => {
   const addTrade = async (formData: EliteTradeFormData) => {
     if (!user) return { error: 'Not authenticated' };
 
-    const tradeData = {
+    // Build trade data with defaults for deprecated fields
+    const tradeData: any = {
       user_id: user.id,
       trade_date: formData.trade_date,
       trade_time: formData.trade_time || null,
-      instrument: 'XAUUSD',
+      instrument: formData.instrument || 'XAUUSD',
       account_type: formData.account_type,
       trade_status: formData.trade_status || 'Executed',
       missed_reason: formData.missed_reason || null,
       hypothetical_result: formData.hypothetical_result || null,
       session: formData.session,
-      killzone: formData.killzone,
+      killzone: formData.killzone || 'None',
       day_of_week: formData.day_of_week,
       news_day: formData.news_day,
-      news_impact: formData.news_impact || null,
-      news_timing: formData.news_timing || null,
-      news_type: formData.news_type || null,
       htf_bias: formData.htf_bias,
       htf_timeframe: formData.htf_timeframe,
-      market_phase: formData.market_phase,
       structure_state: formData.structure_state,
       liquidity_targeted: formData.liquidity_targeted,
       liquidity_taken_before_entry: formData.liquidity_taken_before_entry,
-      liquidity_taken_against_bias: formData.liquidity_taken_against_bias,
       setup_type: formData.setup_type,
       setup_grade: formData.setup_grade,
       execution_tf: formData.execution_tf,
       entry_model: formData.entry_model,
-      entry_candle: formData.entry_candle,
       confirmation_present: formData.confirmation_present,
       entry_price: parseFloat(formData.entry_price),
       stop_loss: parseFloat(formData.stop_loss),
@@ -154,27 +153,34 @@ export const useEliteTrades = () => {
       exit_price: formData.exit_price ? parseFloat(formData.exit_price) : null,
       risk_per_trade_pct: parseFloat(formData.risk_per_trade_pct),
       rr_planned: parseFloat(formData.rr_planned),
-      entry_precision: formData.entry_precision,
-      stop_placement_quality: formData.stop_placement_quality,
-      partial_taken: formData.partial_taken,
       rules_followed: formData.rules_followed,
-      gold_behavior_tags: formData.gold_behavior_tags,
-      first_move_was_fake: formData.first_move_was_fake,
-      real_move_after_liquidity: formData.real_move_after_liquidity,
-      trade_aligned_with_real_move: formData.trade_aligned_with_real_move,
-      pre_trade_state: formData.pre_trade_state,
-      confidence_level: formData.confidence_level,
-      revenge_trade: formData.revenge_trade,
-      fatigue_present: formData.fatigue_present,
       htf_screenshot: formData.htf_screenshot || null,
       ltf_entry_screenshot: formData.ltf_entry_screenshot || null,
       ltf_trade_screenshot: formData.ltf_trade_screenshot || null,
       post_trade_screenshot: formData.post_trade_screenshot || null,
-      annotations_present: formData.annotations_present,
       mae: formData.mae ? parseFloat(formData.mae) : null,
       mfe: formData.mfe ? parseFloat(formData.mfe) : null,
+      // Defaults for deprecated fields (DB requires them)
+      market_phase: formData.market_phase || 'Consolidation',
+      liquidity_taken_against_bias: formData.liquidity_taken_against_bias || 'No',
+      entry_candle: formData.entry_candle || 'Engulfing',
+      entry_precision: formData.entry_precision || 'Optimal',
+      stop_placement_quality: formData.stop_placement_quality || 'Clean',
+      partial_taken: formData.partial_taken || 'No',
+      gold_behavior_tags: formData.gold_behavior_tags || [],
+      first_move_was_fake: formData.first_move_was_fake || 'No',
+      real_move_after_liquidity: formData.real_move_after_liquidity || 'No',
+      trade_aligned_with_real_move: formData.trade_aligned_with_real_move || 'No',
+      pre_trade_state: formData.pre_trade_state || 'Calm',
+      confidence_level: formData.confidence_level || 3,
+      revenge_trade: formData.revenge_trade || 'No',
+      fatigue_present: formData.fatigue_present || 'No',
+      annotations_present: formData.annotations_present || 'No',
       would_i_take_this_trade_again: formData.would_i_take_this_trade_again || null,
       notes: formData.notes || null,
+      news_impact: formData.news_impact || null,
+      news_timing: formData.news_timing || null,
+      news_type: formData.news_type || null,
     };
 
     const { error } = await supabase
@@ -205,13 +211,11 @@ export const useEliteTrades = () => {
         if (value !== null && value !== '') {
           updates[key] = parseFloat(String(value));
         } else if (key === 'exit_price' || key === 'mae' || key === 'mfe') {
-          // These can be null
           updates[key] = null;
         }
       } else if (value !== '') {
         updates[key] = value;
-      } else if (['notes', 'trade_time', 'htf_screenshot', 'ltf_entry_screenshot', 'ltf_trade_screenshot', 'post_trade_screenshot'].includes(key)) {
-        // These string fields can be null
+      } else if (['notes', 'trade_time', 'htf_screenshot', 'ltf_entry_screenshot', 'ltf_trade_screenshot', 'post_trade_screenshot', 'instrument'].includes(key)) {
         updates[key] = null;
       }
     });
@@ -276,7 +280,6 @@ export const useEliteTrades = () => {
   };
 
   const getTradesForReview = async () => {
-    // Get all trades where would_i_take_this_trade_again = 'No'
     if (!user) return [];
 
     const { data, error } = await supabase
@@ -296,7 +299,6 @@ export const useEliteTrades = () => {
   };
 
   const getLegacyTrades = async () => {
-    // Get all trades with legacy_unclassified status
     if (!user) return [];
 
     const { data, error } = await supabase
@@ -314,6 +316,28 @@ export const useEliteTrades = () => {
     return data as unknown as EliteTrade[];
   };
 
+  // Get unique setup types from existing trades (for analytics)
+  const getUniqueSetupTypes = useCallback(() => {
+    const setupTypes = new Set<string>();
+    trades.forEach(trade => {
+      if (trade.setup_type) {
+        setupTypes.add(trade.setup_type);
+      }
+    });
+    return Array.from(setupTypes).sort();
+  }, [trades]);
+
+  // Get unique instruments from existing trades
+  const getUniqueInstruments = useCallback(() => {
+    const instruments = new Set<string>();
+    trades.forEach(trade => {
+      if (trade.instrument) {
+        instruments.add(trade.instrument);
+      }
+    });
+    return Array.from(instruments).sort();
+  }, [trades]);
+
   return {
     trades,
     stats,
@@ -326,5 +350,7 @@ export const useEliteTrades = () => {
     deleteTrade,
     getTradesForReview,
     getLegacyTrades,
+    getUniqueSetupTypes,
+    getUniqueInstruments,
   };
 };
