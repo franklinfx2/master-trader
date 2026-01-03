@@ -1,7 +1,8 @@
 // XAUUSD ELITE TRADING JOURNAL — Elite Trades Page
 // Shows your elite trades (you can filter by classification status if desired)
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Filter, RefreshCw, BarChart2 } from 'lucide-react';
+import { Plus, Filter, RefreshCw, BarChart2, AlertTriangle } from 'lucide-react';
 
 import { ResponsiveLayout } from '@/components/ResponsiveLayout';
 import { Button } from '@/components/ui/button';
@@ -9,15 +10,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import { EliteTradeCard } from '@/components/elite-journal/EliteTradeCard';
+import { MissedOpportunitiesSection } from '@/components/elite-journal/MissedOpportunitiesSection';
 import { useEliteTrades, EliteTradeFilters } from '@/hooks/useEliteTrades';
-import { SESSIONS, SETUP_GRADES, YES_NO } from '@/types/eliteTrade';
+import { SESSIONS, SETUP_GRADES, YES_NO, TRADE_STATUSES } from '@/types/eliteTrade';
 import { useSetupTypes } from '@/hooks/useSetupTypes';
 
 const EliteTrades = () => {
   const { trades, stats, loading, filters, setFilters, fetchTrades } = useEliteTrades();
   const { activeSetupTypes } = useSetupTypes();
+  const [activeTab, setActiveTab] = useState('all');
 
   const handleFilterChange = (key: keyof EliteTradeFilters, value: string | undefined) => {
     setFilters({ ...filters, [key]: value === 'all' ? undefined : value });
@@ -30,6 +34,10 @@ const EliteTrades = () => {
   const activeFilterCount = Object.entries(filters).filter(
     ([key, value]) => value && key !== 'classification_status'
   ).length;
+
+  // Count missed trades for badge
+  const missedCount = trades.filter(t => t.trade_status === 'Missed').length;
+  const executedTrades = trades.filter(t => t.trade_status !== 'Missed');
 
   return (
     <ResponsiveLayout>
@@ -78,114 +86,154 @@ const EliteTrades = () => {
           </div>
         )}
 
-        {/* Filters */}
-        <Card className="mb-6">
-          <CardHeader className="py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4 text-muted-foreground" />
-                <CardTitle className="text-base">Filters</CardTitle>
-                {activeFilterCount > 0 && (
-                  <Badge variant="secondary">{activeFilterCount} active</Badge>
-                )}
-              </div>
-              {activeFilterCount > 0 && (
-                <Button variant="ghost" size="sm" onClick={clearFilters}>
-                  Clear filters
-                </Button>
+        {/* Tabs for All Trades vs Missed Opportunities */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid w-full max-w-md grid-cols-2">
+            <TabsTrigger value="all" className="gap-2">
+              All Trades
+              <Badge variant="secondary" className="ml-1">{executedTrades.length}</Badge>
+            </TabsTrigger>
+            <TabsTrigger value="missed" className="gap-2">
+              <AlertTriangle className="w-4 h-4" />
+              Missed Opportunities
+              {missedCount > 0 && (
+                <Badge variant="outline" className="ml-1 bg-amber-500/10 text-amber-500 border-amber-500/30">
+                  {missedCount}
+                </Badge>
               )}
-            </div>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-              <FilterSelect
-                label="Session"
-                value={filters.session || 'all'}
-                options={['all', ...SESSIONS]}
-                onChange={(v) => handleFilterChange('session', v)}
-              />
-              <FilterSelect
-                label="Setup Type"
-                value={filters.setup_type || 'all'}
-                options={['all', ...activeSetupTypes.map(s => s.code)]}
-                onChange={(v) => handleFilterChange('setup_type', v)}
-              />
-              <FilterSelect
-                label="Setup Grade"
-                value={filters.setup_grade || 'all'}
-                options={['all', ...SETUP_GRADES]}
-                onChange={(v) => handleFilterChange('setup_grade', v)}
-              />
-              <FilterSelect
-                label="News Day"
-                value={filters.news_day || 'all'}
-                options={['all', ...YES_NO]}
-                onChange={(v) => handleFilterChange('news_day', v)}
-              />
-              <FilterSelect
-                label="Rules Followed"
-                value={filters.rules_followed || 'all'}
-                options={['all', ...YES_NO]}
-                onChange={(v) => handleFilterChange('rules_followed', v)}
-              />
-              <FilterSelect
-                label="Result"
-                value={filters.result || 'all'}
-                options={['all', 'Win', 'Loss', 'BE']}
-                onChange={(v) => handleFilterChange('result', v)}
-              />
-              <FilterSelect
-                label="Would Take Again"
-                value={filters.would_take_again || 'all'}
-                options={['all', ...YES_NO]}
-                onChange={(v) => handleFilterChange('would_take_again', v)}
-              />
-              <FilterSelect
-                label="Liquidity Taken"
-                value={filters.liquidity_taken || 'all'}
-                options={['all', ...YES_NO]}
-                onChange={(v) => handleFilterChange('liquidity_taken', v)}
-              />
-            </div>
-          </CardContent>
-        </Card>
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Trade List */}
-        <div className="space-y-4">
-          {loading ? (
-            <>
-              <Skeleton className="h-24 w-full rounded-lg" />
-              <Skeleton className="h-24 w-full rounded-lg" />
-              <Skeleton className="h-24 w-full rounded-lg" />
-            </>
-          ) : trades.length === 0 ? (
-            <Card className="py-12">
-              <CardContent className="text-center">
-                <BarChart2 className="w-12 h-12 mx-auto text-muted-foreground/50 mb-4" />
-                <h3 className="text-lg font-medium mb-2">No trades found</h3>
-                <p className="text-muted-foreground mb-4">
-                  {activeFilterCount > 0 
-                    ? "Try adjusting your filters to see more trades." 
-                    : "Start logging your elite trades to build your edge database."}
-                </p>
-                <Link to="/elite-trade-entry">
-                  <Button>
-                    <Plus className="w-4 h-4 mr-1" /> Log Your First Trade
-                  </Button>
-                </Link>
+          {/* All Trades Tab */}
+          <TabsContent value="all" className="space-y-6">
+            {/* Filters */}
+            <Card>
+              <CardHeader className="py-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Filter className="w-4 h-4 text-muted-foreground" />
+                    <CardTitle className="text-base">Filters</CardTitle>
+                    {activeFilterCount > 0 && (
+                      <Badge variant="secondary">{activeFilterCount} active</Badge>
+                    )}
+                  </div>
+                  {activeFilterCount > 0 && (
+                    <Button variant="ghost" size="sm" onClick={clearFilters}>
+                      Clear filters
+                    </Button>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                  <FilterSelect
+                    label="Trade Status"
+                    value={filters.trade_status || 'all'}
+                    options={['all', ...TRADE_STATUSES]}
+                    onChange={(v) => handleFilterChange('trade_status', v)}
+                  />
+                  <FilterSelect
+                    label="Session"
+                    value={filters.session || 'all'}
+                    options={['all', ...SESSIONS]}
+                    onChange={(v) => handleFilterChange('session', v)}
+                  />
+                  <FilterSelect
+                    label="Setup Type"
+                    value={filters.setup_type || 'all'}
+                    options={['all', ...activeSetupTypes.map(s => s.code)]}
+                    onChange={(v) => handleFilterChange('setup_type', v)}
+                  />
+                  <FilterSelect
+                    label="Setup Grade"
+                    value={filters.setup_grade || 'all'}
+                    options={['all', ...SETUP_GRADES]}
+                    onChange={(v) => handleFilterChange('setup_grade', v)}
+                  />
+                  <FilterSelect
+                    label="News Day"
+                    value={filters.news_day || 'all'}
+                    options={['all', ...YES_NO]}
+                    onChange={(v) => handleFilterChange('news_day', v)}
+                  />
+                  <FilterSelect
+                    label="Rules Followed"
+                    value={filters.rules_followed || 'all'}
+                    options={['all', ...YES_NO]}
+                    onChange={(v) => handleFilterChange('rules_followed', v)}
+                  />
+                  <FilterSelect
+                    label="Result"
+                    value={filters.result || 'all'}
+                    options={['all', 'Win', 'Loss', 'BE']}
+                    onChange={(v) => handleFilterChange('result', v)}
+                  />
+                  <FilterSelect
+                    label="Would Take Again"
+                    value={filters.would_take_again || 'all'}
+                    options={['all', ...YES_NO]}
+                    onChange={(v) => handleFilterChange('would_take_again', v)}
+                  />
+                  <FilterSelect
+                    label="Liquidity Taken"
+                    value={filters.liquidity_taken || 'all'}
+                    options={['all', ...YES_NO]}
+                    onChange={(v) => handleFilterChange('liquidity_taken', v)}
+                  />
+                </div>
               </CardContent>
             </Card>
-          ) : (
-            <>
-              <div className="text-sm text-muted-foreground mb-2">
-                Showing {trades.length} trade{trades.length !== 1 ? 's' : ''}
-              </div>
-              {trades.map((trade) => (
-                <EliteTradeCard key={trade.id} trade={trade} onUpdate={fetchTrades} />
-              ))}
-            </>
-          )}
-        </div>
+
+            {/* Trade List */}
+            <div className="space-y-4">
+              {loading ? (
+                <>
+                  <Skeleton className="h-24 w-full rounded-lg" />
+                  <Skeleton className="h-24 w-full rounded-lg" />
+                  <Skeleton className="h-24 w-full rounded-lg" />
+                </>
+              ) : trades.length === 0 ? (
+                <Card className="py-12">
+                  <CardContent className="text-center">
+                    <BarChart2 className="w-12 h-12 mx-auto text-muted-foreground/50 mb-4" />
+                    <h3 className="text-lg font-medium mb-2">No trades found</h3>
+                    <p className="text-muted-foreground mb-4">
+                      {activeFilterCount > 0 
+                        ? "Try adjusting your filters to see more trades." 
+                        : "Start logging your elite trades to build your edge database."}
+                    </p>
+                    <Link to="/elite-trade-entry">
+                      <Button>
+                        <Plus className="w-4 h-4 mr-1" /> Log Your First Trade
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              ) : (
+                <>
+                  <div className="text-sm text-muted-foreground mb-2">
+                    Showing {trades.length} trade{trades.length !== 1 ? 's' : ''}
+                  </div>
+                  {trades.map((trade) => (
+                    <EliteTradeCard key={trade.id} trade={trade} onUpdate={fetchTrades} />
+                  ))}
+                </>
+              )}
+            </div>
+          </TabsContent>
+
+          {/* Missed Opportunities Tab */}
+          <TabsContent value="missed">
+            {loading ? (
+              <>
+                <Skeleton className="h-24 w-full rounded-lg" />
+                <Skeleton className="h-24 w-full rounded-lg" />
+              </>
+            ) : (
+              <MissedOpportunitiesSection trades={trades} />
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     </ResponsiveLayout>
   );
