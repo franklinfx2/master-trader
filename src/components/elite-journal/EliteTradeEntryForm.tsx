@@ -94,6 +94,7 @@ const backtestSchema = z.object({
   
   // Rules Integrity
   rules_followed: z.enum(['Yes', 'No'], { required_error: 'Required' }),
+  would_i_take_this_trade_again: z.enum(['Yes', 'No']).optional(),
   
   // Visual Evidence (ALL OPTIONAL)
   htf_screenshot: z.string().optional(),
@@ -211,6 +212,7 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
       risk_per_trade_pct: data.risk_per_trade_pct,
       rr_planned: data.rr_planned,
       rules_followed: data.rules_followed,
+      would_i_take_this_trade_again: data.would_i_take_this_trade_again,
       htf_screenshot: data.htf_screenshot || '',
       ltf_entry_screenshot: data.ltf_entry_screenshot || '',
       ltf_trade_screenshot: data.ltf_trade_screenshot || '',
@@ -818,7 +820,7 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">Rules Integrity</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="rules_followed"
@@ -826,6 +828,24 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
                 <FormItem className="max-w-xs">
                   <FormLabel>Rules Followed *</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {YES_NO.map(v => <SelectItem key={v} value={v}>{v}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="would_i_take_this_trade_again"
+              render={({ field }) => (
+                <FormItem className="max-w-xs">
+                  <FormLabel>Would Take Again?</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value || ''}>
                     <FormControl>
                       <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
                     </FormControl>
