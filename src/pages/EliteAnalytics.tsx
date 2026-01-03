@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useEliteTrades } from '@/hooks/useEliteTrades';
 import { useSetupTypes } from '@/hooks/useSetupTypes';
+import { useExecutedTrades } from '@/hooks/useExecutedTrades';
 import StrategyValidationSection from '@/components/analytics/StrategyValidationSection';
 import { SetupEdgeScoreSection } from '@/components/analytics/SetupEdgeScoreSection';
 import { SessionDominanceSection } from '@/components/analytics/SessionDominanceSection';
@@ -34,6 +35,8 @@ export default function EliteAnalytics() {
   const navigate = useNavigate();
   const { trades, loading } = useEliteTrades();
   const { activeSetupTypes } = useSetupTypes();
+  // Filter out missed trades - they should NEVER affect performance analytics
+  const { executedTrades, missedCount } = useExecutedTrades(trades);
   const [dateRange, setDateRange] = useState<DateRange>('all');
   const [selectedSetups, setSelectedSetups] = useState<string[]>([]);
   const [sessionFilter, setSessionFilter] = useState<SessionFilter>('all');
@@ -135,13 +138,22 @@ export default function EliteAnalytics() {
           </div>
         ) : (
           <>
+            {/* Data Health Indicator */}
+            {missedCount > 0 && (
+              <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-md">
+                <p className="text-sm text-amber-400">
+                  {missedCount} missed trade{missedCount > 1 ? 's' : ''} excluded from performance analytics.
+                </p>
+              </div>
+            )}
+            
             <StrategyValidationSection
-              trades={trades}
+              trades={executedTrades}
               dateRange={{ from: new Date(Date.now() - (dateRange === '30' ? 30 : dateRange === '90' ? 90 : 3650) * 24 * 60 * 60 * 1000), to: new Date() }}
             />
             <div className="mt-6">
               <SetupEdgeScoreSection
-                trades={trades}
+                trades={executedTrades}
                 dateRange={dateRange}
                 selectedSetups={selectedSetups}
                 sessionFilter={sessionFilter}
@@ -150,39 +162,39 @@ export default function EliteAnalytics() {
               />
             </div>
             <SessionDominanceSection
-              trades={trades}
+              trades={executedTrades}
               dateRange={dateRange}
               selectedSetups={selectedSetups}
               sessionFilter={sessionFilter}
               activeSetup={activeSetup}
             />
             <TimeDominanceSection
-              trades={trades}
+              trades={executedTrades}
               dateRange={dateRange}
               activeSetup={activeSetup}
             />
             <DayOfWeekDominanceSection
-              trades={trades}
+              trades={executedTrades}
               dateRange={dateRange}
               activeSetup={activeSetup}
             />
             <SampleSizeConfidenceSection
-              trades={trades}
+              trades={executedTrades}
               dateRange={dateRange}
               activeSetup={activeSetup}
             />
             <MistakePatternSection
-              trades={trades}
+              trades={executedTrades}
               dateRange={dateRange}
               activeSetup={activeSetup}
             />
             <EntryPrecisionSection
-              trades={trades}
+              trades={executedTrades}
               dateRange={dateRange}
               activeSetup={activeSetup}
             />
             <EdgeDriftSection
-              trades={trades}
+              trades={executedTrades}
               dateRange={dateRange}
               activeSetup={activeSetup}
             />
