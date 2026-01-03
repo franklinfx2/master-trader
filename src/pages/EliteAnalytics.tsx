@@ -162,24 +162,24 @@ export default function EliteAnalytics() {
               />
             </div>
             <SessionDominanceSection
-              trades={executedTrades}
+              trades={trades}
               dateRange={dateRange}
               selectedSetups={selectedSetups}
               sessionFilter={sessionFilter}
               activeSetup={activeSetup}
             />
             <TimeDominanceSection
-              trades={executedTrades}
+              trades={trades}
               dateRange={dateRange}
               activeSetup={activeSetup}
             />
             <DayOfWeekDominanceSection
-              trades={executedTrades}
+              trades={trades}
               dateRange={dateRange}
               activeSetup={activeSetup}
             />
             <SampleSizeConfidenceSection
-              trades={executedTrades}
+              trades={trades}
               dateRange={dateRange}
               activeSetup={activeSetup}
             />
