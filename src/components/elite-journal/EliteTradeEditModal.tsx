@@ -96,6 +96,7 @@ const editTradeSchema = z.object({
   
   // Rules Integrity
   rules_followed: z.enum(['Yes', 'No']),
+  would_i_take_this_trade_again: z.enum(['Yes', 'No']).optional(),
   
   // Visual Evidence (All optional)
   htf_screenshot: z.string().optional(),
@@ -170,6 +171,7 @@ export const EliteTradeEditModal = ({ trade, open, onOpenChange, onSuccess }: El
     ltf_entry_screenshot: t.ltf_entry_screenshot || '',
     ltf_trade_screenshot: t.ltf_trade_screenshot || '',
     post_trade_screenshot: t.post_trade_screenshot || '',
+    would_i_take_this_trade_again: t.would_i_take_this_trade_again || undefined,
   });
 
   const form = useForm<EditTradeFormValues>({
@@ -261,6 +263,7 @@ export const EliteTradeEditModal = ({ trade, open, onOpenChange, onSuccess }: El
       risk_per_trade_pct: data.risk_per_trade_pct,
       rr_planned: data.rr_planned,
       rules_followed: data.rules_followed,
+      would_i_take_this_trade_again: data.would_i_take_this_trade_again,
       htf_screenshot: data.htf_screenshot || '',
       ltf_entry_screenshot: data.ltf_entry_screenshot || '',
       ltf_trade_screenshot: data.ltf_trade_screenshot || '',
@@ -821,6 +824,24 @@ export const EliteTradeEditModal = ({ trade, open, onOpenChange, onSuccess }: El
                         <Select onValueChange={field.onChange} value={field.value}>
                           <FormControl>
                             <SelectTrigger><SelectValue /></SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {YES_NO.map(v => <SelectItem key={v} value={v}>{v}</SelectItem>)}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="would_i_take_this_trade_again"
+                    render={({ field }) => (
+                      <FormItem className="max-w-xs">
+                        <FormLabel>Would Take Again?</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value || ''}>
+                          <FormControl>
+                            <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
                           </FormControl>
                           <SelectContent>
                             {YES_NO.map(v => <SelectItem key={v} value={v}>{v}</SelectItem>)}
