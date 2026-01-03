@@ -39,7 +39,7 @@ export function SessionDominanceSection({
       return daysAgo <= parseInt(dateRange);
     });
 
-    // Dynamically derive unique setup types from trades
+    // Dynamically derive unique setup types from trades (includes missed for frequency)
     const uniqueSetups = [...new Set(filteredTrades.map(t => t.setup_type))];
     const setupsToShow = selectedSetups.length > 0 
       ? selectedSetups 
@@ -47,28 +47,32 @@ export function SessionDominanceSection({
     
     return setupsToShow.map(setup => {
       const setupTrades = filteredTrades.filter(t => t.setup_type === setup);
+      // Only executed trades for performance metrics
+      const executedSetupTrades = setupTrades.filter(t => t.trade_status === 'Executed');
       
-      // London trades (session === 'London')
+      // London trades - use ALL for count, EXECUTED for performance
       const londonTrades = setupTrades.filter(t => t.session === 'London');
-      const londonWins = londonTrades.filter(t => t.result === 'Win').length;
-      const londonWinRate = londonTrades.length > 0 
-        ? (londonWins / londonTrades.length) * 100 
+      const londonExecuted = executedSetupTrades.filter(t => t.session === 'London');
+      const londonWins = londonExecuted.filter(t => t.result === 'Win').length;
+      const londonWinRate = londonExecuted.length > 0 
+        ? (londonWins / londonExecuted.length) * 100 
         : 0;
-      const londonAvgR = londonTrades.length > 0
-        ? londonTrades.reduce((sum, t) => sum + (t.r_multiple || 0), 0) / londonTrades.length
+      const londonAvgR = londonExecuted.length > 0
+        ? londonExecuted.reduce((sum, t) => sum + (t.r_multiple || 0), 0) / londonExecuted.length
         : 0;
 
-      // NY trades (session === 'NY')
+      // NY trades - use ALL for count, EXECUTED for performance
       const nyTrades = setupTrades.filter(t => t.session === 'NY');
-      const nyWins = nyTrades.filter(t => t.result === 'Win').length;
-      const nyWinRate = nyTrades.length > 0 
-        ? (nyWins / nyTrades.length) * 100 
+      const nyExecuted = executedSetupTrades.filter(t => t.session === 'NY');
+      const nyWins = nyExecuted.filter(t => t.result === 'Win').length;
+      const nyWinRate = nyExecuted.length > 0 
+        ? (nyWins / nyExecuted.length) * 100 
         : 0;
-      const nyAvgR = nyTrades.length > 0
-        ? nyTrades.reduce((sum, t) => sum + (t.r_multiple || 0), 0) / nyTrades.length
+      const nyAvgR = nyExecuted.length > 0
+        ? nyExecuted.reduce((sum, t) => sum + (t.r_multiple || 0), 0) / nyExecuted.length
         : 0;
 
-      // Determine dominance (≥20% difference)
+      // Determine dominance (≥20% difference) - based on executed trades only
       let dominantSession: 'London' | 'NY' | 'Neutral' = 'Neutral';
       
       const winRateDiff = Math.abs(londonWinRate - nyWinRate);
@@ -92,8 +96,8 @@ export function SessionDominanceSection({
         nyWinRate,
         londonAvgR,
         nyAvgR,
-        londonTrades: londonTrades.length,
-        nyTrades: nyTrades.length,
+        londonTrades: londonTrades.length, // Total count (includes missed)
+        nyTrades: nyTrades.length, // Total count (includes missed)
         dominantSession,
       } as SessionMetrics;
     });

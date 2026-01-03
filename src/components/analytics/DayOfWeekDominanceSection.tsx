@@ -60,18 +60,23 @@ export function DayOfWeekDominanceSection({ trades, dateRange, activeSetup }: Da
       }));
 
       // Populate buckets with trade data
+      // Use ALL trades for frequency count, EXECUTED only for performance metrics
       setupTrades.forEach(trade => {
         const dayIndex = WEEKDAYS.indexOf(trade.day_of_week as typeof WEEKDAYS[number]);
         if (dayIndex === -1) return;
 
-        buckets[dayIndex].tradeCount++;
-        if (trade.result === 'Win') {
-          buckets[dayIndex].wins++;
-        } else if (trade.result === 'Loss') {
-          buckets[dayIndex].losses++;
-        }
-        if (trade.r_multiple) {
-          buckets[dayIndex].totalR += trade.r_multiple;
+        buckets[dayIndex].tradeCount++; // Count ALL trades for frequency
+        
+        // Only count wins/losses/R for EXECUTED trades
+        if (trade.trade_status === 'Executed') {
+          if (trade.result === 'Win') {
+            buckets[dayIndex].wins++;
+          } else if (trade.result === 'Loss') {
+            buckets[dayIndex].losses++;
+          }
+          if (trade.r_multiple) {
+            buckets[dayIndex].totalR += trade.r_multiple;
+          }
         }
       });
 
@@ -83,12 +88,14 @@ export function DayOfWeekDominanceSection({ trades, dateRange, activeSetup }: Da
       }
 
       // Calculate internal metrics and classify each day
+      // Performance metrics use executed trades only (wins + losses count)
       const bucketMetrics = activeBuckets.map(bucket => {
-        const winRate = bucket.tradeCount > 0 
-          ? bucket.wins / bucket.tradeCount 
+        const executedCount = bucket.wins + bucket.losses; // Only executed trades have results
+        const winRate = executedCount > 0 
+          ? bucket.wins / executedCount 
           : 0;
-        const expectancy = bucket.tradeCount > 0 
-          ? bucket.totalR / bucket.tradeCount 
+        const expectancy = executedCount > 0 
+          ? bucket.totalR / executedCount 
           : 0;
 
         // Combined score (internal use only)

@@ -72,7 +72,7 @@ export function TimeDominanceSection({ trades, dateRange, activeSetup }: TimeDom
       return daysAgo <= parseInt(dateRange);
     });
 
-    // Dynamically derive unique setup types from filtered trades
+    // Dynamically derive unique setup types from filtered trades (includes missed)
     const uniqueSetups = [...new Set(filteredTrades.map(t => t.setup_type))];
 
     // Process each setup independently
@@ -81,20 +81,25 @@ export function TimeDominanceSection({ trades, dateRange, activeSetup }: TimeDom
       const buckets = generateTimeBuckets();
       
       // Populate buckets with trade data
+      // Use ALL trades for frequency count, EXECUTED only for performance metrics
       setupTrades.forEach(trade => {
         const timeMinutes = getTimeInMinutes((trade as any).trade_time);
         if (timeMinutes === null) return;
         
         const bucketIndex = getBucketIndex(timeMinutes);
         if (bucketIndex >= 0 && bucketIndex < buckets.length) {
-          buckets[bucketIndex].tradeCount++;
-          if (trade.result === 'Win') {
-            buckets[bucketIndex].wins++;
-          } else if (trade.result === 'Loss') {
-            buckets[bucketIndex].losses++;
-          }
-          if (trade.r_multiple) {
-            buckets[bucketIndex].totalR += trade.r_multiple;
+          buckets[bucketIndex].tradeCount++; // Count ALL trades for frequency
+          
+          // Only count wins/losses/R for EXECUTED trades
+          if (trade.trade_status === 'Executed') {
+            if (trade.result === 'Win') {
+              buckets[bucketIndex].wins++;
+            } else if (trade.result === 'Loss') {
+              buckets[bucketIndex].losses++;
+            }
+            if (trade.r_multiple) {
+              buckets[bucketIndex].totalR += trade.r_multiple;
+            }
           }
         }
       });
@@ -107,12 +112,14 @@ export function TimeDominanceSection({ trades, dateRange, activeSetup }: TimeDom
       }
 
       // Calculate internal metrics and classify each bucket
+      // Performance metrics use executed trades only (wins + losses count)
       const bucketMetrics = activeBuckets.map(bucket => {
-        const winRate = bucket.tradeCount > 0 
-          ? bucket.wins / bucket.tradeCount 
+        const executedCount = bucket.wins + bucket.losses; // Only executed trades have results
+        const winRate = executedCount > 0 
+          ? bucket.wins / executedCount 
           : 0;
-        const expectancy = bucket.tradeCount > 0 
-          ? bucket.totalR / bucket.tradeCount 
+        const expectancy = executedCount > 0 
+          ? bucket.totalR / executedCount 
           : 0;
         
         // Combined score (internal use only)
