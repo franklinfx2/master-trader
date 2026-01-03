@@ -662,6 +662,7 @@ export type Database = {
             | null
           id: string
           instrument: string
+          is_htf_clear: Database["public"]["Enums"]["yes_no_enum"] | null
           killzone: Database["public"]["Enums"]["killzone_enum"]
           legacy_trade_id: string | null
           liquidity_taken_against_bias: Database["public"]["Enums"]["yes_no_enum"]
@@ -683,6 +684,9 @@ export type Database = {
           partial_taken: Database["public"]["Enums"]["yes_no_enum"]
           post_trade_screenshot: string | null
           pre_trade_state: Database["public"]["Enums"]["pre_trade_state_enum"]
+          price_at_level_or_open:
+            | Database["public"]["Enums"]["price_position_enum"]
+            | null
           r_multiple: number | null
           real_move_after_liquidity: Database["public"]["Enums"]["yes_no_enum"]
           result: Database["public"]["Enums"]["trade_result_enum"] | null
@@ -738,6 +742,7 @@ export type Database = {
             | null
           id?: string
           instrument?: string
+          is_htf_clear?: Database["public"]["Enums"]["yes_no_enum"] | null
           killzone: Database["public"]["Enums"]["killzone_enum"]
           legacy_trade_id?: string | null
           liquidity_taken_against_bias: Database["public"]["Enums"]["yes_no_enum"]
@@ -759,6 +764,9 @@ export type Database = {
           partial_taken: Database["public"]["Enums"]["yes_no_enum"]
           post_trade_screenshot?: string | null
           pre_trade_state: Database["public"]["Enums"]["pre_trade_state_enum"]
+          price_at_level_or_open?:
+            | Database["public"]["Enums"]["price_position_enum"]
+            | null
           r_multiple?: number | null
           real_move_after_liquidity: Database["public"]["Enums"]["yes_no_enum"]
           result?: Database["public"]["Enums"]["trade_result_enum"] | null
@@ -814,6 +822,7 @@ export type Database = {
             | null
           id?: string
           instrument?: string
+          is_htf_clear?: Database["public"]["Enums"]["yes_no_enum"] | null
           killzone?: Database["public"]["Enums"]["killzone_enum"]
           legacy_trade_id?: string | null
           liquidity_taken_against_bias?: Database["public"]["Enums"]["yes_no_enum"]
@@ -835,6 +844,9 @@ export type Database = {
           partial_taken?: Database["public"]["Enums"]["yes_no_enum"]
           post_trade_screenshot?: string | null
           pre_trade_state?: Database["public"]["Enums"]["pre_trade_state_enum"]
+          price_at_level_or_open?:
+            | Database["public"]["Enums"]["price_position_enum"]
+            | null
           r_multiple?: number | null
           real_move_after_liquidity?: Database["public"]["Enums"]["yes_no_enum"]
           result?: Database["public"]["Enums"]["trade_result_enum"] | null
@@ -995,6 +1007,7 @@ export type Database = {
         | "RISK_SENTIMENT"
         | "NONE"
       pre_trade_state_enum: "Calm" | "FOMO" | "Hesitant" | "Overconfident"
+      price_position_enum: "At Level" | "Open"
       session_enum: "Asia" | "London" | "NY"
       setup_grade_enum: "A+" | "A" | "B" | "Trash"
       setup_type_enum: "OBC" | "OBR" | "BB"
@@ -1191,6 +1204,7 @@ export const Constants = {
         "NONE",
       ],
       pre_trade_state_enum: ["Calm", "FOMO", "Hesitant", "Overconfident"],
+      price_position_enum: ["At Level", "Open"],
       session_enum: ["Asia", "London", "NY"],
       setup_grade_enum: ["A+", "A", "B", "Trash"],
       setup_type_enum: ["OBC", "OBR", "BB"],

@@ -44,6 +44,7 @@ import {
   EXECUTION_TFS,
   ENTRY_MODELS,
   YES_NO,
+  PRICE_POSITIONS,
   TRADE_STATUSES,
   MISSED_REASONS,
   HYPOTHETICAL_RESULTS,
@@ -71,6 +72,8 @@ const editTradeSchema = z.object({
   htf_bias: z.enum(['Bullish', 'Bearish', 'Range']),
   htf_timeframe: z.string().min(1, 'Required'),
   structure_state: z.string().min(1, 'Required'),
+  is_htf_clear: z.enum(['Yes', 'No']),
+  price_at_level_or_open: z.enum(['At Level', 'Open']),
   
   // Liquidity (Generic)
   liquidity_targeted: z.array(z.string()).min(1, 'Select at least one'),
@@ -151,6 +154,8 @@ export const EliteTradeEditModal = ({ trade, open, onOpenChange, onSuccess }: El
     htf_bias: t.htf_bias,
     htf_timeframe: t.htf_timeframe || 'H4',
     structure_state: t.structure_state || 'Continuation',
+    is_htf_clear: t.is_htf_clear || 'No',
+    price_at_level_or_open: t.price_at_level_or_open || 'At Level',
     liquidity_targeted: t.liquidity_targeted || [],
     liquidity_taken_before_entry: t.liquidity_taken_before_entry,
     setup_type: t.setup_type || '',
@@ -249,6 +254,8 @@ export const EliteTradeEditModal = ({ trade, open, onOpenChange, onSuccess }: El
       htf_bias: data.htf_bias,
       htf_timeframe: data.htf_timeframe as any,
       structure_state: data.structure_state as any,
+      is_htf_clear: data.is_htf_clear,
+      price_at_level_or_open: data.price_at_level_or_open as any,
       liquidity_targeted: data.liquidity_targeted as LiquidityTarget[],
       liquidity_taken_before_entry: data.liquidity_taken_before_entry,
       setup_type: normalizedSetupType,
@@ -498,7 +505,7 @@ export const EliteTradeEditModal = ({ trade, open, onOpenChange, onSuccess }: El
 
               {/* Section 2: HTF Context */}
               <Section title="HTF Context" defaultOpen={false}>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 pt-2">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 pt-2">
                   <FormField
                     control={form.control}
                     name="htf_timeframe"
@@ -547,6 +554,42 @@ export const EliteTradeEditModal = ({ trade, open, onOpenChange, onSuccess }: El
                           </FormControl>
                           <SelectContent>
                             {STRUCTURE_STATES.map(v => <SelectItem key={v} value={v}>{v}</SelectItem>)}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="is_htf_clear"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Is HTF Clear?</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger><SelectValue /></SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {YES_NO.map(v => <SelectItem key={v} value={v}>{v}</SelectItem>)}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="price_at_level_or_open"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Price Position</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger><SelectValue /></SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {PRICE_POSITIONS.map(v => <SelectItem key={v} value={v}>{v}</SelectItem>)}
                           </SelectContent>
                         </Select>
                         <FormMessage />
