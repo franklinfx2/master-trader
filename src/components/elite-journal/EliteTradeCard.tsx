@@ -256,11 +256,13 @@ export const EliteTradeCard = ({ trade, onUpdate }: EliteTradeCardProps) => {
               <h4 className="text-sm font-medium text-muted-foreground mb-2 flex items-center gap-1.5">
                 <Target className="w-4 h-4" /> Higher-Timeframe Context
               </h4>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <DetailItem label="HTF Bias" value={trade.htf_bias} />
                 <DetailItem label="HTF TF" value={trade.htf_timeframe} />
-                <DetailItem label="Market Phase" value={trade.market_phase} />
                 <DetailItem label="Structure" value={trade.structure_state} />
+                <DetailItem label="Market Phase" value={trade.market_phase} />
+                <DetailItem label="HTF Clear" value={trade.is_htf_clear} />
+                <DetailItem label="Price Position" value={trade.price_at_level_or_open} />
               </div>
             </div>
 

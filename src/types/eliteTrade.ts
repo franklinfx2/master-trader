@@ -16,6 +16,7 @@ export type DayOfWeek = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Frida
 // HTF Context
 export type HTFBias = 'Bullish' | 'Bearish' | 'Range';
 export type HTFTimeframe = 'H4' | 'H1' | 'D1' | 'W1';
+export type PricePosition = 'At Level' | 'Open';
 export type StructureState = 'Continuation' | 'Reversal' | 'Range' | 'HH-HL' | 'LH-LL' | 'CHoCH' | 'BOS';
 
 // Liquidity targets (generic, multi-select)
@@ -122,6 +123,8 @@ export interface EliteTrade {
   htf_bias: HTFBias;
   htf_timeframe: HTFTimeframe;
   structure_state: StructureState;
+  is_htf_clear?: YesNo;
+  price_at_level_or_open?: PricePosition;
   
   // Liquidity (Generic)
   liquidity_targeted: LiquidityTarget[];
@@ -247,6 +250,8 @@ export interface EliteTradeFormData {
   htf_bias: HTFBias;
   htf_timeframe: HTFTimeframe;
   structure_state: StructureState;
+  is_htf_clear?: YesNo;
+  price_at_level_or_open?: PricePosition;
   
   // Liquidity (Generic)
   liquidity_targeted: LiquidityTarget[];
@@ -313,6 +318,7 @@ export const DAYS_OF_WEEK: DayOfWeek[] = ['Monday', 'Tuesday', 'Wednesday', 'Thu
 export const HTF_BIASES: HTFBias[] = ['Bullish', 'Bearish', 'Range'];
 export const HTF_TIMEFRAMES: HTFTimeframe[] = ['H4', 'H1', 'D1', 'W1'];
 export const STRUCTURE_STATES: StructureState[] = ['Continuation', 'Reversal', 'Range', 'HH-HL', 'LH-LL', 'CHoCH', 'BOS'];
+export const PRICE_POSITIONS: PricePosition[] = ['At Level', 'Open'];
 
 // Generic liquidity targets (instrument-neutral)
 export const LIQUIDITY_TARGETS: LiquidityTarget[] = [

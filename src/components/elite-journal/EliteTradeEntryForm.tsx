@@ -37,6 +37,7 @@ import {
   EXECUTION_TFS,
   ENTRY_MODELS,
   YES_NO,
+  PRICE_POSITIONS,
   TRADE_STATUSES,
   MISSED_REASONS,
   HYPOTHETICAL_RESULTS,
@@ -69,6 +70,8 @@ const backtestSchema = z.object({
   htf_bias: z.enum(['Bullish', 'Bearish', 'Range'], { required_error: 'HTF bias is required' }),
   htf_timeframe: z.string().min(1, 'HTF timeframe is required'),
   structure_state: z.string().min(1, 'Structure state is required'),
+  is_htf_clear: z.enum(['Yes', 'No'], { required_error: 'Required' }),
+  price_at_level_or_open: z.enum(['At Level', 'Open'], { required_error: 'Required' }),
   
   // Liquidity (Generic)
   liquidity_targeted: z.array(z.string()).min(1, 'Select at least one liquidity target'),
@@ -197,6 +200,8 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
       htf_bias: data.htf_bias,
       htf_timeframe: data.htf_timeframe as any,
       structure_state: data.structure_state as any,
+      is_htf_clear: data.is_htf_clear,
+      price_at_level_or_open: data.price_at_level_or_open as any,
       liquidity_targeted: data.liquidity_targeted as LiquidityTarget[],
       liquidity_taken_before_entry: data.liquidity_taken_before_entry,
       setup_type_id: data.setup_type_id, // New canonical FK
@@ -440,7 +445,7 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">HTF Context</CardTitle>
           </CardHeader>
-          <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <CardContent className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
             <FormField
               control={form.control}
               name="htf_timeframe"
@@ -491,6 +496,44 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
                     </FormControl>
                     <SelectContent>
                       {STRUCTURE_STATES.map(ss => <SelectItem key={ss} value={ss}>{ss}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="is_htf_clear"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Is HTF Clear? *</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {YES_NO.map(v => <SelectItem key={v} value={v}>{v}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="price_at_level_or_open"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Price Position *</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {PRICE_POSITIONS.map(v => <SelectItem key={v} value={v}>{v}</SelectItem>)}
                     </SelectContent>
                   </Select>
                   <FormMessage />

@@ -140,6 +140,8 @@ export const useEliteTrades = () => {
       htf_bias: formData.htf_bias,
       htf_timeframe: formData.htf_timeframe,
       structure_state: formData.structure_state,
+      is_htf_clear: formData.is_htf_clear || 'No',
+      price_at_level_or_open: formData.price_at_level_or_open || 'At Level',
       liquidity_targeted: formData.liquidity_targeted,
       liquidity_taken_before_entry: formData.liquidity_taken_before_entry,
       setup_type_id: formData.setup_type_id || null, // New canonical FK
