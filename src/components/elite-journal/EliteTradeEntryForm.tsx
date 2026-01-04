@@ -2,7 +2,7 @@
 // Universal backtesting for any instrument | ≤90 seconds per trade
 // No psychology, no gold-specific tags, optional screenshots
 import { useState, useMemo } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { format } from 'date-fns';
@@ -249,9 +249,24 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
     }
   };
 
+  const onInvalid = (errors: FieldErrors<BacktestFormValues>) => {
+    const firstKey = Object.keys(errors)[0] as keyof BacktestFormValues | undefined;
+
+    toast({
+      title: 'Missing required fields',
+      description: 'Please complete the required fields marked with * before saving.',
+      variant: 'destructive',
+    });
+
+    if (firstKey) {
+      // Focus the first invalid field to make the failure obvious.
+      form.setFocus(firstKey);
+    }
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} className="space-y-4">
         {/* Backtesting Engine Banner */}
         <Alert className="border-primary/30 bg-primary/5">
           <AlertDescription className="flex items-center justify-between">
