@@ -139,6 +139,8 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
       ltf_entry_screenshot: '',
       ltf_trade_screenshot: '',
       post_trade_screenshot: '',
+      is_htf_clear: 'No',
+      price_at_level_or_open: 'At Level',
     },
   });
 
