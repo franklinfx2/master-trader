@@ -250,11 +250,20 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
   };
 
   const onInvalid = (errors: FieldErrors<BacktestFormValues>) => {
+    // Log once so we can see exactly what RHF thinks is missing.
+    console.warn('[EliteTradeEntryForm] validation errors', errors);
+
     const firstKey = Object.keys(errors)[0] as keyof BacktestFormValues | undefined;
+    const firstMessage = firstKey
+      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ((errors as any)[firstKey]?.message as string | undefined)
+      : undefined;
 
     toast({
       title: 'Missing required fields',
-      description: 'Please complete the required fields marked with * before saving.',
+      description: firstKey
+        ? `First invalid field: ${String(firstKey)}${firstMessage ? ` — ${firstMessage}` : ''}`
+        : 'Please complete the required fields marked with * before saving.',
       variant: 'destructive',
     });
 
