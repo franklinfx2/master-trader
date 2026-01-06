@@ -123,40 +123,47 @@ export const useEliteTrades = () => {
   const addTrade = async (formData: EliteTradeFormData) => {
     if (!user) return { error: 'Not authenticated' };
 
+    const normalizeEntryModel = (value: unknown) => {
+      // Supabase enum entry_model_enum only accepts these 3 values
+      const allowed = ['OB retest', 'Sweep → Displacement → OB', 'BOS pullback'] as const;
+      if (typeof value === 'string' && (allowed as readonly string[]).includes(value)) return value;
+      return 'OB retest';
+    };
+
     // Build trade data with defaults for deprecated fields
     const tradeData: any = {
       user_id: user.id,
       trade_date: formData.trade_date,
       trade_time: formData.trade_time || null,
       instrument: formData.instrument || 'XAUUSD',
-      account_type: formData.account_type,
+      account_type: formData.account_type || 'Demo',
       trade_status: formData.trade_status || 'Executed',
       missed_reason: formData.missed_reason || null,
       hypothetical_result: formData.hypothetical_result || null,
-      session: formData.session,
+      session: formData.session || 'London',
       killzone: formData.killzone || 'None',
-      day_of_week: formData.day_of_week,
-      news_day: formData.news_day,
-      htf_bias: formData.htf_bias,
-      htf_timeframe: formData.htf_timeframe,
-      structure_state: formData.structure_state,
+      day_of_week: formData.day_of_week || 'Monday',
+      news_day: formData.news_day || 'No',
+      htf_bias: formData.htf_bias || 'Range',
+      htf_timeframe: formData.htf_timeframe || 'H4',
+      structure_state: formData.structure_state || 'BOS',
       is_htf_clear: formData.is_htf_clear || 'No',
       price_at_level_or_open: formData.price_at_level_or_open || 'At Level',
-      liquidity_targeted: formData.liquidity_targeted,
-      liquidity_taken_before_entry: formData.liquidity_taken_before_entry,
+      liquidity_targeted: formData.liquidity_targeted || ['Structural Liquidity'],
+      liquidity_taken_before_entry: formData.liquidity_taken_before_entry || 'No',
       setup_type_id: formData.setup_type_id || null, // New canonical FK
-      setup_type: formData.setup_type,
-      setup_grade: formData.setup_grade,
-      execution_tf: formData.execution_tf,
-      entry_model: formData.entry_model,
-      confirmation_present: formData.confirmation_present,
-      entry_price: parseFloat(formData.entry_price),
-      stop_loss: parseFloat(formData.stop_loss),
-      take_profit: parseFloat(formData.take_profit),
+      setup_type: formData.setup_type || 'OBC',
+      setup_grade: formData.setup_grade || 'B',
+      execution_tf: formData.execution_tf || 'M5',
+      entry_model: normalizeEntryModel(formData.entry_model),
+      confirmation_present: formData.confirmation_present || 'No',
+      entry_price: parseFloat(formData.entry_price || '0'),
+      stop_loss: parseFloat(formData.stop_loss || '0'),
+      take_profit: parseFloat(formData.take_profit || '0'),
       exit_price: formData.exit_price ? parseFloat(formData.exit_price) : null,
-      risk_per_trade_pct: parseFloat(formData.risk_per_trade_pct),
-      rr_planned: parseFloat(formData.rr_planned),
-      rules_followed: formData.rules_followed,
+      risk_per_trade_pct: parseFloat(formData.risk_per_trade_pct || '1'),
+      rr_planned: parseFloat(formData.rr_planned || '2'),
+      rules_followed: formData.rules_followed || 'Yes',
       htf_screenshot: formData.htf_screenshot || null,
       ltf_entry_screenshot: formData.ltf_entry_screenshot || null,
       ltf_trade_screenshot: formData.ltf_trade_screenshot || null,
@@ -203,12 +210,28 @@ export const useEliteTrades = () => {
   const updateTrade = async (id: string, formData: Partial<EliteTradeFormData>) => {
     if (!user) return { error: 'Not authenticated' };
 
+    const normalizeEntryModel = (value: unknown) => {
+      const allowed = ['OB retest', 'Sweep → Displacement → OB', 'BOS pullback'] as const;
+      if (typeof value === 'string' && (allowed as readonly string[]).includes(value)) return value;
+      return 'OB retest';
+    };
+
     const updates: any = {};
-    
+
     // Only include fields that are actually provided and properly convert them
     Object.entries(formData).forEach(([key, value]) => {
       if (value === undefined) return;
-      
+
+      // Normalize enum fields that have strict DB constraints
+      if (key === 'entry_model') {
+        updates.entry_model = normalizeEntryModel(value);
+        return;
+      }
+      if (key === 'account_type') {
+        updates.account_type = typeof value === 'string' && value ? value : 'Demo';
+        return;
+      }
+
       // Convert string numbers to actual numbers for numeric fields
       if (['entry_price', 'stop_loss', 'take_profit', 'exit_price', 'risk_per_trade_pct', 'rr_planned', 'mae', 'mfe'].includes(key)) {
         if (value !== null && value !== '') {
@@ -227,22 +250,22 @@ export const useEliteTrades = () => {
     if (updates.exit_price !== undefined && updates.exit_price !== null) {
       const entry = updates.entry_price || formData.entry_price;
       const sl = updates.stop_loss || formData.stop_loss;
-      
+
       if (entry && sl) {
         const entryNum = parseFloat(String(entry));
         const slNum = parseFloat(String(sl));
         const exitNum = updates.exit_price;
-        
+
         const isLong = slNum < entryNum;
         const riskDistance = Math.abs(entryNum - slNum);
-        
+
         if (riskDistance > 0) {
           const profitDistance = isLong ? exitNum - entryNum : entryNum - exitNum;
           const rMultiple = profitDistance / riskDistance;
-          
+
           updates.r_multiple = parseFloat(rMultiple.toFixed(4));
           updates.rr_realized = parseFloat(rMultiple.toFixed(4));
-          
+
           if (rMultiple > 0.1) updates.result = 'Win';
           else if (rMultiple < -0.1) updates.result = 'Loss';
           else updates.result = 'BE';

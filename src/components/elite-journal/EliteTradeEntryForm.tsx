@@ -386,30 +386,30 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
             <FormField
               control={form.control}
               name="instrument"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Instrument *</FormLabel>
-                  <FormControl>
-                    <Input placeholder="XAUUSD" {...field} className="uppercase" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+               render={({ field }) => (
+                 <FormItem>
+                   <FormLabel>Instrument</FormLabel>
+                   <FormControl>
+                     <Input placeholder="XAUUSD" {...field} className="uppercase" />
+                   </FormControl>
+                   <FormMessage />
+                 </FormItem>
+               )}
             />
 
-            <FormField
-              control={form.control}
-              name="trade_date"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Date *</FormLabel>
-                  <FormControl>
-                    <TradeDatePickerField value={field.value} onChange={field.onChange} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+             <FormField
+               control={form.control}
+               name="trade_date"
+               render={({ field }) => (
+                 <FormItem>
+                   <FormLabel>Date</FormLabel>
+                   <FormControl>
+                     <TradeDatePickerField value={field.value} onChange={field.onChange} />
+                   </FormControl>
+                   <FormMessage />
+                 </FormItem>
+               )}
+             />
 
             <FormField
               control={form.control}
@@ -425,43 +425,43 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="session"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Session *</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {SESSIONS.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+             <FormField
+               control={form.control}
+               name="session"
+               render={({ field }) => (
+                 <FormItem>
+                   <FormLabel>Session</FormLabel>
+                   <Select onValueChange={field.onChange} value={field.value}>
+                     <FormControl>
+                       <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                     </FormControl>
+                     <SelectContent>
+                       {SESSIONS.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                     </SelectContent>
+                   </Select>
+                   <FormMessage />
+                 </FormItem>
+               )}
+             />
 
-            <FormField
-              control={form.control}
-              name="day_of_week"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Day *</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {DAYS_OF_WEEK.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+             <FormField
+               control={form.control}
+               name="day_of_week"
+               render={({ field }) => (
+                 <FormItem>
+                   <FormLabel>Day</FormLabel>
+                   <Select onValueChange={field.onChange} value={field.value}>
+                     <FormControl>
+                       <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                     </FormControl>
+                     <SelectContent>
+                       {DAYS_OF_WEEK.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}
+                     </SelectContent>
+                   </Select>
+                   <FormMessage />
+                 </FormItem>
+               )}
+             />
 
             <FormField
               control={form.control}

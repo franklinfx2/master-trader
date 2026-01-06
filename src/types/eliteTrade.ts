@@ -41,15 +41,9 @@ export type SetupType = string; // User-defined, normalized
 export type SetupGrade = 'A+' | 'A' | 'B' | 'Trash';
 export type ExecutionTF = 'M1' | 'M3' | 'M5' | 'M15' | 'M30' | 'H1';
 
-// Entry Model (generic)
-export type EntryModel = 
-  | 'Order Block'
-  | 'Breaker Block'
-  | 'Fair Value Gap'
-  | 'Liquidity Sweep'
-  | 'Break of Structure'
-  | 'Custom'
-  // Legacy values
+// Entry Model (DB enum values)
+// NOTE: Must match Supabase enum entry_model_enum exactly.
+export type EntryModel =
   | 'OB retest'
   | 'Sweep → Displacement → OB'
   | 'BOS pullback';
@@ -346,14 +340,11 @@ export const COMMON_SETUP_TYPES: string[] = [
 export const SETUP_GRADES: SetupGrade[] = ['A+', 'A', 'B', 'Trash'];
 export const EXECUTION_TFS: ExecutionTF[] = ['M1', 'M3', 'M5', 'M15', 'M30', 'H1'];
 
-// Generic entry models
+// Entry models (DB enum values)
 export const ENTRY_MODELS: EntryModel[] = [
-  'Order Block',
-  'Breaker Block',
-  'Fair Value Gap',
-  'Liquidity Sweep',
-  'Break of Structure',
-  'Custom'
+  'OB retest',
+  'Sweep → Displacement → OB',
+  'BOS pullback',
 ];
 
 export const YES_NO: YesNo[] = ['Yes', 'No'];
