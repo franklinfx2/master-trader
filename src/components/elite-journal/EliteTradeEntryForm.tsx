@@ -47,56 +47,56 @@ import {
   type HypotheticalResult,
 } from '@/types/eliteTrade';
 
-// Streamlined schema for fast backtesting (no psychology, no gold-specific fields)
+// ALL FIELDS OPTIONAL for fast backtesting – defaults applied on submit
 const backtestSchema = z.object({
   // Trade Context
-  trade_date: z.date({ required_error: 'Trade date is required' }),
+  trade_date: z.date().optional(),
   trade_time: z.string().optional(),
-  instrument: z.string().min(1, 'Instrument is required'),
-  account_type: z.enum(['Demo', 'Live', 'Funded'], { required_error: 'Account type is required' }),
+  instrument: z.string().optional(),
+  account_type: z.enum(['Demo', 'Live', 'Funded']).optional(),
   
   // Trade Status
-  trade_status: z.enum(['Executed', 'Missed']).default('Executed'),
+  trade_status: z.enum(['Executed', 'Missed']).optional(),
   missed_reason: z.enum(['Hesitation', 'Away', 'Technical', 'Fear', 'Other']).optional(),
   hypothetical_result: z.enum(['Win', 'Loss', 'BE', 'Unknown']).optional(),
   
   // Session & Time
-  session: z.enum(['Asia', 'London', 'NY'], { required_error: 'Session is required' }),
+  session: z.enum(['Asia', 'London', 'NY']).optional(),
   killzone: z.enum(['LO', 'NYO', 'NYPM', 'None']).optional(),
-  day_of_week: z.enum(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], { required_error: 'Day is required' }),
-  news_day: z.enum(['Yes', 'No'], { required_error: 'Required' }),
+  day_of_week: z.enum(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']).optional(),
+  news_day: z.enum(['Yes', 'No']).optional(),
   
   // HTF Context (Objective)
-  htf_bias: z.enum(['Bullish', 'Bearish', 'Range'], { required_error: 'HTF bias is required' }),
-  htf_timeframe: z.string().min(1, 'HTF timeframe is required'),
-  structure_state: z.string().min(1, 'Structure state is required'),
-  is_htf_clear: z.enum(['Yes', 'No'], { required_error: 'Required' }),
-  price_at_level_or_open: z.enum(['At Level', 'Open'], { required_error: 'Required' }),
+  htf_bias: z.enum(['Bullish', 'Bearish', 'Range']).optional(),
+  htf_timeframe: z.string().optional(),
+  structure_state: z.string().optional(),
+  is_htf_clear: z.enum(['Yes', 'No']).optional(),
+  price_at_level_or_open: z.enum(['At Level', 'Open']).optional(),
   
   // Liquidity (Generic)
-  liquidity_targeted: z.array(z.string()).min(1, 'Select at least one liquidity target'),
-  liquidity_taken_before_entry: z.enum(['Yes', 'No'], { required_error: 'Required' }),
+  liquidity_targeted: z.array(z.string()).optional(),
+  liquidity_taken_before_entry: z.enum(['Yes', 'No']).optional(),
   
   // Setup Definition (via registry)
-  setup_type_id: z.string().optional(), // FK to setup_types table
-  setup_type: z.string().min(1, 'Setup type is required'), // Code for display
-  setup_grade: z.enum(['A+', 'A', 'B', 'Trash'], { required_error: 'Setup grade is required' }),
-  execution_tf: z.string().min(1, 'Execution TF is required'),
-  entry_model: z.string().min(1, 'Entry model is required'),
-  confirmation_present: z.enum(['Yes', 'No'], { required_error: 'Required' }),
+  setup_type_id: z.string().optional(),
+  setup_type: z.string().optional(),
+  setup_grade: z.enum(['A+', 'A', 'B', 'Trash']).optional(),
+  execution_tf: z.string().optional(),
+  entry_model: z.string().optional(),
+  confirmation_present: z.enum(['Yes', 'No']).optional(),
   
   // Price Levels & Risk
-  entry_price: z.string().min(1, 'Entry price is required').refine(v => !isNaN(parseFloat(v)) && parseFloat(v) > 0, 'Must be valid'),
-  stop_loss: z.string().min(1, 'Stop loss is required').refine(v => !isNaN(parseFloat(v)) && parseFloat(v) > 0, 'Must be valid'),
-  take_profit: z.string().min(1, 'Take profit is required').refine(v => !isNaN(parseFloat(v)) && parseFloat(v) > 0, 'Must be valid'),
+  entry_price: z.string().optional(),
+  stop_loss: z.string().optional(),
+  take_profit: z.string().optional(),
   exit_price: z.string().optional(),
-  risk_per_trade_pct: z.string().min(1, 'Risk % is required').refine(v => !isNaN(parseFloat(v)) && parseFloat(v) > 0 && parseFloat(v) <= 10, '0.1-10%'),
-  rr_planned: z.string().min(1, 'Planned RR is required').refine(v => !isNaN(parseFloat(v)) && parseFloat(v) > 0, 'Must be valid'),
+  risk_per_trade_pct: z.string().optional(),
+  rr_planned: z.string().optional(),
   mae: z.string().optional(),
   mfe: z.string().optional(),
   
   // Rules Integrity
-  rules_followed: z.enum(['Yes', 'No'], { required_error: 'Required' }),
+  rules_followed: z.enum(['Yes', 'No']).optional(),
   would_i_take_this_trade_again: z.enum(['Yes', 'No']).optional(),
   
   // Visual Evidence (ALL OPTIONAL)
@@ -124,23 +124,37 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
       trade_date: new Date(),
       trade_time: '',
       instrument: 'XAUUSD',
+      account_type: 'Demo',
       trade_status: 'Executed',
+      session: 'London',
       killzone: 'None',
+      day_of_week: 'Monday',
+      news_day: 'No',
+      htf_bias: 'Range',
+      htf_timeframe: 'H4',
+      structure_state: 'BOS',
+      is_htf_clear: 'No',
+      price_at_level_or_open: 'At Level',
       liquidity_targeted: [],
+      liquidity_taken_before_entry: 'No',
+      setup_type: 'OBC',
+      setup_grade: 'B',
+      execution_tf: 'M5',
+      entry_model: 'OB retest',
+      confirmation_present: 'No',
       entry_price: '',
       stop_loss: '',
       take_profit: '',
       exit_price: '',
       risk_per_trade_pct: '1',
-      rr_planned: '',
+      rr_planned: '2',
       mae: '',
       mfe: '',
+      rules_followed: 'Yes',
       htf_screenshot: '',
       ltf_entry_screenshot: '',
       ltf_trade_screenshot: '',
       post_trade_screenshot: '',
-      is_htf_clear: 'No',
-      price_at_level_or_open: 'At Level',
     },
   });
 
@@ -182,43 +196,66 @@ export const EliteTradeEntryForm = ({ onSuccess }: EliteTradeEntryFormProps) => 
   const onSubmit = async (data: BacktestFormValues) => {
     setIsSubmitting(true);
 
-    // Normalize setup type
-    const normalizedSetupType = data.setup_type === 'Custom' && customSetupType 
-      ? customSetupType.trim().toUpperCase() 
-      : data.setup_type;
+    // Apply defaults for any empty/missing fields to guarantee DB insert succeeds
+    const safeDate = data.trade_date ?? new Date();
+    const safeInstrument = (data.instrument || 'XAUUSD').toUpperCase();
+    const safeAccountType = data.account_type || 'Demo';
+    const safeTradeStatus = data.trade_status || 'Executed';
+    const safeSession = data.session || 'London';
+    const safeKillzone = data.killzone || 'None';
+    const safeDayOfWeek = data.day_of_week || 'Monday';
+    const safeNewsDay = data.news_day || 'No';
+    const safeHtfBias = data.htf_bias || 'Range';
+    const safeHtfTimeframe = data.htf_timeframe || 'H4';
+    const safeStructureState = data.structure_state || 'BOS';
+    const safeIsHtfClear = data.is_htf_clear || 'No';
+    const safePricePosition = data.price_at_level_or_open || 'At Level';
+    const safeLiquidityTargeted = data.liquidity_targeted?.length ? data.liquidity_targeted : ['Structural Liquidity'];
+    const safeLiquidityTaken = data.liquidity_taken_before_entry || 'No';
+    const safeSetupType = (data.setup_type === 'Custom' && customSetupType ? customSetupType.trim().toUpperCase() : data.setup_type) || 'OBC';
+    const safeSetupGrade = data.setup_grade || 'B';
+    const safeExecutionTf = data.execution_tf || 'M5';
+    const safeEntryModel = data.entry_model || 'OB retest';
+    const safeConfirmationPresent = data.confirmation_present || 'No';
+    const safeEntryPrice = data.entry_price || '0';
+    const safeStopLoss = data.stop_loss || '0';
+    const safeTakeProfit = data.take_profit || '0';
+    const safeRiskPct = data.risk_per_trade_pct || '1';
+    const safeRrPlanned = data.rr_planned || '2';
+    const safeRulesFollowed = data.rules_followed || 'Yes';
 
     const formData = {
-      trade_date: format(data.trade_date, 'yyyy-MM-dd'),
+      trade_date: format(safeDate, 'yyyy-MM-dd'),
       trade_time: data.trade_time || undefined,
-      instrument: data.instrument.toUpperCase(),
-      account_type: data.account_type,
-      trade_status: data.trade_status as TradeStatus,
-      missed_reason: data.trade_status === 'Missed' ? data.missed_reason as MissedReason : undefined,
-      hypothetical_result: data.trade_status === 'Missed' ? data.hypothetical_result as HypotheticalResult : undefined,
-      session: data.session,
-      killzone: data.killzone,
-      day_of_week: data.day_of_week,
-      news_day: data.news_day,
-      htf_bias: data.htf_bias,
-      htf_timeframe: data.htf_timeframe as any,
-      structure_state: data.structure_state as any,
-      is_htf_clear: data.is_htf_clear,
-      price_at_level_or_open: data.price_at_level_or_open as any,
-      liquidity_targeted: data.liquidity_targeted as LiquidityTarget[],
-      liquidity_taken_before_entry: data.liquidity_taken_before_entry,
-      setup_type_id: data.setup_type_id, // New canonical FK
-      setup_type: data.setup_type, // Code for display
-      setup_grade: data.setup_grade,
-      execution_tf: data.execution_tf as any,
-      entry_model: data.entry_model as any,
-      confirmation_present: data.confirmation_present,
-      entry_price: data.entry_price,
-      stop_loss: data.stop_loss,
-      take_profit: data.take_profit,
+      instrument: safeInstrument,
+      account_type: safeAccountType,
+      trade_status: safeTradeStatus as TradeStatus,
+      missed_reason: safeTradeStatus === 'Missed' ? (data.missed_reason as MissedReason) : undefined,
+      hypothetical_result: safeTradeStatus === 'Missed' ? (data.hypothetical_result as HypotheticalResult) : undefined,
+      session: safeSession,
+      killzone: safeKillzone,
+      day_of_week: safeDayOfWeek,
+      news_day: safeNewsDay,
+      htf_bias: safeHtfBias,
+      htf_timeframe: safeHtfTimeframe as any,
+      structure_state: safeStructureState as any,
+      is_htf_clear: safeIsHtfClear,
+      price_at_level_or_open: safePricePosition as any,
+      liquidity_targeted: safeLiquidityTargeted as LiquidityTarget[],
+      liquidity_taken_before_entry: safeLiquidityTaken,
+      setup_type_id: data.setup_type_id,
+      setup_type: safeSetupType,
+      setup_grade: safeSetupGrade,
+      execution_tf: safeExecutionTf as any,
+      entry_model: safeEntryModel as any,
+      confirmation_present: safeConfirmationPresent,
+      entry_price: safeEntryPrice,
+      stop_loss: safeStopLoss,
+      take_profit: safeTakeProfit,
       exit_price: data.exit_price || '',
-      risk_per_trade_pct: data.risk_per_trade_pct,
-      rr_planned: data.rr_planned,
-      rules_followed: data.rules_followed,
+      risk_per_trade_pct: safeRiskPct,
+      rr_planned: safeRrPlanned,
+      rules_followed: safeRulesFollowed,
       would_i_take_this_trade_again: data.would_i_take_this_trade_again,
       htf_screenshot: data.htf_screenshot || '',
       ltf_entry_screenshot: data.ltf_entry_screenshot || '',
