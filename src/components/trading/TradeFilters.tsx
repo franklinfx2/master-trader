@@ -20,6 +20,9 @@ export function TradeFilters({ trades, onFilterChange }: TradeFiltersProps) {
     result: 'all',
     dateFrom: '',
     dateTo: '',
+    htf_bias: 'all',
+    rules_followed: 'all',
+    trade_grade: 'all',
   });
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -35,18 +38,14 @@ export function TradeFilters({ trades, onFilterChange }: TradeFiltersProps) {
       filtered = filtered.filter(t => new Date(t.executed_at) <= new Date(newFilters.dateTo));
     }
 
-    // Session filter
+    // Session filter - use the dedicated session field now
     if (newFilters.session !== 'all') {
       filtered = filtered.filter(t => {
-        const hour = new Date(t.executed_at).getHours();
-        let session = 'other';
-        
-        if (hour >= 0 && hour < 8) session = 'asian';
-        else if (hour >= 8 && hour < 12) session = 'london';
-        else if (hour >= 12 && hour < 20) session = 'newyork';
-        else if (hour >= 20 && hour < 24) session = 'sydney';
-        
-        return session === newFilters.session;
+        const session = t.session?.toLowerCase() || '';
+        if (newFilters.session === 'asian') return session.includes('asia');
+        if (newFilters.session === 'london') return session.includes('london') && !session.includes('overlap');
+        if (newFilters.session === 'newyork') return session.includes('new york') || session.includes('ny');
+        return false;
       });
     }
 
@@ -59,6 +58,17 @@ export function TradeFilters({ trades, onFilterChange }: TradeFiltersProps) {
     }
     if (newFilters.result !== 'all') {
       filtered = filtered.filter(t => t.result === newFilters.result);
+    }
+
+    // Enhanced filters
+    if (newFilters.htf_bias !== 'all') {
+      filtered = filtered.filter(t => t.htf_bias === newFilters.htf_bias);
+    }
+    if (newFilters.rules_followed !== 'all') {
+      filtered = filtered.filter(t => t.rules_followed === newFilters.rules_followed);
+    }
+    if (newFilters.trade_grade !== 'all') {
+      filtered = filtered.filter(t => t.trade_grade === newFilters.trade_grade);
     }
 
     onFilterChange(filtered);
@@ -78,6 +88,9 @@ export function TradeFilters({ trades, onFilterChange }: TradeFiltersProps) {
       result: 'all',
       dateFrom: '',
       dateTo: '',
+      htf_bias: 'all',
+      rules_followed: 'all',
+      trade_grade: 'all',
     };
     setFilters(defaultFilters);
     applyFilters(defaultFilters);
@@ -114,7 +127,7 @@ export function TradeFilters({ trades, onFilterChange }: TradeFiltersProps) {
       </CardHeader>
       {isExpanded && (
         <CardContent className="p-3 pt-0 sm:p-4 sm:pt-0">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-4">
             <div className="space-y-1 sm:space-y-2">
               <Label className="text-xs sm:text-sm">From</Label>
               <Input
@@ -146,7 +159,6 @@ export function TradeFilters({ trades, onFilterChange }: TradeFiltersProps) {
                   <SelectItem value="asian">Asian</SelectItem>
                   <SelectItem value="london">London</SelectItem>
                   <SelectItem value="newyork">NY</SelectItem>
-                  <SelectItem value="sydney">Sydney</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -192,6 +204,50 @@ export function TradeFilters({ trades, onFilterChange }: TradeFiltersProps) {
                   <SelectItem value="loss">Loss</SelectItem>
                   <SelectItem value="be">BE</SelectItem>
                   <SelectItem value="open">Open</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-1 sm:space-y-2">
+              <Label className="text-xs sm:text-sm">HTF Bias</Label>
+              <Select value={filters.htf_bias} onValueChange={(value) => handleFilterChange('htf_bias', value)}>
+                <SelectTrigger className="h-8 text-xs sm:h-9 sm:text-sm">
+                  <SelectValue placeholder="All" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="Bullish">Bullish</SelectItem>
+                  <SelectItem value="Bearish">Bearish</SelectItem>
+                  <SelectItem value="Neutral">Neutral</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-1 sm:space-y-2">
+              <Label className="text-xs sm:text-sm">Rules</Label>
+              <Select value={filters.rules_followed} onValueChange={(value) => handleFilterChange('rules_followed', value)}>
+                <SelectTrigger className="h-8 text-xs sm:h-9 sm:text-sm">
+                  <SelectValue placeholder="All" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="Yes">Followed</SelectItem>
+                  <SelectItem value="No">Broken</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-1 sm:space-y-2">
+              <Label className="text-xs sm:text-sm">Grade</Label>
+              <Select value={filters.trade_grade} onValueChange={(value) => handleFilterChange('trade_grade', value)}>
+                <SelectTrigger className="h-8 text-xs sm:h-9 sm:text-sm">
+                  <SelectValue placeholder="All" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="A">A</SelectItem>
+                  <SelectItem value="B">B</SelectItem>
+                  <SelectItem value="C">C</SelectItem>
                 </SelectContent>
               </Select>
             </div>

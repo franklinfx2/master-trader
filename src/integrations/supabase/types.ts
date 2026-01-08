@@ -569,11 +569,13 @@ export type Database = {
       }
       trades: {
         Row: {
+          confidence: number | null
           created_at: string | null
           direction: string
           entry: number
           executed_at: string | null
           exit: number | null
+          htf_bias: string | null
           id: string
           notes: string | null
           pair: string
@@ -581,18 +583,24 @@ export type Database = {
           result: string | null
           risk_pct: number | null
           rr: number | null
+          rules_followed: string | null
           screenshot_url: string | null
+          session: string | null
+          setup_type: string | null
           sl: number | null
           tp: number | null
+          trade_grade: string | null
           updated_at: string | null
           user_id: string
         }
         Insert: {
+          confidence?: number | null
           created_at?: string | null
           direction: string
           entry: number
           executed_at?: string | null
           exit?: number | null
+          htf_bias?: string | null
           id?: string
           notes?: string | null
           pair: string
@@ -600,18 +608,24 @@ export type Database = {
           result?: string | null
           risk_pct?: number | null
           rr?: number | null
+          rules_followed?: string | null
           screenshot_url?: string | null
+          session?: string | null
+          setup_type?: string | null
           sl?: number | null
           tp?: number | null
+          trade_grade?: string | null
           updated_at?: string | null
           user_id: string
         }
         Update: {
+          confidence?: number | null
           created_at?: string | null
           direction?: string
           entry?: number
           executed_at?: string | null
           exit?: number | null
+          htf_bias?: string | null
           id?: string
           notes?: string | null
           pair?: string
@@ -619,9 +633,13 @@ export type Database = {
           result?: string | null
           risk_pct?: number | null
           rr?: number | null
+          rules_followed?: string | null
           screenshot_url?: string | null
+          session?: string | null
+          setup_type?: string | null
           sl?: number | null
           tp?: number | null
+          trade_grade?: string | null
           updated_at?: string | null
           user_id?: string
         }

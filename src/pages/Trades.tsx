@@ -10,7 +10,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus, Edit, Trash2, Filter, Eye } from 'lucide-react';
+import { Plus, Edit, Trash2, Filter, Eye, ChevronDown, ChevronUp } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/components/ui/use-toast';
 import { ScreenshotUpload } from '@/components/trading/ScreenshotUpload';
 import { MobileTradeCard } from '@/components/trading/MobileTradeCard';
@@ -41,7 +43,14 @@ export default function Trades() {
     notes: '',
     time: '',
     tradingSession: '' as string,
+    // Enhanced fields
+    setup_type: '',
+    htf_bias: 'Neutral' as 'Bullish' | 'Bearish' | 'Neutral',
+    rules_followed: 'Yes' as 'Yes' | 'No',
+    confidence: 3,
+    trade_grade: 'B' as 'A' | 'B' | 'C',
   });
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   // Function to detect trading session based on time (GMT)
   const detectTradingSession = (timeString: string): string => {
@@ -81,9 +90,15 @@ export default function Trades() {
       notes: '',
       time: '',
       tradingSession: '',
+      setup_type: '',
+      htf_bias: 'Neutral',
+      rules_followed: 'Yes',
+      confidence: 3,
+      trade_grade: 'B',
     });
     setScreenshots([]);
     setEditingTrade(null);
+    setShowAdvanced(false);
   };
 
 
@@ -119,9 +134,16 @@ export default function Trades() {
         tp: formData.tp ? parseFloat(formData.tp) : undefined,
         risk_pct: formData.risk_pct ? parseFloat(formData.risk_pct) : undefined,
         result: formData.result,
-        notes: `${formData.notes || ''}${formData.tradingSession ? ` [${formData.tradingSession.toUpperCase()} SESSION]` : ''}`.trim(),
+        notes: formData.notes || undefined,
         screenshot_url: screenshots.length > 0 ? JSON.stringify(screenshots) : undefined,
         executed_at: executedAt,
+        // Enhanced fields
+        session: formData.tradingSession || 'London',
+        setup_type: formData.setup_type || undefined,
+        htf_bias: formData.htf_bias || 'Neutral',
+        rules_followed: formData.rules_followed || 'Yes',
+        confidence: formData.confidence || 3,
+        trade_grade: formData.trade_grade || 'B',
       };
 
       // Calculate P&L and RR if exit is provided
@@ -172,16 +194,6 @@ export default function Trades() {
     const tradeTime = trade.executed_at ? new Date(trade.executed_at) : new Date();
     const timeString = `${tradeTime.getHours().toString().padStart(2, '0')}:${tradeTime.getMinutes().toString().padStart(2, '0')}`;
     
-    // Extract trading session from notes
-    let detectedSession = '';
-    let cleanNotes = trade.notes || '';
-    
-    const sessionMatches = cleanNotes.match(/\[(ASIAN|LONDON|NEW YORK|LONDON\/NEW YORK OVERLAP) SESSION\]/i);
-    if (sessionMatches) {
-      detectedSession = sessionMatches[1];
-      cleanNotes = cleanNotes.replace(sessionMatches[0], '').trim();
-    }
-    
     setFormData({
       pair: trade.pair,
       direction: trade.direction,
@@ -191,9 +203,14 @@ export default function Trades() {
       tp: trade.tp?.toString() || '',
       risk_pct: trade.risk_pct?.toString() || '',
       result: trade.result,
-      notes: cleanNotes,
+      notes: trade.notes || '',
       time: timeString,
-      tradingSession: detectedSession,
+      tradingSession: trade.session || '',
+      setup_type: trade.setup_type || '',
+      htf_bias: (trade.htf_bias as 'Bullish' | 'Bearish' | 'Neutral') || 'Neutral',
+      rules_followed: (trade.rules_followed as 'Yes' | 'No') || 'Yes',
+      confidence: trade.confidence || 3,
+      trade_grade: (trade.trade_grade as 'A' | 'B' | 'C') || 'B',
     });
     // Load existing screenshots if available (parse JSON array or single URL)
     if (trade.screenshot_url) {
@@ -205,6 +222,10 @@ export default function Trades() {
       }
     } else {
       setScreenshots([]);
+    }
+    // Show advanced section if any advanced fields have values
+    if (trade.setup_type || trade.htf_bias !== 'Neutral' || trade.rules_followed !== 'Yes' || trade.confidence !== 3 || trade.trade_grade !== 'B') {
+      setShowAdvanced(true);
     }
     setIsDialogOpen(true);
   };
@@ -419,6 +440,82 @@ export default function Trades() {
                     </Select>
                   </div>
                 </div>
+
+                {/* Advanced Section - Collapsible */}
+                <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
+                  <CollapsibleTrigger asChild>
+                    <Button type="button" variant="ghost" className="w-full justify-between">
+                      <span className="text-sm font-medium">Advanced Analysis</span>
+                      {showAdvanced ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    </Button>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="space-y-4 pt-2">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="setup_type">Setup Type</Label>
+                        <Input
+                          id="setup_type"
+                          placeholder="e.g. OB Retest, BOS"
+                          value={formData.setup_type}
+                          onChange={(e) => setFormData({ ...formData, setup_type: e.target.value })}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="htf_bias">HTF Bias</Label>
+                        <Select value={formData.htf_bias} onValueChange={(value: 'Bullish' | 'Bearish' | 'Neutral') => setFormData({ ...formData, htf_bias: value })}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Bullish">Bullish</SelectItem>
+                            <SelectItem value="Bearish">Bearish</SelectItem>
+                            <SelectItem value="Neutral">Neutral</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="rules_followed">Rules Followed</Label>
+                        <Select value={formData.rules_followed} onValueChange={(value: 'Yes' | 'No') => setFormData({ ...formData, rules_followed: value })}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Yes">Yes</SelectItem>
+                            <SelectItem value="No">No</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="trade_grade">Trade Grade</Label>
+                        <Select value={formData.trade_grade} onValueChange={(value: 'A' | 'B' | 'C') => setFormData({ ...formData, trade_grade: value })}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="A">A - Excellent</SelectItem>
+                            <SelectItem value="B">B - Good</SelectItem>
+                            <SelectItem value="C">C - Poor</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Confidence Level: {formData.confidence}/5</Label>
+                      <Slider
+                        value={[formData.confidence]}
+                        onValueChange={(value) => setFormData({ ...formData, confidence: value[0] })}
+                        min={1}
+                        max={5}
+                        step={1}
+                        className="w-full"
+                      />
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
 
                 <div className="space-y-2">
                   <Label htmlFor="notes">Notes</Label>

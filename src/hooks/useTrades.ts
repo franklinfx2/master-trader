@@ -21,6 +21,13 @@ export interface Trade {
   executed_at: string;
   created_at: string;
   updated_at: string;
+  // Enhanced fields
+  session?: string;
+  setup_type?: string;
+  htf_bias?: string;
+  rules_followed?: string;
+  confidence?: number;
+  trade_grade?: string;
 }
 
 export interface TradeStats {
