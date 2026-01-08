@@ -10,7 +10,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus, Edit, Trash2, Filter, Eye, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, Edit, Trash2, Filter, Eye, ChevronDown, ChevronUp, BarChart3 } from 'lucide-react';
+import { TradesAnalyticsSection } from '@/components/trading/TradesAnalyticsSection';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/components/ui/use-toast';
@@ -51,6 +52,7 @@ export default function Trades() {
     trade_grade: 'B' as 'A' | 'B' | 'C',
   });
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showAnalytics, setShowAnalytics] = useState(false);
 
   // Function to detect trading session based on time (GMT)
   const detectTradingSession = (timeString: string): string => {
@@ -281,20 +283,29 @@ export default function Trades() {
               Manage your trading history and performance
             </p>
           </div>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button 
-                onClick={resetForm}
-                size={isMobile ? "default" : "default"}
-                className={cn(
-                  "shadow-strong transition-transform hover:scale-105",
-                  isMobile ? "w-full" : ""
-                )}
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Add Trade
-              </Button>
-            </DialogTrigger>
+          <div className={cn("flex gap-2", isMobile ? "flex-col w-full" : "")}>
+            <Button
+              variant="outline"
+              onClick={() => setShowAnalytics(!showAnalytics)}
+              className={cn(isMobile ? "w-full" : "")}
+            >
+              <BarChart3 className="w-4 h-4 mr-2" />
+              {showAnalytics ? 'Hide Analytics' : 'View Analytics'}
+            </Button>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button 
+                  onClick={resetForm}
+                  size={isMobile ? "default" : "default"}
+                  className={cn(
+                    "shadow-strong transition-transform hover:scale-105",
+                    isMobile ? "w-full" : ""
+                  )}
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Trade
+                </Button>
+              </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>{editingTrade ? 'Edit Trade' : 'Add New Trade'}</DialogTitle>
@@ -543,7 +554,15 @@ export default function Trades() {
               </form>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
+
+        {/* Analytics Section - Collapsible */}
+        {showAnalytics && (
+          <div className="animate-fade-in">
+            <TradesAnalyticsSection trades={trades} />
+          </div>
+        )}
 
         {/* Filter - Mobile Optimized */}
         <Card className="card-premium animate-scale-in">

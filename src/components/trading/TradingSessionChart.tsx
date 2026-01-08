@@ -17,16 +17,18 @@ const sessionColors = {
 export function TradingSessionChart({ trades }: TradingSessionChartProps) {
   const sessionData = useMemo(() => {
     const sessions = trades.reduce((acc, trade) => {
-      if (!trade?.executed_at) return acc;
-      const hour = new Date(trade.executed_at).getHours();
-      if (isNaN(hour)) return acc;
-      let session = 'Other';
+      // Use session column if available, otherwise calculate from executed_at
+      let session = trade.session || 'Other';
       
-      // Determine session based on UTC hour
-      if (hour >= 0 && hour < 8) session = 'Asian';
-      else if (hour >= 8 && hour < 12) session = 'London';
-      else if (hour >= 12 && hour < 20) session = 'New York';
-      else if (hour >= 20 && hour < 24) session = 'Sydney';
+      if (!trade.session && trade.executed_at) {
+        const hour = new Date(trade.executed_at).getHours();
+        if (!isNaN(hour)) {
+          if (hour >= 0 && hour < 8) session = 'Asian';
+          else if (hour >= 8 && hour < 12) session = 'London';
+          else if (hour >= 12 && hour < 20) session = 'New York';
+          else if (hour >= 20 && hour < 24) session = 'Sydney';
+        }
+      }
       
       if (!acc[session]) {
         acc[session] = { session, wins: 0, losses: 0, total: 0, pnl: 0, winRate: 0 };

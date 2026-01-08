@@ -18,8 +18,8 @@ const COLORS = [
 export function SetupAnalysisChart({ trades }: SetupAnalysisChartProps) {
   const setupData = useMemo(() => {
     const setups = trades.reduce((acc, trade) => {
-      // Extract setup from notes or use pair as setup
-      const setup = trade.notes?.split(' ')[0] || trade.pair;
+      // Use setup_type column if available, otherwise fall back to extracting from notes or pair
+      const setup = trade.setup_type || trade.notes?.split(' ')[0] || trade.pair;
       
       if (!acc[setup]) {
         acc[setup] = { setup, wins: 0, losses: 0, total: 0, pnl: 0 };
