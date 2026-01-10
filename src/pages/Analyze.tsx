@@ -37,7 +37,7 @@ export default function Analyze() {
   }, [trades]);
 
   const canAnalyze = () => {
-    if (profile?.plan === 'pro') return true;
+    if (profile?.plan === 'pro' || profile?.role === 'owner') return true;
     
     if (!profile?.ai_last_analysis_at) return true;
     
@@ -144,7 +144,7 @@ export default function Analyze() {
   };
 
   const exportTrades = () => {
-    if (profile?.plan !== 'pro') {
+    if (profile?.plan !== 'pro' && profile?.role !== 'owner') {
       toast({
         title: "Pro Feature",
         description: "CSV export is available for Pro users only.",
