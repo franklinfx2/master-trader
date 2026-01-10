@@ -12,7 +12,7 @@ export const useScreenshotLimit = () => {
   const MAX_FREE_SCREENSHOTS = 20;
 
   useEffect(() => {
-    if (user && profile?.plan === 'free') {
+    if (user && profile?.plan === 'free' && profile?.role !== 'owner') {
       fetchScreenshotCount();
     } else {
       setLoading(false);
@@ -43,7 +43,7 @@ export const useScreenshotLimit = () => {
     }
   };
 
-  const isProUser = profile?.plan === 'pro';
+  const isProUser = profile?.plan === 'pro' || profile?.role === 'owner';
   const canUploadMore = isProUser || screenshotCount < MAX_FREE_SCREENSHOTS;
   const remainingScreenshots = isProUser ? Infinity : Math.max(0, MAX_FREE_SCREENSHOTS - screenshotCount);
 
