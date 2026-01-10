@@ -10,13 +10,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus, Edit, Trash2, Filter, Eye, ChevronDown, ChevronUp, BarChart3 } from 'lucide-react';
+import { Plus, Edit, Trash2, Filter, ChevronDown, ChevronUp, BarChart3 } from 'lucide-react';
 import { TradesAnalyticsSection } from '@/components/trading/TradesAnalyticsSection';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/components/ui/use-toast';
 import { ScreenshotUpload } from '@/components/trading/ScreenshotUpload';
 import { MobileTradeCard } from '@/components/trading/MobileTradeCard';
+import { TradeScreenshotGallery, ScreenshotThumbnails } from '@/components/trading/TradeScreenshotGallery';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsMobileOrTablet } from '@/hooks/use-mobile';
@@ -53,6 +54,17 @@ export default function Trades() {
   });
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
+  const [galleryState, setGalleryState] = useState<{
+    isOpen: boolean;
+    screenshots: string[];
+    pair: string;
+    initialIndex: number;
+  }>({
+    isOpen: false,
+    screenshots: [],
+    pair: '',
+    initialIndex: 0,
+  });
 
   // Function to detect trading session based on time (GMT)
   const detectTradingSession = (timeString: string): string => {
@@ -684,38 +696,30 @@ export default function Trades() {
                     )}
                     {trade.screenshot_url && (
                       <div className="mt-4">
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button variant="outline" size="sm">
-                              <Eye className="w-4 h-4 mr-2" />
-                              View Screenshots
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className="max-w-4xl">
-                            <DialogHeader>
-                              <DialogTitle>Trade Screenshots - {trade.pair}</DialogTitle>
-                            </DialogHeader>
-                            <div className="max-h-[70vh] overflow-auto space-y-4">
-                              {(() => {
-                                let urls: string[] = [];
-                                try {
-                                  const parsed = JSON.parse(trade.screenshot_url!);
-                                  urls = Array.isArray(parsed) ? parsed : [trade.screenshot_url!];
-                                } catch {
-                                  urls = [trade.screenshot_url!];
-                                }
-                                return urls.map((url, index) => (
-                                  <img
-                                    key={index}
-                                    src={url}
-                                    alt={`Screenshot ${index + 1} for ${trade.pair} trade`}
-                                    className="w-full h-auto rounded-md"
-                                  />
-                                ));
-                              })()}
-                            </div>
-                          </DialogContent>
-                        </Dialog>
+                        {(() => {
+                          let urls: string[] = [];
+                          try {
+                            const parsed = JSON.parse(trade.screenshot_url);
+                            urls = Array.isArray(parsed) ? parsed : [trade.screenshot_url];
+                          } catch {
+                            urls = [trade.screenshot_url];
+                          }
+                          return (
+                            <ScreenshotThumbnails
+                              screenshots={urls}
+                              maxVisible={4}
+                              size="md"
+                              onThumbnailClick={(index) => {
+                                setGalleryState({
+                                  isOpen: true,
+                                  screenshots: urls,
+                                  pair: trade.pair,
+                                  initialIndex: index,
+                                });
+                              }}
+                            />
+                          );
+                        })()}
                       </div>
                     )}
                   </CardContent>
@@ -723,6 +727,15 @@ export default function Trades() {
             ))}
           </div>
         )}
+
+        {/* Shared Screenshot Gallery */}
+        <TradeScreenshotGallery
+          screenshots={galleryState.screenshots}
+          pair={galleryState.pair}
+          isOpen={galleryState.isOpen}
+          onClose={() => setGalleryState(prev => ({ ...prev, isOpen: false }))}
+          initialIndex={galleryState.initialIndex}
+        />
       </div>
     </Layout>
   );

@@ -3,9 +3,9 @@ import { Trade } from '@/hooks/useTrades';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ChevronDown, ChevronUp, Edit, Trash2, Eye, Image } from 'lucide-react';
+import { ChevronDown, ChevronUp, Edit, Trash2, Eye } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { TradeScreenshotGallery, ScreenshotThumbnails } from './TradeScreenshotGallery';
 
 interface MobileTradeCardProps {
   trade: Trade;
@@ -16,6 +16,8 @@ interface MobileTradeCardProps {
 
 export const MobileTradeCard = ({ trade, onEdit, onDelete, onView }: MobileTradeCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [galleryInitialIndex, setGalleryInitialIndex] = useState(0);
 
   const formatCurrency = (value: number | string) => {
     const num = typeof value === 'string' ? parseFloat(value) : value;
@@ -179,38 +181,30 @@ export const MobileTradeCard = ({ trade, onEdit, onDelete, onView }: MobileTrade
               </div>
             )}
 
-            {/* Screenshots */}
+            {/* Screenshot Thumbnails */}
             {screenshots.length > 0 && (
               <div className="pt-2">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full text-xs h-8"
-                    >
-                      <Image className="w-3 h-3 mr-1" />
-                      View Screenshots ({screenshots.length})
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-4xl max-h-[90vh]">
-                    <DialogHeader>
-                      <DialogTitle>Trade Screenshots - {trade.pair}</DialogTitle>
-                    </DialogHeader>
-                    <div className="max-h-[70vh] overflow-auto space-y-4">
-                      {screenshots.map((url, index) => (
-                        <img
-                          key={index}
-                          src={url}
-                          alt={`Screenshot ${index + 1} for ${trade.pair} trade`}
-                          className="w-full h-auto rounded-md"
-                        />
-                      ))}
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                <p className="text-xs text-muted-foreground mb-2">Screenshots:</p>
+                <ScreenshotThumbnails
+                  screenshots={screenshots}
+                  maxVisible={4}
+                  size="sm"
+                  onThumbnailClick={(index) => {
+                    setGalleryInitialIndex(index);
+                    setGalleryOpen(true);
+                  }}
+                />
               </div>
             )}
+
+            {/* Screenshot Gallery */}
+            <TradeScreenshotGallery
+              screenshots={screenshots}
+              pair={trade.pair}
+              isOpen={galleryOpen}
+              onClose={() => setGalleryOpen(false)}
+              initialIndex={galleryInitialIndex}
+            />
 
             {/* Actions */}
             <div className="flex space-x-2 pt-2">
