@@ -63,12 +63,12 @@ export function SetupEdgeScoreSection({
     }
 
     // Dynamically derive unique setup types from trades
-    // Group by setup_type_id if available, otherwise by setup_type string
+    // Always group by setup_type string to prevent duplicates when setup_type_id is inconsistent
     const setupGroups = new Map<string, { id?: string; code: string; trades: EliteTrade[] }>();
     
     for (const trade of filteredTrades) {
-      // Use setup_type_id as primary key if available, otherwise use setup_type string
-      const key = trade.setup_type_id || trade.setup_type;
+      // Always use setup_type string as the grouping key for consistency
+      const key = trade.setup_type;
       
       if (!setupGroups.has(key)) {
         setupGroups.set(key, {
@@ -76,6 +76,10 @@ export function SetupEdgeScoreSection({
           code: trade.setup_type,
           trades: [],
         });
+      }
+      // Update ID if this trade has one and the group doesn't
+      if (trade.setup_type_id && !setupGroups.get(key)!.id) {
+        setupGroups.get(key)!.id = trade.setup_type_id;
       }
       setupGroups.get(key)!.trades.push(trade);
     }
