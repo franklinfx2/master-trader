@@ -28,7 +28,6 @@ import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
 import Affiliate from "./pages/Affiliate";
 import Pricing from "./pages/Pricing";
-import EliteJournalDebug from "./pages/EliteJournalDebug";
 import EliteTradeEntry from "./pages/EliteTradeEntry";
 import EliteTrades from "./pages/EliteTrades";
 import LegacyUpgrade from "./pages/LegacyUpgrade";
@@ -58,7 +57,6 @@ const App = () => (
             <Route path="/webhook" element={<Webhook />} />
             <Route path="/admin/test-mode" element={<ProtectedRoute><AdminTestMode /></ProtectedRoute>} />
             <Route path="/admin/feedback" element={<ProtectedRoute><AdminFeedback /></ProtectedRoute>} />
-            <Route path="/elite-journal-debug" element={<OwnerRoute><EliteJournalDebug /></OwnerRoute>} />
             <Route path="/elite-trade-entry" element={<OwnerRoute><EliteTradeEntry /></OwnerRoute>} />
             <Route path="/elite-trades" element={<OwnerRoute><EliteTrades /></OwnerRoute>} />
             <Route path="/legacy-upgrade" element={<OwnerRoute><LegacyUpgrade /></OwnerRoute>} />

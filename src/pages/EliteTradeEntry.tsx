@@ -9,7 +9,7 @@ const EliteTradeEntry = () => {
   const navigate = useNavigate();
 
   const handleSuccess = () => {
-    navigate('/elite-journal-debug');
+    navigate('/elite-trades');
   };
 
   return (
