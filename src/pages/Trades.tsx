@@ -118,16 +118,6 @@ export default function Trades() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Check trade limit for free users
-    if (profile?.plan === 'free' && trades.length >= 20 && !editingTrade) {
-      toast({
-        title: "Trade Limit Reached",
-        description: "Free users can only create 20 trades. Upgrade to Pro for unlimited trades.",
-        variant: "destructive",
-      });
-      return;
-    }
 
     try {
       // Combine date and time for executed_at

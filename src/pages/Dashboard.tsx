@@ -99,46 +99,6 @@ export default function Dashboard() {
         {/* AI Credits Display */}
         <AICreditDisplay />
 
-        {/* Premium Plan Notice - Mobile Optimized */}
-        {profile?.plan === 'free' && trades.length >= 20 && (
-          <Card className="card-premium border-violet/20 bg-violet/5 animate-slide-up">
-            <CardContent className={cn("pt-6", isMobile && "p-4")}>
-              <div className="flex flex-col gap-4">
-                <div className="flex items-start space-x-3">
-                  <div className={cn(
-                    "rounded-xl bg-violet/10 text-violet transition-transform hover:scale-105",
-                    isMobile ? "p-2" : "p-3"
-                  )}>
-                    <TrendingUp className={cn(isMobile ? "w-5 h-5" : "w-6 h-6")} />
-                  </div>
-                  <div className="space-y-1 flex-1">
-                    <p className={cn(
-                      "text-violet font-semibold",
-                      isMobile ? "text-base" : "text-lg"
-                    )}>
-                      You've reached the 20 trade limit
-                    </p>
-                    <p className={cn(
-                      "text-muted-foreground",
-                      isMobile ? "text-sm" : ""
-                    )}>
-                      Unlock unlimited trades, advanced analytics, and premium features with Pro.
-                    </p>
-                  </div>
-                </div>
-                <Link to="/settings" className="w-full">
-                  <Button 
-                    variant="premium" 
-                    size={isMobile ? "default" : "lg"} 
-                    className="w-full shadow-premium transition-transform hover:scale-105"
-                  >
-                    Upgrade to Pro
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* Premium Stats Grid - Mobile Optimized */}
         <div className={cn(
@@ -181,7 +141,7 @@ export default function Dashboard() {
                 "text-muted-foreground",
                 isMobile ? "text-xs" : "text-sm"
               )}>
-                {profile?.plan === 'free' ? `${20 - (stats?.trade_count || 0)} remaining` : 'Unlimited'}
+                Unlimited
               </p>
             </CardContent>
           </Card>
