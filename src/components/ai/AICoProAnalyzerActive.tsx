@@ -41,7 +41,7 @@ export const AICoProAnalyzerActive = ({ userPlan }: AICoProAnalyzerActiveProps) 
   const { credits, hasEnoughCredits, fetchCredits } = useAICredits();
   const { user } = useAuth();
 
-  const CREDIT_COST = 3;
+  const CREDIT_COST = 0; // Now free for all users
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -137,15 +137,6 @@ export const AICoProAnalyzerActive = ({ userPlan }: AICoProAnalyzerActiveProps) 
       return;
     }
 
-    if (!hasEnoughCredits(CREDIT_COST)) {
-      setShowUpgradeModal(true);
-      toast({
-        title: "Insufficient Credits",
-        description: `You need ${CREDIT_COST} AI credits for this analysis. Upgrade to continue!`,
-        variant: "destructive",
-      });
-      return;
-    }
 
     setLoading(true);
     
@@ -295,7 +286,7 @@ export const AICoProAnalyzerActive = ({ userPlan }: AICoProAnalyzerActiveProps) 
           {/* Analyze Button */}
           <Button
             onClick={handleAnalyze}
-            disabled={loading || uploading || !hasEnoughCredits(CREDIT_COST)}
+            disabled={loading || uploading}
             className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-amber-600 hover:from-blue-700 hover:via-purple-700 hover:to-amber-700"
             size="lg"
           >
@@ -396,15 +387,6 @@ export const AICoProAnalyzerActive = ({ userPlan }: AICoProAnalyzerActiveProps) 
             </div>
           )}
 
-          {/* Credit Warning */}
-          {!hasEnoughCredits(CREDIT_COST) && (
-            <div className="p-3 sm:p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
-              <p className="text-xs sm:text-sm text-destructive font-medium">
-                Insufficient Credits: You need {CREDIT_COST} credits but only have{' '}
-                {credits?.remaining || 0} remaining. Upgrade to continue using AI Co-Pro!
-              </p>
-            </div>
-          )}
         </CardContent>
       </Card>
 

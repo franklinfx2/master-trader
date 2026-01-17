@@ -37,13 +37,8 @@ export default function Analyze() {
   }, [trades]);
 
   const canAnalyze = () => {
-    if (profile?.plan === 'pro' || profile?.role === 'owner') return true;
-    
-    if (!profile?.ai_last_analysis_at) return true;
-    
-    const lastAnalysis = new Date(profile.ai_last_analysis_at);
-    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    return lastAnalysis < weekAgo;
+    // All users can analyze without restrictions
+    return true;
   };
 
   const getDaysUntilNextAnalysis = () => {
@@ -144,14 +139,7 @@ export default function Analyze() {
   };
 
   const exportTrades = () => {
-    if (profile?.plan !== 'pro' && profile?.role !== 'owner') {
-      toast({
-        title: "Pro Feature",
-        description: "CSV export is available for Pro users only.",
-        variant: "destructive",
-      });
-      return;
-    }
+    // All users can export trades
 
     // Create CSV content
     const headers = ['Date', 'Pair', 'Direction', 'Entry', 'Exit', 'SL', 'TP', 'Risk%', 'R:R', 'Result', 'P&L', 'Notes'];

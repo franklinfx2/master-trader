@@ -29,19 +29,10 @@ export const AIMentor = ({ trades, userPlan, onUpgradeClick }: AIMentorProps) =>
   const { toast } = useToast();
   const { credits, hasEnoughCredits, fetchCredits } = useAICredits();
 
-  const CREDIT_COST = 2; // AI Mentor uses 2 credits per analysis
-  const canUseMentor = userPlan === 'pro' || userPlan === 'go' || (userPlan === 'free' && hasEnoughCredits(CREDIT_COST));
+  const CREDIT_COST = 0; // AI Mentor is now free for all users
+  const canUseMentor = true; // All users can use the mentor
 
   const handleMentorClick = async () => {
-    if (!hasEnoughCredits(CREDIT_COST)) {
-      setShowUpgradeModal(true);
-      toast({
-        title: "Insufficient Credits",
-        description: `You need ${CREDIT_COST} AI credits for mentor analysis. Upgrade to get more!`,
-        variant: "destructive",
-      });
-      return;
-    }
 
     if (trades.length < 5) {
       toast({
@@ -242,9 +233,7 @@ export const AIMentor = ({ trades, userPlan, onUpgradeClick }: AIMentorProps) =>
     </div>
   );
 
-  if (!canUseMentor && userPlan === 'free' && !hasEnoughCredits(CREDIT_COST)) {
-    return <UpgradeTeaser />;
-  }
+  // All users can use mentor - no upgrade teaser needed
 
   return (
     <>
