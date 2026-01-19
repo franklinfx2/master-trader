@@ -230,7 +230,7 @@ const EliteTrades = () => {
                 <Skeleton className="h-24 w-full rounded-lg" />
               </>
             ) : (
-              <MissedOpportunitiesSection trades={trades} />
+              <MissedOpportunitiesSection trades={trades} onUpdate={fetchTrades} />
             )}
           </TabsContent>
         </Tabs>
