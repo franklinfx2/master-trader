@@ -27,6 +27,7 @@ import { SampleSizeConfidenceSection } from '@/components/analytics/SampleSizeCo
 import { MistakePatternSection } from '@/components/analytics/MistakePatternSection';
 import { EntryPrecisionSection } from '@/components/analytics/EntryPrecisionSection';
 import { EdgeDriftSection } from '@/components/analytics/EdgeDriftSection';
+import { EliteAITradingRules } from '@/components/analytics/EliteAITradingRules';
 
 type DateRange = '30' | '90' | 'all';
 type SessionFilter = 'LN' | 'NY' | 'all';
@@ -146,11 +147,16 @@ export default function EliteAnalytics() {
                 </p>
               </div>
             )}
+
+            {/* AI Rules Panel */}
+            <EliteAITradingRules trades={executedTrades} dateRange={dateRange} />
             
-            <StrategyValidationSection
-              trades={executedTrades}
-              dateRange={{ from: new Date(Date.now() - (dateRange === '30' ? 30 : dateRange === '90' ? 90 : 3650) * 24 * 60 * 60 * 1000), to: new Date() }}
-            />
+            <div className="mt-6">
+              <StrategyValidationSection
+                trades={executedTrades}
+                dateRange={{ from: new Date(Date.now() - (dateRange === '30' ? 30 : dateRange === '90' ? 90 : 3650) * 24 * 60 * 60 * 1000), to: new Date() }}
+              />
+            </div>
             <div className="mt-6">
               <SetupEdgeScoreSection
                 trades={executedTrades}
