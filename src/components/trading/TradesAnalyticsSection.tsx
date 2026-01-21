@@ -7,6 +7,7 @@ import { TimeOfDayChart } from './TimeOfDayChart';
 import { TradeGradeChart } from './TradeGradeChart';
 import { RulesFollowedChart } from './RulesFollowedChart';
 import { HTFBiasChart } from './HTFBiasChart';
+import { AITradingRules } from './AITradingRules';
 import { TrendingUp, TrendingDown, Target, BarChart3, Clock, Award } from 'lucide-react';
 
 interface TradesAnalyticsSectionProps {
@@ -83,6 +84,9 @@ export function TradesAnalyticsSection({ trades }: TradesAnalyticsSectionProps) 
 
   return (
     <div className="space-y-6">
+      {/* AI Trading Rules */}
+      <AITradingRules trades={trades} />
+
       {/* Summary Stats */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         <Card className="bg-card/50 backdrop-blur-sm">
