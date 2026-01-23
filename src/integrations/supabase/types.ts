@@ -716,7 +716,7 @@ export type Database = {
           screenshots_valid: boolean
           session: Database["public"]["Enums"]["session_enum"]
           setup_grade: Database["public"]["Enums"]["setup_grade_enum"]
-          setup_type: Database["public"]["Enums"]["setup_type_enum"]
+          setup_type: string
           setup_type_id: string | null
           stop_loss: number
           stop_placement_quality: Database["public"]["Enums"]["stop_placement_quality_enum"]
@@ -796,7 +796,7 @@ export type Database = {
           screenshots_valid?: boolean
           session: Database["public"]["Enums"]["session_enum"]
           setup_grade: Database["public"]["Enums"]["setup_grade_enum"]
-          setup_type: Database["public"]["Enums"]["setup_type_enum"]
+          setup_type?: string
           setup_type_id?: string | null
           stop_loss: number
           stop_placement_quality: Database["public"]["Enums"]["stop_placement_quality_enum"]
@@ -876,7 +876,7 @@ export type Database = {
           screenshots_valid?: boolean
           session?: Database["public"]["Enums"]["session_enum"]
           setup_grade?: Database["public"]["Enums"]["setup_grade_enum"]
-          setup_type?: Database["public"]["Enums"]["setup_type_enum"]
+          setup_type?: string
           setup_type_id?: string | null
           stop_loss?: number
           stop_placement_quality?: Database["public"]["Enums"]["stop_placement_quality_enum"]
