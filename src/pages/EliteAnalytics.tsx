@@ -18,16 +18,22 @@ import {
 import { useEliteTrades } from '@/hooks/useEliteTrades';
 import { useSetupTypes } from '@/hooks/useSetupTypes';
 import { useExecutedTrades } from '@/hooks/useExecutedTrades';
-import StrategyValidationSection from '@/components/analytics/StrategyValidationSection';
+
+// Analytics Components
+import { EliteCommandCenter } from '@/components/analytics/EliteCommandCenter';
+import { EliteAITradingRules } from '@/components/analytics/EliteAITradingRules';
+import { SetupQualityMatrix } from '@/components/analytics/SetupQualityMatrix';
+import { ConditionImpactAnalysis } from '@/components/analytics/ConditionImpactAnalysis';
 import { SetupEdgeScoreSection } from '@/components/analytics/SetupEdgeScoreSection';
 import { SessionDominanceSection } from '@/components/analytics/SessionDominanceSection';
 import { TimeDominanceSection } from '@/components/analytics/TimeDominanceSection';
 import { DayOfWeekDominanceSection } from '@/components/analytics/DayOfWeekDominanceSection';
-import { SampleSizeConfidenceSection } from '@/components/analytics/SampleSizeConfidenceSection';
+import { DisciplineAnalytics } from '@/components/analytics/DisciplineAnalytics';
 import { MistakePatternSection } from '@/components/analytics/MistakePatternSection';
 import { EntryPrecisionSection } from '@/components/analytics/EntryPrecisionSection';
 import { EdgeDriftSection } from '@/components/analytics/EdgeDriftSection';
-import { EliteAITradingRules } from '@/components/analytics/EliteAITradingRules';
+import { SampleSizeConfidenceSection } from '@/components/analytics/SampleSizeConfidenceSection';
+import { EliteEdgeSummary } from '@/components/analytics/EliteEdgeSummary';
 
 type DateRange = '30' | '90' | 'all';
 type SessionFilter = 'LN' | 'NY' | 'all';
@@ -76,7 +82,7 @@ export default function EliteAnalytics() {
                   Elite Analytics
                 </h1>
                 <p className="text-xs sm:text-sm text-muted-foreground">
-                  Data-backed edge. No opinions.
+                  Decision Intelligence Dashboard — Data from Elite Trades only
                 </p>
               </div>
             </div>
@@ -143,21 +149,42 @@ export default function EliteAnalytics() {
             {missedCount > 0 && (
               <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-md">
                 <p className="text-sm text-amber-400">
-                  {missedCount} missed trade{missedCount > 1 ? 's' : ''} excluded from performance analytics.
+                  {missedCount} missed trade{missedCount > 1 ? 's' : ''} excluded from performance analytics (included in frequency data).
                 </p>
               </div>
             )}
 
-            {/* AI Rules Panel */}
-            <EliteAITradingRules trades={executedTrades} dateRange={dateRange} />
-            
-            <div className="mt-6">
-              <StrategyValidationSection
-                trades={executedTrades}
-                dateRange={{ from: new Date(Date.now() - (dateRange === '30' ? 30 : dateRange === '90' ? 90 : 3650) * 24 * 60 * 60 * 1000), to: new Date() }}
-              />
+            {/* 1. Elite Performance Command Center */}
+            <EliteCommandCenter
+              trades={executedTrades}
+              dateRange={dateRange}
+              selectedSetups={selectedSetups}
+              sessionFilter={sessionFilter}
+            />
+
+            {/* 2. AI Rules Panel */}
+            <div className="mt-8">
+              <EliteAITradingRules trades={executedTrades} dateRange={dateRange} />
             </div>
-            <div className="mt-6">
+
+            {/* 3. Setup Quality Matrix */}
+            <SetupQualityMatrix
+              trades={executedTrades}
+              dateRange={dateRange}
+              selectedSetups={selectedSetups}
+              sessionFilter={sessionFilter}
+            />
+
+            {/* 4. Condition Impact Analysis */}
+            <ConditionImpactAnalysis
+              trades={executedTrades}
+              dateRange={dateRange}
+              selectedSetups={selectedSetups}
+              sessionFilter={sessionFilter}
+            />
+
+            {/* 5. Setup Edge Score */}
+            <div className="mt-8">
               <SetupEdgeScoreSection
                 trades={executedTrades}
                 dateRange={dateRange}
@@ -167,6 +194,8 @@ export default function EliteAnalytics() {
                 onSetupClick={handleSetupClick}
               />
             </div>
+
+            {/* 6. Session Dominance */}
             <SessionDominanceSection
               trades={trades}
               dateRange={dateRange}
@@ -174,35 +203,61 @@ export default function EliteAnalytics() {
               sessionFilter={sessionFilter}
               activeSetup={activeSetup}
             />
+
+            {/* 7. Time Dominance */}
             <TimeDominanceSection
               trades={trades}
               dateRange={dateRange}
               activeSetup={activeSetup}
             />
+
+            {/* 8. Day of Week Dominance */}
             <DayOfWeekDominanceSection
               trades={trades}
               dateRange={dateRange}
               activeSetup={activeSetup}
             />
-            <SampleSizeConfidenceSection
-              trades={trades}
+
+            {/* 9. Discipline & Psychology Analytics */}
+            <DisciplineAnalytics
+              trades={executedTrades}
               dateRange={dateRange}
-              activeSetup={activeSetup}
+              selectedSetups={selectedSetups}
+              sessionFilter={sessionFilter}
             />
+
+            {/* 10. Mistake Pattern Section */}
             <MistakePatternSection
               trades={executedTrades}
               dateRange={dateRange}
               activeSetup={activeSetup}
             />
+
+            {/* 11. Entry Precision */}
             <EntryPrecisionSection
               trades={executedTrades}
               dateRange={dateRange}
               activeSetup={activeSetup}
             />
+
+            {/* 12. Edge Drift */}
             <EdgeDriftSection
               trades={executedTrades}
               dateRange={dateRange}
               activeSetup={activeSetup}
+            />
+
+            {/* 13. Sample Size Confidence */}
+            <SampleSizeConfidenceSection
+              trades={trades}
+              dateRange={dateRange}
+              activeSetup={activeSetup}
+            />
+
+            {/* 14. Elite Edge Summary (Trading Operating System) */}
+            <EliteEdgeSummary
+              trades={executedTrades}
+              dateRange={dateRange}
             />
           </>
         )}
