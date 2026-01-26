@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
@@ -28,25 +28,102 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const isIntentionalSignOut = useRef(false);
 
   useEffect(() => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
+      async (event, currentSession) => {
+        console.log('Auth event:', event);
+        
+        if (event === 'TOKEN_REFRESHED') {
+          setSession(currentSession);
+          setUser(currentSession?.user ?? null);
+        } else if (event === 'SIGNED_OUT') {
+          // Only clear state and show message if this was NOT intentional
+          if (!isIntentionalSignOut.current && user) {
+            // Try to recover the session before giving up
+            const { data } = await supabase.auth.refreshSession();
+            if (data.session) {
+              setSession(data.session);
+              setUser(data.session.user);
+              return; // Recovery successful, don't sign out
+            }
+          }
+          setSession(null);
+          setUser(null);
+          isIntentionalSignOut.current = false;
+        } else {
+          setSession(currentSession);
+          setUser(currentSession?.user ?? null);
+        }
         setLoading(false);
       }
     );
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    // THEN check for existing session with error recovery
+    supabase.auth.getSession().then(async ({ data: { session: initialSession }, error }) => {
+      if (error && error.message?.includes('Refresh Token')) {
+        // Try to refresh the session instead of giving up
+        const { data } = await supabase.auth.refreshSession();
+        if (data.session) {
+          setSession(data.session);
+          setUser(data.session.user);
+          setLoading(false);
+          return;
+        }
+      }
+      setSession(initialSession);
+      setUser(initialSession?.user ?? null);
       setLoading(false);
     });
 
     return () => subscription.unsubscribe();
+  }, []);
+
+  // Proactive session refresh when tab becomes visible
+  useEffect(() => {
+    const handleVisibilityChange = async () => {
+      if (document.visibilityState === 'visible' && session) {
+        const { data, error } = await supabase.auth.refreshSession();
+        if (!error && data.session) {
+          setSession(data.session);
+          setUser(data.session.user);
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [session]);
+
+  // Periodic session refresh every 10 minutes
+  useEffect(() => {
+    if (!session) return;
+
+    const refreshInterval = setInterval(async () => {
+      const { data, error } = await supabase.auth.refreshSession();
+      if (!error && data.session) {
+        setSession(data.session);
+        setUser(data.session.user);
+      }
+    }, 10 * 60 * 1000); // Every 10 minutes
+
+    return () => clearInterval(refreshInterval);
+  }, [session]);
+
+  // Multi-tab synchronization
+  useEffect(() => {
+    const handleStorageChange = async (event: StorageEvent) => {
+      if (event.key?.includes('supabase.auth.token')) {
+        const { data: { session: newSession } } = await supabase.auth.getSession();
+        setSession(newSession);
+        setUser(newSession?.user ?? null);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const signIn = async (email: string, password: string) => {
@@ -146,6 +223,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOut = async () => {
+    isIntentionalSignOut.current = true;
     await supabase.auth.signOut();
     toast({
       title: "Signed Out",
